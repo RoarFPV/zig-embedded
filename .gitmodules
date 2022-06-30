@@ -1,0 +1,6 @@
+[submodule "libs/regz"]
+	path = libs/regz
+	url = git@github.com:ZigEmbeddedGroup/regz.git
+[submodule "libs/stm32-svd"]
+	path = libs/stm32-svd
+	url = git@github.com:svcguy/stm32-svd.git
