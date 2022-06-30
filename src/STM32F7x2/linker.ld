@@ -13,6 +13,8 @@ MEMORY
   ram0   (rw!x) : ORIGIN = 0x20000000, LENGTH = 0x00040000
 }
 
+__stack_end = ORIGIN(ram0) + LENGTH(ram0); 
+
 SECTIONS
 {
   .text :

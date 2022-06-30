@@ -5,6 +5,8 @@ const builtin = @import("builtin");
 const mcu = @import("STM32F7x2/registers.zig");
 const regs = mcu.registers;
 
+
+
 pub fn sei() void {
     asm volatile ("cpsie i");
 }
@@ -50,6 +52,7 @@ extern var __data_end: anyopaque;
 extern var __bss_start: anyopaque;
 extern var __bss_end: anyopaque;
 extern const __data_load_start: anyopaque;
+extern const __stack_end: anyopaque;
 
 pub fn _start() callconv(.C) noreturn {
 
@@ -75,34 +78,27 @@ pub fn _start() callconv(.C) noreturn {
     __main();
 }
 
-fn isValidField(field_name: []const u8) bool {
-    return !std.mem.startsWith(u8, field_name, "reserved") and
-        !std.mem.eql(u8, field_name, "initial_stack_pointer") and
-        !std.mem.eql(u8, field_name, "reset");
-}
-
 pub fn __panic(message: []const u8, maybe_stack_trace: ?*std.builtin.StackTrace) noreturn {
 
     // utilize logging functions
     std.log.err("PANIC: {s}", .{message});
 
-    if (builtin.cpu.arch != .avr) {
-        // var writer = debug.writer();
-        // writer.print("PANIC: {s}\r\n", .{message}) catch unreachable;
+    // var writer = debug.writer();
+    // writer.print("PANIC: {s}\r\n", .{message}) catch unreachable;
 
-        if (maybe_stack_trace) |stack_trace| {
-            var frame_index: usize = 0;
-            var frames_left: usize = std.math.min(stack_trace.index, stack_trace.instruction_addresses.len);
-            while (frames_left != 0) : ({
-                frames_left -= 1;
-                frame_index = (frame_index + 1) % stack_trace.instruction_addresses.len;
-            }) {
-                const return_address = stack_trace.instruction_addresses[frame_index];
-                _ = return_address;
-                // writer.print("0x{X:0>8}\r\n", .{return_address}) catch unreachable;
-            }
+    if (maybe_stack_trace) |stack_trace| {
+        var frame_index: usize = 0;
+        var frames_left: usize = std.math.min(stack_trace.index, stack_trace.instruction_addresses.len);
+        while (frames_left != 0) : ({
+            frames_left -= 1;
+            frame_index = (frame_index + 1) % stack_trace.instruction_addresses.len;
+        }) {
+            const return_address = stack_trace.instruction_addresses[frame_index];
+            _ = return_address;
+            // writer.print("0x{X:0>8}\r\n", .{return_address}) catch unreachable;
         }
     }
+    
     hang();
 }
 
@@ -119,7 +115,7 @@ pub fn hang() noreturn {
 const VectorTable = mcu.VectorTable;
 
 export var vector_table linksection("__flash_start") = VectorTable{
-    .initial_stack_pointer = 0x20040000,
+    .initial_stack_pointer = __stack_end,
     .Reset = .{ .C = _start },
 };
 
@@ -136,8 +132,65 @@ export fn __main() noreturn {
     hang();
 }
 
+// ================ application code ============================
+
+pub const RCC = struct {
+    pub const base_address = 0x40023800;
+
+    /// address: 0x40023800
+    /// clock control register
+    pub const CR = @intToPtr(*volatile packed struct {
+        /// Internal high-speed clock
+        /// enable
+        HSION: u1,
+        /// Internal high-speed clock ready
+        /// flag
+        HSIRDY: u1,
+        reserved0: u1,
+        /// Internal high-speed clock
+        /// trimming
+        HSITRIM: u5,
+        /// Internal high-speed clock
+        /// calibration
+        HSICAL: u8,
+        /// HSE clock enable
+        HSEON: u1,
+        /// HSE clock ready flag
+        HSERDY: u1,
+        /// HSE clock bypass
+        HSEBYP: u1,
+        /// Clock security system
+        /// enable
+        CSSON: u1,
+        reserved1: u1,
+        reserved2: u1,
+        reserved3: u1,
+        reserved4: u1,
+        /// Main PLL (PLL) enable
+        PLLON: u1,
+        /// Main PLL (PLL) clock ready
+        /// flag
+        PLLRDY: u1,
+        /// PLLI2S enable
+        PLLI2SON: u1,
+        /// PLLI2S clock ready flag
+        PLLI2SRDY: u1,
+        /// PLLSAI enable
+        PLLSAION: u1,
+        /// PLLSAI clock ready flag
+        PLLSAIRDY: u1,
+        padding0: u1,
+        padding1: u1,
+    }, base_address + 0x0);
+
+    
+};
+
+
+
 pub fn init() anyerror!void {
 
+    regs.RCC.CR.HSEON = 1;
     // 1. Enable HSE and wait for the HSE to become ready
     regs.RCC.CR.modify(.{ .HSEON = 1 });
     while (regs.RCC.CR.read().HSERDY != 1) {}
