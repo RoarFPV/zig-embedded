@@ -1,8 +1,6 @@
 const std = @import("std");
 const root = @import("root");
 const builtin = @import("builtin");
-const arm = @import("arm.zig");
-const arch = arm.Arm;
 
 extern var __data_start: anyopaque;
 extern var __data_end: anyopaque;
@@ -11,35 +9,37 @@ extern var __bss_end: anyopaque;
 extern const __data_load_start: anyopaque;
 extern var __stack_end: u32;
 
- pub const MainFunc = fn () !void;
+pub const MainFunc = fn () !void;
+pub const PanicFunc = pub fn (message: []const u8, maybe_stack_trace: ?*std.builtin.StackTrace) noreturn;
 
-pub fn Core(comptime arch:anytype, main:MainFunc) type {
+pub fn Core(comptime arch:anytype, comptime VectorTable:type, vectorTable:VectorTable, main:MainFunc, panic:PanicFunc ) type {
     return struct {
         pub fn _start() callconv(.C) noreturn {
+            // fill .bss with zeroes
+            
+            const bss_start = @ptrCast([*]u8, &__bss_start);
+            const bss_end = @ptrCast([*]u8, &__bss_end);
+            arch.Program.initBss(bss_start, bss_end);
 
-        // fill .bss with zeroes
-        
-        const bss_start = @ptrCast([*]u8, &__bss_start);
-        const bss_end = @ptrCast([*]u8, &__bss_end);
-        arch.Program.initBss(bss_start, bss_end);
+            // load .data from flash
+            const data_start = @ptrCast([*]u8, &__data_start);
+            const data_end = @ptrCast([*]u8, &__data_end);
+            const data_src = @ptrCast([*]const u8, &__data_load_start);
+            arch.Program.copyData(data_src, data_start, data_end);
 
-        // load .data from flash
-        const data_start = @ptrCast([*]u8, &__data_start);
-        const data_end = @ptrCast([*]u8, &__data_end);
-        const data_src = @ptrCast([*]const u8, &__data_load_start);
-        arch.Program.copyData(data_src, data_start, data_end);
+            main() catch |err| {
+                // TODO:
+                // - Compute maximum size on the type of "err"
+                // - Do not emit error names when std.builtin.strip is set.
+                var msg: [64]u8 = undefined;
+                @panic(std.fmt.bufPrint(&msg, "main() returned error {s}", .{@errorName(err)}) catch @panic("main() returned error."));
+            };
 
-        main() catch |err| {
-            // TODO:
-            // - Compute maximum size on the type of "err"
-            // - Do not emit error names when std.builtin.strip is set.
-            var msg: [64]u8 = undefined;
-            @panic(std.fmt.bufPrint(&msg, "main() returned error {s}", .{@errorName(err)}) catch @panic("main() returned error."));
-        };
+            // main returned, just hang around here a bit
+            hang();
+        }
 
-        // main returned, just hang around here a bit
-        hang();
-    }
+
     };
 }
 

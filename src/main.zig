@@ -7,6 +7,8 @@ const arch = arm.Arm;
 const mcu = @import("STM32F7x2/registers.zig");
 const regs = mcu.registers;
 
+
+
 extern var __data_start: anyopaque;
 extern var __data_end: anyopaque;
 extern var __bss_start: anyopaque;
@@ -105,6 +107,8 @@ export var vector_table linksection("__flash_start") = VectorTable{
 export fn __main() noreturn {
     
 }
+
+const core = @import("core.zig").Core(arch, VectorTable, vector_table, &main, &panic);
 
 // ================ application code ============================
 

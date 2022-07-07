@@ -18,7 +18,7 @@ pub fn build(b: *std.build.Builder) void {
         });
 
     exe.bundle_compiler_rt = true;
-    exe.emit_asm = .emit;
+    // exe.emit_asm = .emit;
     // exe.emit_analysis = .emit;
     // exe.emit_llvm_bc = .emit;
     // exe.emit_llvm_ir = .emit;
