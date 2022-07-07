@@ -5,7 +5,7 @@
 // cpu: CM7
 
 pub const VectorTable = extern struct {
-    initial_stack_pointer: u32,
+    initial_stack_pointer: u32 = undefined,
     Reset: InterruptVector = unhandled,
     NMI: InterruptVector = unhandled,
     HardFault: InterruptVector = unhandled,

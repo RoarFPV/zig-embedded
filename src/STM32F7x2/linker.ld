@@ -4,6 +4,7 @@
  * Target CPU:  ARM Cortex-M7
  * Target Chip: STM32F7x2
  */
+/* OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm") */
 
 ENTRY(__main);
 
@@ -13,12 +14,13 @@ MEMORY
   ram0   (rw!x) : ORIGIN = 0x20000000, LENGTH = 0x00040000
 }
 
-__stack_end = ORIGIN(ram0) + LENGTH(ram0); 
+/* PROVIDE(__stack_end = (ORIGIN(ram0) + LENGTH(ram0)-8));  */
 
 SECTIONS
 {
   .text :
   {
+     /* LONG(__stack_end); */
      KEEP(*(__flash_start))
      *(.text*)
   } > flash0
