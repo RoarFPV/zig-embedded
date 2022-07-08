@@ -2,48 +2,12 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "zngine build",
-      "type": "shell",
-      "command": "zig build",
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}/zig-engine"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": [
-        "$gcc"
-      ]
-    },
-    {
-      "label": "zngine test file",
-      "type": "process",
-      "command": "zig",
-      "options": {
-        "cwd": "${workspaceFolder}/zig-engine"
-      },
-      "args": [
-          "test",
-          "${file}"
-      ],
-      "group": {
-          "kind": "test",
-          "isDefault": true
-      },
-      "presentation":{
-          "showReuseMessage": false,
-          "clear": true
-      }
-    },
-    {
       "label": "Zig stm32f7x2 Build",
       "type": "shell",
       "command": "zig build",
       "args": [],
       "options": {
-        "cwd": "${workspaceFolder}/projects/zig-embedded"
+       
       },
       "group": {
         "kind": "build",

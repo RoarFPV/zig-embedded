@@ -4,7 +4,7 @@ pub fn build(b: *std.build.Builder) void {
     // const mode = b.standardReleaseOptions();
     
     const exe = b.addExecutable(
-        "STM32F7x2-firmware",
+        "STM32F7x2-firmware.elf",
         root()++"src/main.zig",
     );
 
