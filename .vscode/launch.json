@@ -1,0 +1,81 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+
+    
+    {
+      "name": "Zigne (gdb) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/zig-engine/zig-out/bin/zngine",
+      "args": [],
+      "preLaunchTask":"zngine build",
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/zig-engine/zig-out/bin",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    },
+
+    {
+      "name": "zig-engine Test debug",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/zig-engine/src/core/zig-cache/o/de008e61898741902329139b00ea70e9/test",
+      "args": [],
+      "preLaunchTask":"zngine test file",
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/zig-engine/zig-cache/bin",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    },
+
+    {
+      "name": "STM32F7X2 zig Debug",
+      "cwd": "${workspaceRoot}/projects/zig-embedded",
+      "executable": "${workspaceRoot}/projects/zig-embedded/zig-out/bin/STM32F7x2-firmware",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      // This may need to be arm-none-eabi-gdb depending on your system
+      "gdbPath": "gdb-multiarch",
+      // "device": "RP2040",
+      "configFiles": [
+      //   "target/rp2040.cfg"
+          "libs/openocd/stm32f7x2.cfg"
+      ],
+      "showDevDebugOutput": "both",
+      // "serverArgs": ["-d"],
+      "svdFile": "libs/stm32-svd/f7/STM32F722.svd",
+      // "runToMain": true,
+      // Work around for stopping at main on restart
+      "preLaunchTask": "Zig stm32f7x2 Build",
+  
+      // "postLaunchCommands": [
+      //     "break main"
+      // ],
+      // "postRestartCommands": [
+      //   "break main",
+      //   "continue"
+      // ]
+    },
+  ]
+}
