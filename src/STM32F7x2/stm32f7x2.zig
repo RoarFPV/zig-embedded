@@ -46,9 +46,7 @@ pub fn parsePin(comptime spec: []const u8) type {
 }
 
 fn setRegField(reg: anytype, comptime field_name: anytype, value: anytype) void {
-    var temp = reg.read();
-    @field(temp, field_name) = value;
-    reg.write(temp);
+    @field(reg, field_name) = value;
 }
 
 pub const gpio = struct {
@@ -64,15 +62,15 @@ pub const gpio = struct {
 
     pub fn read(comptime pin: type) u1 {
         const idr_reg = pin.gpio_port.IDR;
-        const reg_value = @field(idr_reg.read(), "IDR" ++ pin.suffix); // TODO extract to getRegField()?
+        const reg_value = @field(idr_reg, "IDR" ++ pin.suffix); // TODO extract to getRegField()?
         return @intCast(u1, reg_value);
     }
 
-    pub fn write(comptime pin: type, state: micro.gpio.State) void {
+    pub fn write(comptime pin: type, state: u1) void {
         _ = pin;
         switch (state) {
-            .low => setRegField(pin.gpio_port.BSRR, "BR" ++ pin.suffix, 1),
-            .high => setRegField(pin.gpio_port.BSRR, "BS" ++ pin.suffix, 1),
+            0 => setRegField(pin.gpio_port.BSRR, "BR" ++ pin.suffix, 1),
+            1 => setRegField(pin.gpio_port.BSRR, "BS" ++ pin.suffix, 1),
         }
     }
 };

@@ -42,13 +42,13 @@ pub const Arm = struct {
   }
 
   pub const Program = struct {
-    pub fn initBss(start:[*]u8, end:[*]u8 ) void {
+    pub fn initBss(start:[*]u8, end:[*]const u8 ) void {
         const bss_len = @ptrToInt(end) - @ptrToInt(start);
 
         std.mem.set(u8, start[0..bss_len], 0);
     }
 
-    pub fn copyData(src:[*]u8, start:[*]u8, end:[*]u8) void {
+    pub fn copyData(src:[*]const u8, start:[*]u8, end:[*]const u8) void {
         const data_len = @ptrToInt(end) - @ptrToInt(start);
 
         std.mem.copy(u8, start[0..data_len], src[0..data_len]);
