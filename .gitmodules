@@ -4,3 +4,6 @@
 [submodule "libs/stm32-svd"]
 	path = libs/stm32-svd
 	url = git@github.com:svcguy/stm32-svd.git
+[submodule "libs/cmsis-svd"]
+	path = libs/cmsis-svd
+	url = git@github.com:posborne/cmsis-svd.git
