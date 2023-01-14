@@ -5,7 +5,7 @@ const arm = @import("arm.zig");
 const arch = arm.Arm;
 
 const mcu = @import("STM32F7x2/stm32f7x2.zig");
-const regs = mcu.registers;
+const r = mcu.registers;
 
 
 pub fn SysTick_Handler() callconv(.C) void {
@@ -22,12 +22,13 @@ pub fn RCC_Handler() callconv(.C) void {
 } //@panic("RCC"); }
 
 const core = @import("core.zig").Core(arch, main);
-export const start = core.start;
+export fn __start() callconv(.C) noreturn {
+    core.start();
+}
 
 
 export var vector_table linksection("__flash_start") = mcu.VectorTable{
-    // .initial_stack_pointer = 0x20040000,
-     .Reset = .{ .C = core.start },
+    .Reset = .{ .C = __start },
     .SysTick = .{ .C = SysTick_Handler },
     .HardFault = .{ .C = HardFault_Handler },
     .BusFault = .{ .C = BusFault_Handler },
@@ -47,27 +48,39 @@ pub const pin_map = .{
     .@"LED" = "PC13",
 };
 
+
+
 pub fn init() anyerror!void {
+
+    //regs.RCC.CR.reset();
 // 1. Enable HSE and wait for the HSE to become ready
-    regs.RCC.CR.HSEON = 1;
-    while (regs.RCC.CR.HSERDY != 1) {}
+    var CR = r.RCC.CR.read();
+    
+    while (CR.HSERDY != 1) {
+        r.RCC.CR.modify(.{.HSEON=1});
+        CR = r.RCC.CR.read();
+    }
 
 // 2. Set the POWER ENABLE CLOCK and VOLTAGE REGULATOR
-    regs.RCC.APB1ENR.PWREN = 1;
-    regs.PWR.CR1.VOS = 1;
+    r.RCC.APB1ENR.modify(.{.PWREN = 1});
+    r.PWR.CR1.modify(.{.VOS = 1});
 
 // 3. Configure the FLASH PREFETCH and the LATENCY related settings
-    regs.FLASH.ACR.ARTEN = 1;
-    regs.FLASH.ACR.PRFTEN = 1;
-    regs.FLASH.ACR.LATENCY = 7;
+    r.FLASH.ACR.modify(.{
+        .ARTEN = 1, 
+        .PRFTEN = 1, 
+        .LATENCY = 7
+        });
 
 // 4. Configure the PRESCALARS HCLK, PCLK1, PCLK2
-    regs.RCC.CFGR.HPRE = 0; // DIV 1
-    regs.RCC.CFGR.PPRE1 = 5; // DIV 4
-    regs.RCC.CFGR.PPRE2 = 4; // DIV 2
+    r.RCC.CFGR.modify(.{
+        .HPRE = 0, // DIV 1
+        .PPRE1 = 5, // DIV 4
+        .PPRE2 = 4
+     }); // DIV 2
 
-    regs.RCC.CR.PLLON = 0;
-    while (regs.RCC.CR.PLLRDY != 0) {}
+    // CR.PLLON = 0;
+    // while (CR.PLLRDY != 0) {}
 
     // regs.RCC.CIR.* = 0;
 // 5. Configure the MAIN PLL
@@ -80,42 +93,45 @@ pub fn init() anyerror!void {
     // #define PLL_SAIQ  7
     // #define PLL_SAIP  RCC_PLLSAIP_DIV8
 
-    regs.RCC.PLLCFGR.PLLSRC = 1; // HSE
-    regs.RCC.PLLCFGR.PLLM = 8;
-    regs.RCC.PLLCFGR.PLLN = 432;
-    regs.RCC.PLLCFGR.PLLP = 0; // div 2
-    regs.RCC.PLLCFGR.PLLQ = 9;
+    r.RCC.PLLCFGR.modify(.{
+        .PLLSRC = 1, // HSE
+        .PLLM = 8,
+        .PLLN = 432,
+        .PLLP = 0, // div 2
+        .PLLQ = 9
+        });
 
 // 6. Enable the PLL and wait for it to become ready
-    regs.RCC.CR.PLLON = 1;
-    while (regs.RCC.CR.PLLRDY != 1) {}
+    // CR.PLLON = 1;
+    // while (CR.PLLRDY != 1) {}
 
-    regs.PWR.CR1.ODEN = 1;
-    while (regs.PWR.CSR1.ODRDY != 1) {}
+    r.PWR.CR1.modify(.{.ODEN=1});
+    while (r.PWR.CSR1.read().ODRDY != 1) {}
 
     // regs.RCC.CR.HSION = 0;
 
 // 7. Select the clock source and waoit for it to be set
     // regs.RCC.CFGR.SW = 2; // System clock use PLL
-    // while (regs.RCC.CFGR.SWS != 2) {}
+    // while (regs.RCC.CFG.SWS != 2) {}
 
 
 // enable instruction and data cache
-    regs.SCB.CCR.IC = 1;
-    regs.SCB.CCR.DC = 1;
+    r.SCB.CCR.modify(.{.IC=1, .DC=1});
 }
 
 pub fn main() anyerror!void {
-    {
-        try init();
-    }
+    
+    try init();
 
     // const led_pin = microzig.Pin("PC13");
 
     // const led_pin = mcu.parsePin(pin_map.LED);
 
-    regs.RCC.AHB1ENR.GPIOCEN=1;
-    regs.GPIOC.MODER.MODER13 = 1;
+    // enable gpio port c
+    r.RCC.AHB1ENR.modify(.{.GPIOCEN=1});
+
+    // set PC13 output
+    r.GPIOC.MODER.modify(.{.MODER13 = 1});
 
     // mcu.gpio.setOutput(led_pin);
     // mcu.gpio.write(led_pin, 1);
@@ -130,10 +146,11 @@ pub fn main() anyerror!void {
         // mcu.gpio.write(led_pin, value);
 
         if(value == 0)
-            regs.GPIOC.BSRR.BR13 = 1;
+            r.GPIOC.BSRR.modify(.{.BR13 = 0});
 
         if(value == 1)
-            regs.GPIOC.BSRR.BS13 = 1;
+            r.GPIOC.BSRR.modify(.{.BR13 = 1});
+
         value = ~value;
         delay(1000);
     }

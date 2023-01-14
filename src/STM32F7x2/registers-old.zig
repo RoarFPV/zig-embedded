@@ -4,7 +4,7 @@
 // device: STM32F722
 // cpu: CM7
 
-pub const VectorTable = extern struct {
+pub const VectorTable align(4) = extern struct {
     Reset: InterruptVector = unhandled,
     NMI: InterruptVector = unhandled,
     HardFault: InterruptVector = unhandled,
@@ -219,10 +219,12 @@ pub const VectorTable = extern struct {
     SDMMC2: InterruptVector = unhandled,
 };
 
-pub const registers = struct {
+pub const registers align(4) = struct {
+
+    //RCC : @import("peripheral/RCC/RCC.zig").Peripheral,
 
     /// System Control Space
-    pub const SCS = struct {
+    pub const SCS align(4) =  struct {
         pub const base_address = 0xe000e000;
 
         /// System Tick Timer
@@ -230,7 +232,7 @@ pub const registers = struct {
 
             /// address: 0xe000e010
             /// SysTick Control and Status Register
-            pub const CTRL = @intToPtr(*volatile Mmio(32, packed struct {
+            pub const CTRL align(4)= @intToPtr(*volatile align(4) packed struct {
                 ENABLE: u1,
                 TICKINT: u1,
                 CLKSOURCE: u1,
@@ -263,11 +265,11 @@ pub const registers = struct {
                 padding12: u1,
                 padding13: u1,
                 padding14: u1,
-            }), base_address + 0x10);
+            }, base_address + 0x10);
 
             /// address: 0xe000e014
             /// SysTick Reload Value Register
-            pub const LOAD = @intToPtr(*volatile Mmio(32, packed struct {
+            pub const LOAD align(4)= @intToPtr(*volatile align(4) packed struct {
                 RELOAD: u24,
                 padding0: u1,
                 padding1: u1,
@@ -277,11 +279,11 @@ pub const registers = struct {
                 padding5: u1,
                 padding6: u1,
                 padding7: u1,
-            }), base_address + 0x14);
+            }, base_address + 0x14);
 
             /// address: 0xe000e018
             /// SysTick Current Value Register
-            pub const VAL = @intToPtr(*volatile Mmio(32, packed struct {
+            pub const VAL align(4) = @intToPtr(*volatile align(4) packed struct {
                 CURRENT: u24,
                 padding0: u1,
                 padding1: u1,
@@ -291,11 +293,11 @@ pub const registers = struct {
                 padding5: u1,
                 padding6: u1,
                 padding7: u1,
-            }), base_address + 0x18);
+            }, base_address + 0x18);
 
             /// address: 0xe000e01c
             /// SysTick Calibration Register
-            pub const CALIB = @intToPtr(*volatile Mmio(32, packed struct {
+            pub const CALIB = @intToPtr(*volatile align(4) packed struct {
                 TENMS: u24,
                 reserved0: u1,
                 reserved1: u1,
@@ -305,7 +307,7 @@ pub const registers = struct {
                 reserved5: u1,
                 SKEW: u1,
                 NOREF: u1,
-            }), base_address + 0x1c);
+            } , base_address + 0x1c);
         };
     };
 
@@ -315,7 +317,7 @@ pub const registers = struct {
 
         /// address: 0x40010000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -356,11 +358,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40010004
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare preloaded
             /// control
             CCPC: u1,
@@ -408,11 +410,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40010008
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection -
             /// bit[2:0]
             SMS: u3,
@@ -447,11 +449,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001000c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -507,11 +509,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40010010
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -565,11 +567,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40010014
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -616,12 +618,12 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40010018
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -670,12 +672,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40010018
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -706,12 +708,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001001c
         /// capture/compare mode register 2 (output
         /// mode)
-        pub const CCMR2_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 3
             /// selection
             CC3S: u2,
@@ -760,12 +762,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x4001001c
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR2_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare 3
             /// selection
             CC3S: u2,
@@ -796,12 +798,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40010020
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -872,11 +874,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40010024
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// counter value
             CNT: u16,
             reserved0: u1,
@@ -896,35 +898,35 @@ pub const registers = struct {
             reserved14: u1,
             /// UIF copy
             UIFCPY: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40010028
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4001002c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40010034
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40010038
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x38);
+        pub const CCR2 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x38);
 
         /// address: 0x4001003c
         /// capture/compare register 3
-        pub const CCR3 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x3c);
+        pub const CCR3 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x3c);
 
         /// address: 0x40010040
         /// capture/compare register 4
-        pub const CCR4 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x40);
+        pub const CCR4 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x40);
 
         /// address: 0x40010048
         /// DMA control register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// DMA base address
             DBA: u5,
             reserved0: u1,
@@ -951,19 +953,19 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4001004c
         /// DMA address for full transfer
-        pub const DMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DMAR = @intToPtr(*volatile align(4) packed struct {
             /// DMA register for burst
             /// accesses
             DMAB: u32,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40010030
         /// repetition counter register
-        pub const RCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RCR = @intToPtr(*volatile align(4) packed struct {
             /// Repetition counter value
             REP: u8,
             padding0: u1,
@@ -990,11 +992,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40010044
         /// break and dead-time register
-        pub const BDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BDTR = @intToPtr(*volatile align(4) packed struct {
             /// Dead-time generator setup
             DTG: u8,
             /// Lock configuration
@@ -1027,12 +1029,12 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40010054
         /// capture/compare mode register 3 (output
         /// mode)
-        pub const CCMR3_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR3_Output = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             /// Output compare 5 fast
@@ -1077,11 +1079,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40010058
         /// capture/compare register 5
-        pub const CCR5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR5 = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 5 value
             CCR5: u16,
             reserved0: u1,
@@ -1106,18 +1108,18 @@ pub const registers = struct {
             /// Group Channel 5 and Channel
             /// 3
             GC5C3: u1,
-        }), base_address + 0x58);
+        }, base_address + 0x58);
 
         /// address: 0x4001005c
         /// capture/compare register 6
-        pub const CCR6 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x5c);
+        pub const CCR6 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x5c);
     };
     pub const TIM8 = struct {
         pub const base_address = 0x40010400;
 
         /// address: 0x40010400
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -1158,11 +1160,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40010404
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare preloaded
             /// control
             CCPC: u1,
@@ -1210,11 +1212,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40010408
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection -
             /// bit[2:0]
             SMS: u3,
@@ -1249,11 +1251,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001040c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -1309,11 +1311,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40010410
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -1367,11 +1369,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40010414
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -1418,12 +1420,12 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40010418
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -1472,12 +1474,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40010418
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -1508,12 +1510,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001041c
         /// capture/compare mode register 2 (output
         /// mode)
-        pub const CCMR2_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 3
             /// selection
             CC3S: u2,
@@ -1562,12 +1564,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x4001041c
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR2_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare 3
             /// selection
             CC3S: u2,
@@ -1598,12 +1600,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40010420
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -1674,11 +1676,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40010424
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// counter value
             CNT: u16,
             reserved0: u1,
@@ -1698,35 +1700,35 @@ pub const registers = struct {
             reserved14: u1,
             /// UIF copy
             UIFCPY: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40010428
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4001042c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40010434
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40010438
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x38);
+        pub const CCR2 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x38);
 
         /// address: 0x4001043c
         /// capture/compare register 3
-        pub const CCR3 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x3c);
+        pub const CCR3 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x3c);
 
         /// address: 0x40010440
         /// capture/compare register 4
-        pub const CCR4 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x40);
+        pub const CCR4 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x40);
 
         /// address: 0x40010448
         /// DMA control register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// DMA base address
             DBA: u5,
             reserved0: u1,
@@ -1753,19 +1755,19 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4001044c
         /// DMA address for full transfer
-        pub const DMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DMAR = @intToPtr(*volatile align(4) packed struct {
             /// DMA register for burst
             /// accesses
             DMAB: u32,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40010430
         /// repetition counter register
-        pub const RCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RCR = @intToPtr(*volatile align(4) packed struct {
             /// Repetition counter value
             REP: u8,
             padding0: u1,
@@ -1792,11 +1794,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40010444
         /// break and dead-time register
-        pub const BDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BDTR = @intToPtr(*volatile align(4) packed struct {
             /// Dead-time generator setup
             DTG: u8,
             /// Lock configuration
@@ -1829,12 +1831,12 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40010454
         /// capture/compare mode register 3 (output
         /// mode)
-        pub const CCMR3_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR3_Output = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             /// Output compare 5 fast
@@ -1879,11 +1881,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40010458
         /// capture/compare register 5
-        pub const CCR5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR5 = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 5 value
             CCR5: u16,
             reserved0: u1,
@@ -1908,11 +1910,11 @@ pub const registers = struct {
             /// Group Channel 5 and Channel
             /// 3
             GC5C3: u1,
-        }), base_address + 0x58);
+        }, base_address + 0x58);
 
         /// address: 0x4001045c
         /// capture/compare register 6
-        pub const CCR6 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x5c);
+        pub const CCR6 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x5c);
     };
 
     /// Analog-to-digital converter
@@ -1921,7 +1923,7 @@ pub const registers = struct {
 
         /// address: 0x40012100
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog flag
             AWD: u1,
             /// Regular channel end of
@@ -1963,11 +1965,11 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40012104
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog channel select
             /// bits
             AWDCH: u5,
@@ -2017,11 +2019,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40012108
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// A/D Converter ON / OFF
             ADON: u1,
             /// Continuous conversion
@@ -2067,26 +2069,26 @@ pub const registers = struct {
             /// channels
             SWSTART: u1,
             padding0: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001210c
         /// sample time register 1
-        pub const SMPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMPR1 = @intToPtr(*volatile align(4) packed struct {
             /// Sample time bits
             SMPx_x: u32,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40012110
         /// sample time register 2
-        pub const SMPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMPR2 = @intToPtr(*volatile align(4) packed struct {
             /// Sample time bits
             SMPx_x: u32,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40012114
         /// injected channel data offset register
         /// x
-        pub const JOFR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR1 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET1: u12,
@@ -2110,12 +2112,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40012118
         /// injected channel data offset register
         /// x
-        pub const JOFR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR2 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET2: u12,
@@ -2139,12 +2141,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001211c
         /// injected channel data offset register
         /// x
-        pub const JOFR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR3 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET3: u12,
@@ -2168,12 +2170,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40012120
         /// injected channel data offset register
         /// x
-        pub const JOFR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR4 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET4: u12,
@@ -2197,12 +2199,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40012124
         /// watchdog higher threshold
         /// register
-        pub const HTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HTR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog higher
             /// threshold
             HT: u12,
@@ -2226,12 +2228,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40012128
         /// watchdog lower threshold
         /// register
-        pub const LTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LTR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog lower
             /// threshold
             LT: u12,
@@ -2255,11 +2257,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4001212c
         /// regular sequence register 1
-        pub const SQR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR1 = @intToPtr(*volatile align(4) packed struct {
             /// 13th conversion in regular
             /// sequence
             SQ13: u5,
@@ -2283,11 +2285,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40012130
         /// regular sequence register 2
-        pub const SQR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR2 = @intToPtr(*volatile align(4) packed struct {
             /// 7th conversion in regular
             /// sequence
             SQ7: u5,
@@ -2308,11 +2310,11 @@ pub const registers = struct {
             SQ12: u5,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40012134
         /// regular sequence register 3
-        pub const SQR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR3 = @intToPtr(*volatile align(4) packed struct {
             /// 1st conversion in regular
             /// sequence
             SQ1: u5,
@@ -2333,11 +2335,11 @@ pub const registers = struct {
             SQ6: u5,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40012138
         /// injected sequence register
-        pub const JSQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JSQR = @intToPtr(*volatile align(4) packed struct {
             /// 1st conversion in injected
             /// sequence
             JSQ1: u5,
@@ -2362,11 +2364,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4001213c
         /// injected data register x
-        pub const JDR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR1 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2385,11 +2387,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40012140
         /// injected data register x
-        pub const JDR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR2 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2408,11 +2410,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40012144
         /// injected data register x
-        pub const JDR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR3 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2431,11 +2433,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40012148
         /// injected data register x
-        pub const JDR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR4 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2454,11 +2456,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4001214c
         /// regular data register
-        pub const DR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DR = @intToPtr(*volatile align(4) packed struct {
             /// Regular data
             DATA: u16,
             padding0: u1,
@@ -2477,14 +2479,14 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
     };
     pub const ADC1 = struct {
         pub const base_address = 0x40012000;
 
         /// address: 0x40012000
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog flag
             AWD: u1,
             /// Regular channel end of
@@ -2526,11 +2528,11 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40012004
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog channel select
             /// bits
             AWDCH: u5,
@@ -2580,11 +2582,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40012008
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// A/D Converter ON / OFF
             ADON: u1,
             /// Continuous conversion
@@ -2630,26 +2632,26 @@ pub const registers = struct {
             /// channels
             SWSTART: u1,
             padding0: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001200c
         /// sample time register 1
-        pub const SMPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMPR1 = @intToPtr(*volatile align(4) packed struct {
             /// Sample time bits
             SMPx_x: u32,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40012010
         /// sample time register 2
-        pub const SMPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMPR2 = @intToPtr(*volatile align(4) packed struct {
             /// Sample time bits
             SMPx_x: u32,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40012014
         /// injected channel data offset register
         /// x
-        pub const JOFR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR1 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET1: u12,
@@ -2673,12 +2675,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40012018
         /// injected channel data offset register
         /// x
-        pub const JOFR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR2 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET2: u12,
@@ -2702,12 +2704,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001201c
         /// injected channel data offset register
         /// x
-        pub const JOFR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR3 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET3: u12,
@@ -2731,12 +2733,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40012020
         /// injected channel data offset register
         /// x
-        pub const JOFR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR4 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET4: u12,
@@ -2760,12 +2762,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40012024
         /// watchdog higher threshold
         /// register
-        pub const HTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HTR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog higher
             /// threshold
             HT: u12,
@@ -2789,12 +2791,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40012028
         /// watchdog lower threshold
         /// register
-        pub const LTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LTR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog lower
             /// threshold
             LT: u12,
@@ -2818,11 +2820,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4001202c
         /// regular sequence register 1
-        pub const SQR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR1 = @intToPtr(*volatile align(4) packed struct {
             /// 13th conversion in regular
             /// sequence
             SQ13: u5,
@@ -2846,11 +2848,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40012030
         /// regular sequence register 2
-        pub const SQR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR2 = @intToPtr(*volatile align(4) packed struct {
             /// 7th conversion in regular
             /// sequence
             SQ7: u5,
@@ -2871,11 +2873,11 @@ pub const registers = struct {
             SQ12: u5,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40012034
         /// regular sequence register 3
-        pub const SQR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR3 = @intToPtr(*volatile align(4) packed struct {
             /// 1st conversion in regular
             /// sequence
             SQ1: u5,
@@ -2896,11 +2898,11 @@ pub const registers = struct {
             SQ6: u5,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40012038
         /// injected sequence register
-        pub const JSQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JSQR = @intToPtr(*volatile align(4) packed struct {
             /// 1st conversion in injected
             /// sequence
             JSQ1: u5,
@@ -2925,11 +2927,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4001203c
         /// injected data register x
-        pub const JDR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR1 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2948,11 +2950,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40012040
         /// injected data register x
-        pub const JDR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR2 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2971,11 +2973,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40012044
         /// injected data register x
-        pub const JDR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR3 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -2994,11 +2996,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40012048
         /// injected data register x
-        pub const JDR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR4 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -3017,11 +3019,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4001204c
         /// regular data register
-        pub const DR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DR = @intToPtr(*volatile align(4) packed struct {
             /// Regular data
             DATA: u16,
             padding0: u1,
@@ -3040,14 +3042,14 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
     };
     pub const ADC3 = struct {
         pub const base_address = 0x40012200;
 
         /// address: 0x40012200
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog flag
             AWD: u1,
             /// Regular channel end of
@@ -3089,11 +3091,11 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40012204
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog channel select
             /// bits
             AWDCH: u5,
@@ -3143,11 +3145,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40012208
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// A/D Converter ON / OFF
             ADON: u1,
             /// Continuous conversion
@@ -3193,26 +3195,26 @@ pub const registers = struct {
             /// channels
             SWSTART: u1,
             padding0: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001220c
         /// sample time register 1
-        pub const SMPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMPR1 = @intToPtr(*volatile align(4) packed struct {
             /// Sample time bits
             SMPx_x: u32,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40012210
         /// sample time register 2
-        pub const SMPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMPR2 = @intToPtr(*volatile align(4) packed struct {
             /// Sample time bits
             SMPx_x: u32,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40012214
         /// injected channel data offset register
         /// x
-        pub const JOFR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR1 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET1: u12,
@@ -3236,12 +3238,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40012218
         /// injected channel data offset register
         /// x
-        pub const JOFR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR2 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET2: u12,
@@ -3265,12 +3267,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001221c
         /// injected channel data offset register
         /// x
-        pub const JOFR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR3 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET3: u12,
@@ -3294,12 +3296,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40012220
         /// injected channel data offset register
         /// x
-        pub const JOFR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JOFR4 = @intToPtr(*volatile align(4) packed struct {
             /// Data offset for injected channel
             /// x
             JOFFSET4: u12,
@@ -3323,12 +3325,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40012224
         /// watchdog higher threshold
         /// register
-        pub const HTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HTR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog higher
             /// threshold
             HT: u12,
@@ -3352,12 +3354,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40012228
         /// watchdog lower threshold
         /// register
-        pub const LTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LTR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog lower
             /// threshold
             LT: u12,
@@ -3381,11 +3383,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4001222c
         /// regular sequence register 1
-        pub const SQR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR1 = @intToPtr(*volatile align(4) packed struct {
             /// 13th conversion in regular
             /// sequence
             SQ13: u5,
@@ -3409,11 +3411,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40012230
         /// regular sequence register 2
-        pub const SQR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR2 = @intToPtr(*volatile align(4) packed struct {
             /// 7th conversion in regular
             /// sequence
             SQ7: u5,
@@ -3434,11 +3436,11 @@ pub const registers = struct {
             SQ12: u5,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40012234
         /// regular sequence register 3
-        pub const SQR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SQR3 = @intToPtr(*volatile align(4) packed struct {
             /// 1st conversion in regular
             /// sequence
             SQ1: u5,
@@ -3459,11 +3461,11 @@ pub const registers = struct {
             SQ6: u5,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40012238
         /// injected sequence register
-        pub const JSQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JSQR = @intToPtr(*volatile align(4) packed struct {
             /// 1st conversion in injected
             /// sequence
             JSQ1: u5,
@@ -3488,11 +3490,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4001223c
         /// injected data register x
-        pub const JDR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR1 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -3511,11 +3513,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40012240
         /// injected data register x
-        pub const JDR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR2 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -3534,11 +3536,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40012244
         /// injected data register x
-        pub const JDR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR3 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -3557,11 +3559,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40012248
         /// injected data register x
-        pub const JDR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const JDR4 = @intToPtr(*volatile align(4) packed struct {
             /// Injected data
             JDATA: u16,
             padding0: u1,
@@ -3580,11 +3582,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4001224c
         /// regular data register
-        pub const DR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DR = @intToPtr(*volatile align(4) packed struct {
             /// Regular data
             DATA: u16,
             padding0: u1,
@@ -3603,7 +3605,7 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
     };
 
     /// Basic timers
@@ -3612,7 +3614,7 @@ pub const registers = struct {
 
         /// address: 0x40001000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -3650,11 +3652,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40001004
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -3686,11 +3688,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x4000100c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             reserved0: u1,
@@ -3725,11 +3727,11 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40001010
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             padding0: u1,
@@ -3763,11 +3765,11 @@ pub const registers = struct {
             padding28: u1,
             padding29: u1,
             padding30: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40001014
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             padding0: u1,
@@ -3801,11 +3803,11 @@ pub const registers = struct {
             padding28: u1,
             padding29: u1,
             padding30: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40001024
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// Low counter value
             CNT: u16,
             reserved0: u1,
@@ -3825,22 +3827,22 @@ pub const registers = struct {
             reserved14: u1,
             /// UIF Copy
             UIFCPY: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40001028
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000102c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
     };
     pub const TIM7 = struct {
         pub const base_address = 0x40001400;
 
         /// address: 0x40001400
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -3878,11 +3880,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40001404
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -3914,11 +3916,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x4000140c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             reserved0: u1,
@@ -3953,11 +3955,11 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40001410
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             padding0: u1,
@@ -3991,11 +3993,11 @@ pub const registers = struct {
             padding28: u1,
             padding29: u1,
             padding30: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40001414
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             padding0: u1,
@@ -4029,11 +4031,11 @@ pub const registers = struct {
             padding28: u1,
             padding29: u1,
             padding30: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40001424
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// Low counter value
             CNT: u16,
             reserved0: u1,
@@ -4053,15 +4055,15 @@ pub const registers = struct {
             reserved14: u1,
             /// UIF Copy
             UIFCPY: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40001428
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000142c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
     };
 
     /// Common ADC registers
@@ -4070,7 +4072,7 @@ pub const registers = struct {
 
         /// address: 0x40012300
         /// ADC Common status register
-        pub const CSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CSR = @intToPtr(*volatile align(4) packed struct {
             /// Analog watchdog flag of ADC
             /// 1
             AWD1: u1,
@@ -4133,11 +4135,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40012304
         /// ADC common control register
-        pub const CCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR = @intToPtr(*volatile align(4) packed struct {
             /// Multi ADC mode selection
             MULT: u5,
             reserved0: u1,
@@ -4172,19 +4174,19 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40012308
         /// ADC common regular data register for dual
         /// and triple modes
-        pub const CDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CDR = @intToPtr(*volatile align(4) packed struct {
             /// 1st data item of a pair of regular
             /// conversions
             DATA1: u16,
             /// 2nd data item of a pair of regular
             /// conversions
             DATA2: u16,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
     };
 
     /// Controller area network
@@ -4193,7 +4195,7 @@ pub const registers = struct {
 
         /// address: 0x40006400
         /// master control register
-        pub const MCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MCR = @intToPtr(*volatile align(4) packed struct {
             /// INRQ
             INRQ: u1,
             /// SLEEP
@@ -4236,11 +4238,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40006404
         /// master status register
-        pub const MSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MSR = @intToPtr(*volatile align(4) packed struct {
             /// INAK
             INAK: u1,
             /// SLAK
@@ -4282,11 +4284,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40006408
         /// transmit status register
-        pub const TSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TSR = @intToPtr(*volatile align(4) packed struct {
             /// RQCP0
             RQCP0: u1,
             /// TXOK0
@@ -4346,11 +4348,11 @@ pub const registers = struct {
             /// Lowest priority flag for mailbox
             /// 2
             LOW2: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000640c
         /// receive FIFO 0 register
-        pub const RF0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RF0R = @intToPtr(*volatile align(4) packed struct {
             /// FMP0
             FMP0: u2,
             reserved0: u1,
@@ -4386,11 +4388,11 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40006410
         /// receive FIFO 1 register
-        pub const RF1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RF1R = @intToPtr(*volatile align(4) packed struct {
             /// FMP1
             FMP1: u2,
             reserved0: u1,
@@ -4426,11 +4428,11 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40006414
         /// interrupt enable register
-        pub const IER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IER = @intToPtr(*volatile align(4) packed struct {
             /// TMEIE
             TMEIE: u1,
             /// FMPIE0
@@ -4477,11 +4479,11 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40006418
         /// interrupt enable register
-        pub const ESR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ESR = @intToPtr(*volatile align(4) packed struct {
             /// EWGF
             EWGF: u1,
             /// EPVF
@@ -4504,11 +4506,11 @@ pub const registers = struct {
             TEC: u8,
             /// REC
             REC: u8,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000641c
         /// bit timing register
-        pub const BTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BTR = @intToPtr(*volatile align(4) packed struct {
             /// BRP
             BRP: u10,
             reserved0: u1,
@@ -4532,11 +4534,11 @@ pub const registers = struct {
             LBKM: u1,
             /// SILM
             SILM: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40006580
         /// TX mailbox identifier register
-        pub const TI0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TI0R = @intToPtr(*volatile align(4) packed struct {
             /// TXRQ
             TXRQ: u1,
             /// RTR
@@ -4547,12 +4549,12 @@ pub const registers = struct {
             EXID: u18,
             /// STID
             STID: u11,
-        }), base_address + 0x180);
+        }, base_address + 0x180);
 
         /// address: 0x40006584
         /// mailbox data length control and time stamp
         /// register
-        pub const TDT0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDT0R = @intToPtr(*volatile align(4) packed struct {
             /// DLC
             DLC: u4,
             reserved0: u1,
@@ -4570,11 +4572,11 @@ pub const registers = struct {
             reserved10: u1,
             /// TIME
             TIME: u16,
-        }), base_address + 0x184);
+        }, base_address + 0x184);
 
         /// address: 0x40006588
         /// mailbox data low register
-        pub const TDL0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDL0R = @intToPtr(*volatile align(4) packed struct {
             /// DATA0
             DATA0: u8,
             /// DATA1
@@ -4583,11 +4585,11 @@ pub const registers = struct {
             DATA2: u8,
             /// DATA3
             DATA3: u8,
-        }), base_address + 0x188);
+        }, base_address + 0x188);
 
         /// address: 0x4000658c
         /// mailbox data high register
-        pub const TDH0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDH0R = @intToPtr(*volatile align(4) packed struct {
             /// DATA4
             DATA4: u8,
             /// DATA5
@@ -4596,11 +4598,11 @@ pub const registers = struct {
             DATA6: u8,
             /// DATA7
             DATA7: u8,
-        }), base_address + 0x18c);
+        }, base_address + 0x18c);
 
         /// address: 0x40006590
         /// mailbox identifier register
-        pub const TI1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TI1R = @intToPtr(*volatile align(4) packed struct {
             /// TXRQ
             TXRQ: u1,
             /// RTR
@@ -4611,12 +4613,12 @@ pub const registers = struct {
             EXID: u18,
             /// STID
             STID: u11,
-        }), base_address + 0x190);
+        }, base_address + 0x190);
 
         /// address: 0x40006594
         /// mailbox data length control and time stamp
         /// register
-        pub const TDT1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDT1R = @intToPtr(*volatile align(4) packed struct {
             /// DLC
             DLC: u4,
             reserved0: u1,
@@ -4634,11 +4636,11 @@ pub const registers = struct {
             reserved10: u1,
             /// TIME
             TIME: u16,
-        }), base_address + 0x194);
+        }, base_address + 0x194);
 
         /// address: 0x40006598
         /// mailbox data low register
-        pub const TDL1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDL1R = @intToPtr(*volatile align(4) packed struct {
             /// DATA0
             DATA0: u8,
             /// DATA1
@@ -4647,11 +4649,11 @@ pub const registers = struct {
             DATA2: u8,
             /// DATA3
             DATA3: u8,
-        }), base_address + 0x198);
+        }, base_address + 0x198);
 
         /// address: 0x4000659c
         /// mailbox data high register
-        pub const TDH1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDH1R = @intToPtr(*volatile align(4) packed struct {
             /// DATA4
             DATA4: u8,
             /// DATA5
@@ -4660,11 +4662,11 @@ pub const registers = struct {
             DATA6: u8,
             /// DATA7
             DATA7: u8,
-        }), base_address + 0x19c);
+        }, base_address + 0x19c);
 
         /// address: 0x400065a0
         /// mailbox identifier register
-        pub const TI2R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TI2R = @intToPtr(*volatile align(4) packed struct {
             /// TXRQ
             TXRQ: u1,
             /// RTR
@@ -4675,12 +4677,12 @@ pub const registers = struct {
             EXID: u18,
             /// STID
             STID: u11,
-        }), base_address + 0x1a0);
+        }, base_address + 0x1a0);
 
         /// address: 0x400065a4
         /// mailbox data length control and time stamp
         /// register
-        pub const TDT2R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDT2R = @intToPtr(*volatile align(4) packed struct {
             /// DLC
             DLC: u4,
             reserved0: u1,
@@ -4698,11 +4700,11 @@ pub const registers = struct {
             reserved10: u1,
             /// TIME
             TIME: u16,
-        }), base_address + 0x1a4);
+        }, base_address + 0x1a4);
 
         /// address: 0x400065a8
         /// mailbox data low register
-        pub const TDL2R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDL2R = @intToPtr(*volatile align(4) packed struct {
             /// DATA0
             DATA0: u8,
             /// DATA1
@@ -4711,11 +4713,11 @@ pub const registers = struct {
             DATA2: u8,
             /// DATA3
             DATA3: u8,
-        }), base_address + 0x1a8);
+        }, base_address + 0x1a8);
 
         /// address: 0x400065ac
         /// mailbox data high register
-        pub const TDH2R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TDH2R = @intToPtr(*volatile align(4) packed struct {
             /// DATA4
             DATA4: u8,
             /// DATA5
@@ -4724,12 +4726,12 @@ pub const registers = struct {
             DATA6: u8,
             /// DATA7
             DATA7: u8,
-        }), base_address + 0x1ac);
+        }, base_address + 0x1ac);
 
         /// address: 0x400065b0
         /// receive FIFO mailbox identifier
         /// register
-        pub const RI0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RI0R = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// RTR
             RTR: u1,
@@ -4739,11 +4741,11 @@ pub const registers = struct {
             EXID: u18,
             /// STID
             STID: u11,
-        }), base_address + 0x1b0);
+        }, base_address + 0x1b0);
 
         /// address: 0x400065b4
         /// mailbox data high register
-        pub const RDT0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RDT0R = @intToPtr(*volatile align(4) packed struct {
             /// DLC
             DLC: u4,
             reserved0: u1,
@@ -4754,11 +4756,11 @@ pub const registers = struct {
             FMI: u8,
             /// TIME
             TIME: u16,
-        }), base_address + 0x1b4);
+        }, base_address + 0x1b4);
 
         /// address: 0x400065b8
         /// mailbox data high register
-        pub const RDL0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RDL0R = @intToPtr(*volatile align(4) packed struct {
             /// DATA0
             DATA0: u8,
             /// DATA1
@@ -4767,12 +4769,12 @@ pub const registers = struct {
             DATA2: u8,
             /// DATA3
             DATA3: u8,
-        }), base_address + 0x1b8);
+        }, base_address + 0x1b8);
 
         /// address: 0x400065bc
         /// receive FIFO mailbox data high
         /// register
-        pub const RDH0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RDH0R = @intToPtr(*volatile align(4) packed struct {
             /// DATA4
             DATA4: u8,
             /// DATA5
@@ -4781,11 +4783,11 @@ pub const registers = struct {
             DATA6: u8,
             /// DATA7
             DATA7: u8,
-        }), base_address + 0x1bc);
+        }, base_address + 0x1bc);
 
         /// address: 0x400065c0
         /// mailbox data high register
-        pub const RI1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RI1R = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// RTR
             RTR: u1,
@@ -4795,11 +4797,11 @@ pub const registers = struct {
             EXID: u18,
             /// STID
             STID: u11,
-        }), base_address + 0x1c0);
+        }, base_address + 0x1c0);
 
         /// address: 0x400065c4
         /// mailbox data high register
-        pub const RDT1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RDT1R = @intToPtr(*volatile align(4) packed struct {
             /// DLC
             DLC: u4,
             reserved0: u1,
@@ -4810,11 +4812,11 @@ pub const registers = struct {
             FMI: u8,
             /// TIME
             TIME: u16,
-        }), base_address + 0x1c4);
+        }, base_address + 0x1c4);
 
         /// address: 0x400065c8
         /// mailbox data high register
-        pub const RDL1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RDL1R = @intToPtr(*volatile align(4) packed struct {
             /// DATA0
             DATA0: u8,
             /// DATA1
@@ -4823,11 +4825,11 @@ pub const registers = struct {
             DATA2: u8,
             /// DATA3
             DATA3: u8,
-        }), base_address + 0x1c8);
+        }, base_address + 0x1c8);
 
         /// address: 0x400065cc
         /// mailbox data high register
-        pub const RDH1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RDH1R = @intToPtr(*volatile align(4) packed struct {
             /// DATA4
             DATA4: u8,
             /// DATA5
@@ -4836,11 +4838,11 @@ pub const registers = struct {
             DATA6: u8,
             /// DATA7
             DATA7: u8,
-        }), base_address + 0x1cc);
+        }, base_address + 0x1cc);
 
         /// address: 0x40006600
         /// filter master register
-        pub const FMR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FMR = @intToPtr(*volatile align(4) packed struct {
             /// FINIT
             FINIT: u1,
             padding0: u1,
@@ -4874,11 +4876,11 @@ pub const registers = struct {
             padding28: u1,
             padding29: u1,
             padding30: u1,
-        }), base_address + 0x200);
+        }, base_address + 0x200);
 
         /// address: 0x40006604
         /// filter mode register
-        pub const FM1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FM1R = @intToPtr(*volatile align(4) packed struct {
             /// Filter mode
             FBM0: u1,
             /// Filter mode
@@ -4925,11 +4927,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x204);
+        }, base_address + 0x204);
 
         /// address: 0x4000660c
         /// filter scale register
-        pub const FS1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FS1R = @intToPtr(*volatile align(4) packed struct {
             /// Filter scale configuration
             FSC0: u1,
             /// Filter scale configuration
@@ -4976,12 +4978,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x20c);
+        }, base_address + 0x20c);
 
         /// address: 0x40006614
         /// filter FIFO assignment
         /// register
-        pub const FFA1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FFA1R = @intToPtr(*volatile align(4) packed struct {
             /// Filter FIFO assignment for filter
             /// 0
             FFA0: u1,
@@ -5042,11 +5044,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x214);
+        }, base_address + 0x214);
 
         /// address: 0x4000661c
         /// filter activation register
-        pub const FA1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FA1R = @intToPtr(*volatile align(4) packed struct {
             /// Filter active
             FACT0: u1,
             /// Filter active
@@ -5093,11 +5095,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x21c);
+        }, base_address + 0x21c);
 
         /// address: 0x40006640
         /// Filter bank 0 register 1
-        pub const F0R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F0R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5162,11 +5164,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x240);
+        }, base_address + 0x240);
 
         /// address: 0x40006644
         /// Filter bank 0 register 2
-        pub const F0R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F0R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5231,11 +5233,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x244);
+        }, base_address + 0x244);
 
         /// address: 0x40006648
         /// Filter bank 1 register 1
-        pub const F1R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F1R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5300,11 +5302,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x248);
+        }, base_address + 0x248);
 
         /// address: 0x4000664c
         /// Filter bank 1 register 2
-        pub const F1R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F1R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5369,11 +5371,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x24c);
+        }, base_address + 0x24c);
 
         /// address: 0x40006650
         /// Filter bank 2 register 1
-        pub const F2R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F2R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5438,11 +5440,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x250);
+        }, base_address + 0x250);
 
         /// address: 0x40006654
         /// Filter bank 2 register 2
-        pub const F2R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F2R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5507,11 +5509,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x254);
+        }, base_address + 0x254);
 
         /// address: 0x40006658
         /// Filter bank 3 register 1
-        pub const F3R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F3R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5576,11 +5578,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x258);
+        }, base_address + 0x258);
 
         /// address: 0x4000665c
         /// Filter bank 3 register 2
-        pub const F3R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F3R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5645,11 +5647,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x25c);
+        }, base_address + 0x25c);
 
         /// address: 0x40006660
         /// Filter bank 4 register 1
-        pub const F4R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F4R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5714,11 +5716,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x260);
+        }, base_address + 0x260);
 
         /// address: 0x40006664
         /// Filter bank 4 register 2
-        pub const F4R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F4R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5783,11 +5785,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x264);
+        }, base_address + 0x264);
 
         /// address: 0x40006668
         /// Filter bank 5 register 1
-        pub const F5R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F5R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5852,11 +5854,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x268);
+        }, base_address + 0x268);
 
         /// address: 0x4000666c
         /// Filter bank 5 register 2
-        pub const F5R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F5R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5921,11 +5923,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x26c);
+        }, base_address + 0x26c);
 
         /// address: 0x40006670
         /// Filter bank 6 register 1
-        pub const F6R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F6R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -5990,11 +5992,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x270);
+        }, base_address + 0x270);
 
         /// address: 0x40006674
         /// Filter bank 6 register 2
-        pub const F6R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F6R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6059,11 +6061,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x274);
+        }, base_address + 0x274);
 
         /// address: 0x40006678
         /// Filter bank 7 register 1
-        pub const F7R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F7R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6128,11 +6130,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x278);
+        }, base_address + 0x278);
 
         /// address: 0x4000667c
         /// Filter bank 7 register 2
-        pub const F7R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F7R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6197,11 +6199,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x27c);
+        }, base_address + 0x27c);
 
         /// address: 0x40006680
         /// Filter bank 8 register 1
-        pub const F8R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F8R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6266,11 +6268,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x280);
+        }, base_address + 0x280);
 
         /// address: 0x40006684
         /// Filter bank 8 register 2
-        pub const F8R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F8R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6335,11 +6337,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x284);
+        }, base_address + 0x284);
 
         /// address: 0x40006688
         /// Filter bank 9 register 1
-        pub const F9R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F9R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6404,11 +6406,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x288);
+        }, base_address + 0x288);
 
         /// address: 0x4000668c
         /// Filter bank 9 register 2
-        pub const F9R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F9R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6473,11 +6475,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x28c);
+        }, base_address + 0x28c);
 
         /// address: 0x40006690
         /// Filter bank 10 register 1
-        pub const F10R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F10R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6542,11 +6544,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x290);
+        }, base_address + 0x290);
 
         /// address: 0x40006694
         /// Filter bank 10 register 2
-        pub const F10R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F10R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6611,11 +6613,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x294);
+        }, base_address + 0x294);
 
         /// address: 0x40006698
         /// Filter bank 11 register 1
-        pub const F11R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F11R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6680,11 +6682,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x298);
+        }, base_address + 0x298);
 
         /// address: 0x4000669c
         /// Filter bank 11 register 2
-        pub const F11R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F11R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6749,11 +6751,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x29c);
+        }, base_address + 0x29c);
 
         /// address: 0x400066a0
         /// Filter bank 4 register 1
-        pub const F12R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F12R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6818,11 +6820,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2a0);
+        }, base_address + 0x2a0);
 
         /// address: 0x400066a4
         /// Filter bank 12 register 2
-        pub const F12R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F12R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6887,11 +6889,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2a4);
+        }, base_address + 0x2a4);
 
         /// address: 0x400066a8
         /// Filter bank 13 register 1
-        pub const F13R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F13R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -6956,11 +6958,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2a8);
+        }, base_address + 0x2a8);
 
         /// address: 0x400066ac
         /// Filter bank 13 register 2
-        pub const F13R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F13R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7025,11 +7027,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2ac);
+        }, base_address + 0x2ac);
 
         /// address: 0x400066b0
         /// Filter bank 14 register 1
-        pub const F14R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F14R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7094,11 +7096,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2b0);
+        }, base_address + 0x2b0);
 
         /// address: 0x400066b4
         /// Filter bank 14 register 2
-        pub const F14R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F14R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7163,11 +7165,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2b4);
+        }, base_address + 0x2b4);
 
         /// address: 0x400066b8
         /// Filter bank 15 register 1
-        pub const F15R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F15R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7232,11 +7234,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2b8);
+        }, base_address + 0x2b8);
 
         /// address: 0x400066bc
         /// Filter bank 15 register 2
-        pub const F15R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F15R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7301,11 +7303,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2bc);
+        }, base_address + 0x2bc);
 
         /// address: 0x400066c0
         /// Filter bank 16 register 1
-        pub const F16R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F16R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7370,11 +7372,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2c0);
+        }, base_address + 0x2c0);
 
         /// address: 0x400066c4
         /// Filter bank 16 register 2
-        pub const F16R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F16R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7439,11 +7441,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2c4);
+        }, base_address + 0x2c4);
 
         /// address: 0x400066c8
         /// Filter bank 17 register 1
-        pub const F17R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F17R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7508,11 +7510,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2c8);
+        }, base_address + 0x2c8);
 
         /// address: 0x400066cc
         /// Filter bank 17 register 2
-        pub const F17R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F17R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7577,11 +7579,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2cc);
+        }, base_address + 0x2cc);
 
         /// address: 0x400066d0
         /// Filter bank 18 register 1
-        pub const F18R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F18R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7646,11 +7648,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2d0);
+        }, base_address + 0x2d0);
 
         /// address: 0x400066d4
         /// Filter bank 18 register 2
-        pub const F18R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F18R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7715,11 +7717,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2d4);
+        }, base_address + 0x2d4);
 
         /// address: 0x400066d8
         /// Filter bank 19 register 1
-        pub const F19R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F19R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7784,11 +7786,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2d8);
+        }, base_address + 0x2d8);
 
         /// address: 0x400066dc
         /// Filter bank 19 register 2
-        pub const F19R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F19R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7853,11 +7855,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2dc);
+        }, base_address + 0x2dc);
 
         /// address: 0x400066e0
         /// Filter bank 20 register 1
-        pub const F20R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F20R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7922,11 +7924,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2e0);
+        }, base_address + 0x2e0);
 
         /// address: 0x400066e4
         /// Filter bank 20 register 2
-        pub const F20R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F20R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -7991,11 +7993,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2e4);
+        }, base_address + 0x2e4);
 
         /// address: 0x400066e8
         /// Filter bank 21 register 1
-        pub const F21R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F21R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8060,11 +8062,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2e8);
+        }, base_address + 0x2e8);
 
         /// address: 0x400066ec
         /// Filter bank 21 register 2
-        pub const F21R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F21R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8129,11 +8131,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2ec);
+        }, base_address + 0x2ec);
 
         /// address: 0x400066f0
         /// Filter bank 22 register 1
-        pub const F22R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F22R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8198,11 +8200,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2f0);
+        }, base_address + 0x2f0);
 
         /// address: 0x400066f4
         /// Filter bank 22 register 2
-        pub const F22R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F22R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8267,11 +8269,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2f4);
+        }, base_address + 0x2f4);
 
         /// address: 0x400066f8
         /// Filter bank 23 register 1
-        pub const F23R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F23R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8336,11 +8338,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2f8);
+        }, base_address + 0x2f8);
 
         /// address: 0x400066fc
         /// Filter bank 23 register 2
-        pub const F23R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F23R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8405,11 +8407,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x2fc);
+        }, base_address + 0x2fc);
 
         /// address: 0x40006700
         /// Filter bank 24 register 1
-        pub const F24R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F24R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8474,11 +8476,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x300);
+        }, base_address + 0x300);
 
         /// address: 0x40006704
         /// Filter bank 24 register 2
-        pub const F24R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F24R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8543,11 +8545,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x304);
+        }, base_address + 0x304);
 
         /// address: 0x40006708
         /// Filter bank 25 register 1
-        pub const F25R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F25R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8612,11 +8614,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x308);
+        }, base_address + 0x308);
 
         /// address: 0x4000670c
         /// Filter bank 25 register 2
-        pub const F25R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F25R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8681,11 +8683,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x30c);
+        }, base_address + 0x30c);
 
         /// address: 0x40006710
         /// Filter bank 26 register 1
-        pub const F26R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F26R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8750,11 +8752,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x310);
+        }, base_address + 0x310);
 
         /// address: 0x40006714
         /// Filter bank 26 register 2
-        pub const F26R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F26R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8819,11 +8821,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x314);
+        }, base_address + 0x314);
 
         /// address: 0x40006718
         /// Filter bank 27 register 1
-        pub const F27R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F27R1 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8888,11 +8890,11 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x318);
+        }, base_address + 0x318);
 
         /// address: 0x4000671c
         /// Filter bank 27 register 2
-        pub const F27R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const F27R2 = @intToPtr(*volatile align(4) packed struct {
             /// Filter bits
             FB0: u1,
             /// Filter bits
@@ -8957,7 +8959,7 @@ pub const registers = struct {
             FB30: u1,
             /// Filter bits
             FB31: u1,
-        }), base_address + 0x31c);
+        }, base_address + 0x31c);
     };
 
     /// Cryptographic processor
@@ -8966,15 +8968,15 @@ pub const registers = struct {
 
         /// address: 0x40023000
         /// Data register
-        pub const DR = @intToPtr(*volatile u32, base_address + 0x0);
+        pub const DR = @intToPtr(*volatile align(4) u32, base_address + 0x0);
 
         /// address: 0x40023004
         /// Independent Data register
-        pub const IDR = @intToPtr(*volatile MmioInt(32, u8), base_address + 0x4);
+        pub const IDR = @intToPtr(*volatile align(4) MmioInt(32, u8), base_address + 0x4);
 
         /// address: 0x40023008
         /// Control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// RESET bit
             RESET: u1,
             reserved0: u1,
@@ -9009,19 +9011,19 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40023010
         /// Initial CRC value
-        pub const INIT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const INIT = @intToPtr(*volatile align(4) packed struct {
             /// Programmable initial CRC
             /// value
             CRC_INIT: u32,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40023014
         /// CRC polynomial
-        pub const POL = @intToPtr(*volatile u32, base_address + 0x14);
+        pub const POL = @intToPtr(*volatile align(4) u32, base_address + 0x14);
     };
 
     /// Cryptographic processor
@@ -9030,7 +9032,7 @@ pub const registers = struct {
 
         /// address: 0x50060000
         /// control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// AES enable
             EN: u1,
             /// Data type selection (for data in and
@@ -9077,11 +9079,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x50060004
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Computation complete flag
             CCF: u1,
             /// Read error flag
@@ -9118,95 +9120,95 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x50060008
         /// data input register
-        pub const DINR = @intToPtr(*volatile u32, base_address + 0x8);
+        pub const DINR = @intToPtr(*volatile align(4) u32, base_address + 0x8);
 
         /// address: 0x5006000c
         /// data output register
-        pub const DOUTR = @intToPtr(*volatile u32, base_address + 0xc);
+        pub const DOUTR = @intToPtr(*volatile align(4) u32, base_address + 0xc);
 
         /// address: 0x50060010
         /// key register
-        pub const KEYR0 = @intToPtr(*volatile MmioInt(32, u31), base_address + 0x10);
+        pub const KEYR0 = @intToPtr(*volatile align(4) MmioInt(32, u31), base_address + 0x10);
 
         /// address: 0x50060014
         /// key register
-        pub const KEYR1 = @intToPtr(*volatile u32, base_address + 0x14);
+        pub const KEYR1 = @intToPtr(*volatile align(4) u32, base_address + 0x14);
 
         /// address: 0x50060018
         /// key register
-        pub const KEYR2 = @intToPtr(*volatile MmioInt(32, u31), base_address + 0x18);
+        pub const KEYR2 = @intToPtr(*volatile align(4) MmioInt(32, u31), base_address + 0x18);
 
         /// address: 0x5006001c
         /// key register
-        pub const KEYR3 = @intToPtr(*volatile u32, base_address + 0x1c);
+        pub const KEYR3 = @intToPtr(*volatile align(4) u32, base_address + 0x1c);
 
         /// address: 0x50060020
         /// initialization vector register
-        pub const IVR0 = @intToPtr(*volatile u32, base_address + 0x20);
+        pub const IVR0 = @intToPtr(*volatile align(4) u32, base_address + 0x20);
 
         /// address: 0x50060024
         /// initialization vector register
-        pub const IVR1 = @intToPtr(*volatile u32, base_address + 0x24);
+        pub const IVR1 = @intToPtr(*volatile align(4) u32, base_address + 0x24);
 
         /// address: 0x50060028
         /// initialization vector register
-        pub const IVR2 = @intToPtr(*volatile u32, base_address + 0x28);
+        pub const IVR2 = @intToPtr(*volatile align(4) u32, base_address + 0x28);
 
         /// address: 0x5006002c
         /// initialization vector register
-        pub const IVR3 = @intToPtr(*volatile u32, base_address + 0x2c);
+        pub const IVR3 = @intToPtr(*volatile align(4) u32, base_address + 0x2c);
 
         /// address: 0x50060030
         /// key registers
-        pub const KEYR4 = @intToPtr(*volatile u32, base_address + 0x30);
+        pub const KEYR4 = @intToPtr(*volatile align(4) u32, base_address + 0x30);
 
         /// address: 0x50060034
         /// key registers
-        pub const KEYR5 = @intToPtr(*volatile u32, base_address + 0x34);
+        pub const KEYR5 = @intToPtr(*volatile align(4) u32, base_address + 0x34);
 
         /// address: 0x50060038
         /// key registers
-        pub const KEYR6 = @intToPtr(*volatile u32, base_address + 0x38);
+        pub const KEYR6 = @intToPtr(*volatile align(4) u32, base_address + 0x38);
 
         /// address: 0x5006003c
         /// key registers
-        pub const KEYR7 = @intToPtr(*volatile u32, base_address + 0x3c);
+        pub const KEYR7 = @intToPtr(*volatile align(4) u32, base_address + 0x3c);
 
         /// address: 0x50060040
         /// Suspend registers
-        pub const SUSP0R = @intToPtr(*volatile u32, base_address + 0x40);
+        pub const SUSP0R = @intToPtr(*volatile align(4) u32, base_address + 0x40);
 
         /// address: 0x50060044
         /// Suspend registers
-        pub const SUSP1R = @intToPtr(*volatile u32, base_address + 0x44);
+        pub const SUSP1R = @intToPtr(*volatile align(4) u32, base_address + 0x44);
 
         /// address: 0x50060048
         /// Suspend registers
-        pub const SUSP2R = @intToPtr(*volatile u32, base_address + 0x48);
+        pub const SUSP2R = @intToPtr(*volatile align(4) u32, base_address + 0x48);
 
         /// address: 0x5006004c
         /// Suspend registers
-        pub const SUSP3R = @intToPtr(*volatile u32, base_address + 0x4c);
+        pub const SUSP3R = @intToPtr(*volatile align(4) u32, base_address + 0x4c);
 
         /// address: 0x50060050
         /// Suspend registers
-        pub const SUSP4R = @intToPtr(*volatile u32, base_address + 0x50);
+        pub const SUSP4R = @intToPtr(*volatile align(4) u32, base_address + 0x50);
 
         /// address: 0x50060054
         /// Suspend registers
-        pub const SUSP5R = @intToPtr(*volatile u32, base_address + 0x54);
+        pub const SUSP5R = @intToPtr(*volatile align(4) u32, base_address + 0x54);
 
         /// address: 0x50060058
         /// Suspend registers
-        pub const SUSP6R = @intToPtr(*volatile u32, base_address + 0x58);
+        pub const SUSP6R = @intToPtr(*volatile align(4) u32, base_address + 0x58);
 
         /// address: 0x5006005c
         /// Suspend registers
-        pub const SUSP7R = @intToPtr(*volatile u32, base_address + 0x5c);
+        pub const SUSP7R = @intToPtr(*volatile align(4) u32, base_address + 0x5c);
     };
 
     /// Debug support
@@ -9215,7 +9217,7 @@ pub const registers = struct {
 
         /// address: 0xe0042000
         /// IDCODE
-        pub const DBGMCU_IDCODE = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DBGMCU_IDCODE = @intToPtr(*volatile align(4) packed struct {
             /// DEV_ID
             DEV_ID: u12,
             reserved0: u1,
@@ -9224,11 +9226,11 @@ pub const registers = struct {
             reserved3: u1,
             /// REV_ID
             REV_ID: u16,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe0042004
         /// Control Register
-        pub const DBGMCU_CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DBGMCU_CR = @intToPtr(*volatile align(4) packed struct {
             /// DBG_SLEEP
             DBG_SLEEP: u1,
             /// DBG_STOP
@@ -9265,11 +9267,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe0042008
         /// Debug MCU APB1 Freeze registe
-        pub const DBGMCU_APB1_FZ = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DBGMCU_APB1_FZ = @intToPtr(*volatile align(4) packed struct {
             /// DBG_TIM2_STOP
             DBG_TIM2_STOP: u1,
             /// DBG_TIM3 _STOP
@@ -9318,11 +9320,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xe004200c
         /// Debug MCU APB2 Freeze registe
-        pub const DBGMCU_APB2_FZ = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DBGMCU_APB2_FZ = @intToPtr(*volatile align(4) packed struct {
             /// TIM1 counter stopped when core is
             /// halted
             DBG_TIM1_STOP: u1,
@@ -9365,7 +9367,7 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
     };
 
     /// Digital-to-analog converter
@@ -9374,7 +9376,7 @@ pub const registers = struct {
 
         /// address: 0x40007400
         /// control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 enable
             EN1: u1,
             /// DAC channel1 output buffer
@@ -9423,11 +9425,11 @@ pub const registers = struct {
             DMAUDRIE2: u1,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40007404
         /// software trigger register
-        pub const SWTRIGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SWTRIGR = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 software
             /// trigger
             SWTRIG1: u1,
@@ -9464,12 +9466,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40007408
         /// channel1 12-bit right-aligned data holding
         /// register
-        pub const DHR12R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR12R1 = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 12-bit right-aligned
             /// data
             DACC1DHR: u12,
@@ -9493,12 +9495,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000740c
         /// channel1 12-bit left aligned data holding
         /// register
-        pub const DHR12L1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR12L1 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -9522,12 +9524,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40007410
         /// channel1 8-bit right aligned data holding
         /// register
-        pub const DHR8R1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR8R1 = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 8-bit right-aligned
             /// data
             DACC1DHR: u8,
@@ -9555,12 +9557,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40007414
         /// channel2 12-bit right aligned data holding
         /// register
-        pub const DHR12R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR12R2 = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel2 12-bit right-aligned
             /// data
             DACC2DHR: u12,
@@ -9584,12 +9586,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40007418
         /// channel2 12-bit left aligned data holding
         /// register
-        pub const DHR12L2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR12L2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -9613,12 +9615,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000741c
         /// channel2 8-bit right-aligned data holding
         /// register
-        pub const DHR8R2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR8R2 = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel2 8-bit right-aligned
             /// data
             DACC2DHR: u8,
@@ -9646,12 +9648,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40007420
         /// Dual DAC 12-bit right-aligned data holding
         /// register
-        pub const DHR12RD = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR12RD = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 12-bit right-aligned
             /// data
             DACC1DHR: u12,
@@ -9666,12 +9668,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40007424
         /// DUAL DAC 12-bit left aligned data holding
         /// register
-        pub const DHR12LD = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR12LD = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -9686,12 +9688,12 @@ pub const registers = struct {
             /// DAC channel2 12-bit left-aligned
             /// data
             DACC2DHR: u12,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40007428
         /// DUAL DAC 8-bit right aligned data holding
         /// register
-        pub const DHR8RD = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DHR8RD = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 8-bit right-aligned
             /// data
             DACC1DHR: u8,
@@ -9714,11 +9716,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4000742c
         /// channel1 data output register
-        pub const DOR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DOR1 = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel1 data output
             DACC1DOR: u12,
             padding0: u1,
@@ -9741,11 +9743,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40007430
         /// channel2 data output register
-        pub const DOR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DOR2 = @intToPtr(*volatile align(4) packed struct {
             /// DAC channel2 data output
             DACC2DOR: u12,
             padding0: u1,
@@ -9768,11 +9770,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40007434
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -9809,7 +9811,7 @@ pub const registers = struct {
             DMAUDR2: u1,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
     };
 
     /// DMA controller
@@ -9818,7 +9820,7 @@ pub const registers = struct {
 
         /// address: 0x40026400
         /// low interrupt status register
-        pub const LISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LISR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x FIFO error interrupt flag
             /// (x=3..0)
             FEIF0: u1,
@@ -9891,11 +9893,11 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40026404
         /// high interrupt status register
-        pub const HISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HISR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x FIFO error interrupt flag
             /// (x=7..4)
             FEIF4: u1,
@@ -9968,12 +9970,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40026408
         /// low interrupt flag clear
         /// register
-        pub const LIFCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LIFCR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x clear FIFO error interrupt flag
             /// (x = 3..0)
             CFEIF0: u1,
@@ -10046,12 +10048,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002640c
         /// high interrupt flag clear
         /// register
-        pub const HIFCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HIFCR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x clear FIFO error interrupt flag
             /// (x = 7..4)
             CFEIF4: u1,
@@ -10124,12 +10126,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40026410
         /// stream x configuration
         /// register
-        pub const S0CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -10182,12 +10184,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40026414
         /// stream x number of data
         /// register
-        pub const S0NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -10207,36 +10209,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40026418
         /// stream x peripheral address
         /// register
-        pub const S0PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002641c
         /// stream x memory 0 address
         /// register
-        pub const S0M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40026420
         /// stream x memory 1 address
         /// register
-        pub const S0M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40026424
         /// stream x FIFO control register
-        pub const S0FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -10271,12 +10273,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40026428
         /// stream x configuration
         /// register
-        pub const S1CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -10329,12 +10331,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4002642c
         /// stream x number of data
         /// register
-        pub const S1NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -10354,36 +10356,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40026430
         /// stream x peripheral address
         /// register
-        pub const S1PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40026434
         /// stream x memory 0 address
         /// register
-        pub const S1M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40026438
         /// stream x memory 1 address
         /// register
-        pub const S1M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4002643c
         /// stream x FIFO control register
-        pub const S1FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -10418,12 +10420,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40026440
         /// stream x configuration
         /// register
-        pub const S2CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -10476,12 +10478,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40026444
         /// stream x number of data
         /// register
-        pub const S2NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -10501,36 +10503,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40026448
         /// stream x peripheral address
         /// register
-        pub const S2PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4002644c
         /// stream x memory 0 address
         /// register
-        pub const S2M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40026450
         /// stream x memory 1 address
         /// register
-        pub const S2M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
 
         /// address: 0x40026454
         /// stream x FIFO control register
-        pub const S2FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -10565,12 +10567,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40026458
         /// stream x configuration
         /// register
-        pub const S3CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -10623,12 +10625,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x58);
+        }, base_address + 0x58);
 
         /// address: 0x4002645c
         /// stream x number of data
         /// register
-        pub const S3NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -10648,36 +10650,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x5c);
+        }, base_address + 0x5c);
 
         /// address: 0x40026460
         /// stream x peripheral address
         /// register
-        pub const S3PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x60);
+        }, base_address + 0x60);
 
         /// address: 0x40026464
         /// stream x memory 0 address
         /// register
-        pub const S3M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x64);
+        }, base_address + 0x64);
 
         /// address: 0x40026468
         /// stream x memory 1 address
         /// register
-        pub const S3M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x68);
+        }, base_address + 0x68);
 
         /// address: 0x4002646c
         /// stream x FIFO control register
-        pub const S3FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -10712,12 +10714,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x6c);
+        }, base_address + 0x6c);
 
         /// address: 0x40026470
         /// stream x configuration
         /// register
-        pub const S4CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -10770,12 +10772,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x70);
+        }, base_address + 0x70);
 
         /// address: 0x40026474
         /// stream x number of data
         /// register
-        pub const S4NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -10795,36 +10797,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x74);
+        }, base_address + 0x74);
 
         /// address: 0x40026478
         /// stream x peripheral address
         /// register
-        pub const S4PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x78);
+        }, base_address + 0x78);
 
         /// address: 0x4002647c
         /// stream x memory 0 address
         /// register
-        pub const S4M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x7c);
+        }, base_address + 0x7c);
 
         /// address: 0x40026480
         /// stream x memory 1 address
         /// register
-        pub const S4M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
 
         /// address: 0x40026484
         /// stream x FIFO control register
-        pub const S4FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -10859,12 +10861,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x84);
+        }, base_address + 0x84);
 
         /// address: 0x40026488
         /// stream x configuration
         /// register
-        pub const S5CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -10917,12 +10919,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x88);
+        }, base_address + 0x88);
 
         /// address: 0x4002648c
         /// stream x number of data
         /// register
-        pub const S5NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -10942,36 +10944,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8c);
+        }, base_address + 0x8c);
 
         /// address: 0x40026490
         /// stream x peripheral address
         /// register
-        pub const S5PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x90);
+        }, base_address + 0x90);
 
         /// address: 0x40026494
         /// stream x memory 0 address
         /// register
-        pub const S5M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x94);
+        }, base_address + 0x94);
 
         /// address: 0x40026498
         /// stream x memory 1 address
         /// register
-        pub const S5M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x98);
+        }, base_address + 0x98);
 
         /// address: 0x4002649c
         /// stream x FIFO control register
-        pub const S5FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -11006,12 +11008,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x9c);
+        }, base_address + 0x9c);
 
         /// address: 0x400264a0
         /// stream x configuration
         /// register
-        pub const S6CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -11064,12 +11066,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0xa0);
+        }, base_address + 0xa0);
 
         /// address: 0x400264a4
         /// stream x number of data
         /// register
-        pub const S6NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -11089,36 +11091,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xa4);
+        }, base_address + 0xa4);
 
         /// address: 0x400264a8
         /// stream x peripheral address
         /// register
-        pub const S6PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0xa8);
+        }, base_address + 0xa8);
 
         /// address: 0x400264ac
         /// stream x memory 0 address
         /// register
-        pub const S6M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0xac);
+        }, base_address + 0xac);
 
         /// address: 0x400264b0
         /// stream x memory 1 address
         /// register
-        pub const S6M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0xb0);
+        }, base_address + 0xb0);
 
         /// address: 0x400264b4
         /// stream x FIFO control register
-        pub const S6FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -11153,12 +11155,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0xb4);
+        }, base_address + 0xb4);
 
         /// address: 0x400264b8
         /// stream x configuration
         /// register
-        pub const S7CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -11211,12 +11213,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0xb8);
+        }, base_address + 0xb8);
 
         /// address: 0x400264bc
         /// stream x number of data
         /// register
-        pub const S7NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -11236,36 +11238,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xbc);
+        }, base_address + 0xbc);
 
         /// address: 0x400264c0
         /// stream x peripheral address
         /// register
-        pub const S7PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0xc0);
+        }, base_address + 0xc0);
 
         /// address: 0x400264c4
         /// stream x memory 0 address
         /// register
-        pub const S7M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0xc4);
+        }, base_address + 0xc4);
 
         /// address: 0x400264c8
         /// stream x memory 1 address
         /// register
-        pub const S7M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0xc8);
+        }, base_address + 0xc8);
 
         /// address: 0x400264cc
         /// stream x FIFO control register
-        pub const S7FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -11300,14 +11302,14 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0xcc);
+        }, base_address + 0xcc);
     };
     pub const DMA1 = struct {
         pub const base_address = 0x40026000;
 
         /// address: 0x40026000
         /// low interrupt status register
-        pub const LISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LISR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x FIFO error interrupt flag
             /// (x=3..0)
             FEIF0: u1,
@@ -11380,11 +11382,11 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40026004
         /// high interrupt status register
-        pub const HISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HISR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x FIFO error interrupt flag
             /// (x=7..4)
             FEIF4: u1,
@@ -11457,12 +11459,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40026008
         /// low interrupt flag clear
         /// register
-        pub const LIFCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LIFCR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x clear FIFO error interrupt flag
             /// (x = 3..0)
             CFEIF0: u1,
@@ -11535,12 +11537,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002600c
         /// high interrupt flag clear
         /// register
-        pub const HIFCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HIFCR = @intToPtr(*volatile align(4) packed struct {
             /// Stream x clear FIFO error interrupt flag
             /// (x = 7..4)
             CFEIF4: u1,
@@ -11613,12 +11615,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40026010
         /// stream x configuration
         /// register
-        pub const S0CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -11671,12 +11673,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40026014
         /// stream x number of data
         /// register
-        pub const S0NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -11696,36 +11698,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40026018
         /// stream x peripheral address
         /// register
-        pub const S0PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002601c
         /// stream x memory 0 address
         /// register
-        pub const S0M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40026020
         /// stream x memory 1 address
         /// register
-        pub const S0M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40026024
         /// stream x FIFO control register
-        pub const S0FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S0FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -11760,12 +11762,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40026028
         /// stream x configuration
         /// register
-        pub const S1CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -11818,12 +11820,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4002602c
         /// stream x number of data
         /// register
-        pub const S1NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -11843,36 +11845,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40026030
         /// stream x peripheral address
         /// register
-        pub const S1PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40026034
         /// stream x memory 0 address
         /// register
-        pub const S1M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40026038
         /// stream x memory 1 address
         /// register
-        pub const S1M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4002603c
         /// stream x FIFO control register
-        pub const S1FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S1FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -11907,12 +11909,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40026040
         /// stream x configuration
         /// register
-        pub const S2CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -11965,12 +11967,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40026044
         /// stream x number of data
         /// register
-        pub const S2NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -11990,36 +11992,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40026048
         /// stream x peripheral address
         /// register
-        pub const S2PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4002604c
         /// stream x memory 0 address
         /// register
-        pub const S2M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40026050
         /// stream x memory 1 address
         /// register
-        pub const S2M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
 
         /// address: 0x40026054
         /// stream x FIFO control register
-        pub const S2FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S2FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -12054,12 +12056,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40026058
         /// stream x configuration
         /// register
-        pub const S3CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -12112,12 +12114,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x58);
+        }, base_address + 0x58);
 
         /// address: 0x4002605c
         /// stream x number of data
         /// register
-        pub const S3NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -12137,36 +12139,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x5c);
+        }, base_address + 0x5c);
 
         /// address: 0x40026060
         /// stream x peripheral address
         /// register
-        pub const S3PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x60);
+        }, base_address + 0x60);
 
         /// address: 0x40026064
         /// stream x memory 0 address
         /// register
-        pub const S3M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x64);
+        }, base_address + 0x64);
 
         /// address: 0x40026068
         /// stream x memory 1 address
         /// register
-        pub const S3M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x68);
+        }, base_address + 0x68);
 
         /// address: 0x4002606c
         /// stream x FIFO control register
-        pub const S3FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S3FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -12201,12 +12203,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x6c);
+        }, base_address + 0x6c);
 
         /// address: 0x40026070
         /// stream x configuration
         /// register
-        pub const S4CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -12259,12 +12261,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x70);
+        }, base_address + 0x70);
 
         /// address: 0x40026074
         /// stream x number of data
         /// register
-        pub const S4NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -12284,36 +12286,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x74);
+        }, base_address + 0x74);
 
         /// address: 0x40026078
         /// stream x peripheral address
         /// register
-        pub const S4PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x78);
+        }, base_address + 0x78);
 
         /// address: 0x4002607c
         /// stream x memory 0 address
         /// register
-        pub const S4M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x7c);
+        }, base_address + 0x7c);
 
         /// address: 0x40026080
         /// stream x memory 1 address
         /// register
-        pub const S4M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
 
         /// address: 0x40026084
         /// stream x FIFO control register
-        pub const S4FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S4FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -12348,12 +12350,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x84);
+        }, base_address + 0x84);
 
         /// address: 0x40026088
         /// stream x configuration
         /// register
-        pub const S5CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -12406,12 +12408,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x88);
+        }, base_address + 0x88);
 
         /// address: 0x4002608c
         /// stream x number of data
         /// register
-        pub const S5NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -12431,36 +12433,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8c);
+        }, base_address + 0x8c);
 
         /// address: 0x40026090
         /// stream x peripheral address
         /// register
-        pub const S5PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0x90);
+        }, base_address + 0x90);
 
         /// address: 0x40026094
         /// stream x memory 0 address
         /// register
-        pub const S5M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0x94);
+        }, base_address + 0x94);
 
         /// address: 0x40026098
         /// stream x memory 1 address
         /// register
-        pub const S5M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0x98);
+        }, base_address + 0x98);
 
         /// address: 0x4002609c
         /// stream x FIFO control register
-        pub const S5FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S5FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -12495,12 +12497,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x9c);
+        }, base_address + 0x9c);
 
         /// address: 0x400260a0
         /// stream x configuration
         /// register
-        pub const S6CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -12553,12 +12555,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0xa0);
+        }, base_address + 0xa0);
 
         /// address: 0x400260a4
         /// stream x number of data
         /// register
-        pub const S6NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -12578,36 +12580,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xa4);
+        }, base_address + 0xa4);
 
         /// address: 0x400260a8
         /// stream x peripheral address
         /// register
-        pub const S6PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0xa8);
+        }, base_address + 0xa8);
 
         /// address: 0x400260ac
         /// stream x memory 0 address
         /// register
-        pub const S6M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0xac);
+        }, base_address + 0xac);
 
         /// address: 0x400260b0
         /// stream x memory 1 address
         /// register
-        pub const S6M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0xb0);
+        }, base_address + 0xb0);
 
         /// address: 0x400260b4
         /// stream x FIFO control register
-        pub const S6FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S6FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -12642,12 +12644,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0xb4);
+        }, base_address + 0xb4);
 
         /// address: 0x400260b8
         /// stream x configuration
         /// register
-        pub const S7CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7CR = @intToPtr(*volatile align(4) packed struct {
             /// Stream enable / flag stream ready when
             /// read low
             EN: u1,
@@ -12700,12 +12702,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0xb8);
+        }, base_address + 0xb8);
 
         /// address: 0x400260bc
         /// stream x number of data
         /// register
-        pub const S7NDTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7NDTR = @intToPtr(*volatile align(4) packed struct {
             /// Number of data items to
             /// transfer
             NDT: u16,
@@ -12725,36 +12727,36 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xbc);
+        }, base_address + 0xbc);
 
         /// address: 0x400260c0
         /// stream x peripheral address
         /// register
-        pub const S7PAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7PAR = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral address
             PA: u32,
-        }), base_address + 0xc0);
+        }, base_address + 0xc0);
 
         /// address: 0x400260c4
         /// stream x memory 0 address
         /// register
-        pub const S7M0AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7M0AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 0 address
             M0A: u32,
-        }), base_address + 0xc4);
+        }, base_address + 0xc4);
 
         /// address: 0x400260c8
         /// stream x memory 1 address
         /// register
-        pub const S7M1AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7M1AR = @intToPtr(*volatile align(4) packed struct {
             /// Memory 1 address (used in case of Double
             /// buffer mode)
             M1A: u32,
-        }), base_address + 0xc8);
+        }, base_address + 0xc8);
 
         /// address: 0x400260cc
         /// stream x FIFO control register
-        pub const S7FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const S7FCR = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold selection
             FTH: u2,
             /// Direct mode disable
@@ -12789,7 +12791,7 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0xcc);
+        }, base_address + 0xcc);
     };
 
     /// External interrupt/event
@@ -12800,7 +12802,7 @@ pub const registers = struct {
         /// address: 0x40013c00
         /// Interrupt mask register
         /// (EXTI_IMR)
-        pub const IMR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IMR = @intToPtr(*volatile align(4) packed struct {
             /// Interrupt Mask on line 0
             IM0: u1,
             /// Interrupt Mask on line 1
@@ -12857,11 +12859,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40013c04
         /// Event mask register (EXTI_EMR)
-        pub const EMR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EMR = @intToPtr(*volatile align(4) packed struct {
             /// Event Mask on line 0
             EM0: u1,
             /// Event Mask on line 1
@@ -12918,12 +12920,12 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40013c08
         /// Rising Trigger selection register
         /// (EXTI_RTSR)
-        pub const RTSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTSR = @intToPtr(*volatile align(4) packed struct {
             /// Rising trigger event configuration of
             /// line 0
             TR0: u1,
@@ -13004,12 +13006,12 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40013c0c
         /// Falling Trigger selection register
         /// (EXTI_FTSR)
-        pub const FTSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FTSR = @intToPtr(*volatile align(4) packed struct {
             /// Falling trigger event configuration of
             /// line 0
             TR0: u1,
@@ -13090,12 +13092,12 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40013c10
         /// Software interrupt event register
         /// (EXTI_SWIER)
-        pub const SWIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SWIER = @intToPtr(*volatile align(4) packed struct {
             /// Software Interrupt on line
             /// 0
             SWIER0: u1,
@@ -13176,11 +13178,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40013c14
         /// Pending register (EXTI_PR)
-        pub const PR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PR = @intToPtr(*volatile align(4) packed struct {
             /// Pending bit 0
             PR0: u1,
             /// Pending bit 1
@@ -13237,7 +13239,7 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
     };
 
     /// FLASH
@@ -13246,7 +13248,7 @@ pub const registers = struct {
 
         /// address: 0x40023c00
         /// Flash access control register
-        pub const ACR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACR = @intToPtr(*volatile align(4) packed struct {
             /// Latency
             LATENCY: u3,
             reserved0: u1,
@@ -13281,22 +13283,22 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40023c04
         /// Flash key register
-        pub const KEYR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const KEYR = @intToPtr(*volatile align(4) packed struct {
             /// FPEC key
             KEY: u32,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40023c08
         /// Flash option key register
-        pub const OPTKEYR = @intToPtr(*volatile u32, base_address + 0x8);
+        pub const OPTKEYR = @intToPtr(*volatile align(4) u32, base_address + 0x8);
 
         /// address: 0x40023c0c
         /// Status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// End of operation
             EOP: u1,
             /// Operation error
@@ -13338,11 +13340,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40023c10
         /// Control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// Programming
             PG: u1,
             /// Sector Erase
@@ -13383,11 +13385,11 @@ pub const registers = struct {
             reserved16: u1,
             /// Lock
             LOCK: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40023c14
         /// Flash option control register
-        pub const OPTCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OPTCR = @intToPtr(*volatile align(4) packed struct {
             /// Option lock
             OPTLOCK: u1,
             /// Option start
@@ -13416,23 +13418,23 @@ pub const registers = struct {
             /// Independent watchdog counter freeze in
             /// Stop mode
             IWDG_STOP: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40023c18
         /// Flash option control register
         /// 1
-        pub const OPTCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OPTCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Boot base address when Boot pin
             /// =0
             BOOT_ADD0: u16,
             /// Boot base address when Boot pin
             /// =1
             BOOT_ADD1: u16,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40023c1c
         /// Flash option control register
-        pub const OPTCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OPTCR2 = @intToPtr(*volatile align(4) packed struct {
             /// PCROP option byte
             PCROP: u8,
             reserved0: u1,
@@ -13461,7 +13463,7 @@ pub const registers = struct {
             /// PCROP zone preserved when RDP level
             /// decreased
             PCROP_RDP: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
     };
 
     /// Flexible memory controller
@@ -13471,7 +13473,7 @@ pub const registers = struct {
         /// address: 0xa0000000
         /// SRAM/NOR-Flash chip-select control register
         /// 1
-        pub const BCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR1 = @intToPtr(*volatile align(4) packed struct {
             /// MBKEN
             MBKEN: u1,
             /// MUXEN
@@ -13516,12 +13518,12 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xa0000004
         /// SRAM/NOR-Flash chip-select timing register
         /// 1
-        pub const BTR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BTR1 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13538,12 +13540,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xa0000008
         /// SRAM/NOR-Flash chip-select control register
         /// 2
-        pub const BCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR2 = @intToPtr(*volatile align(4) packed struct {
             /// MBKEN
             MBKEN: u1,
             /// MUXEN
@@ -13586,12 +13588,12 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xa000000c
         /// SRAM/NOR-Flash chip-select timing register
         /// 2
-        pub const BTR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BTR2 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13608,12 +13610,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0xa0000010
         /// SRAM/NOR-Flash chip-select control register
         /// 3
-        pub const BCR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR3 = @intToPtr(*volatile align(4) packed struct {
             /// MBKEN
             MBKEN: u1,
             /// MUXEN
@@ -13656,12 +13658,12 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0xa0000014
         /// SRAM/NOR-Flash chip-select timing register
         /// 3
-        pub const BTR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BTR3 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13678,12 +13680,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0xa0000018
         /// SRAM/NOR-Flash chip-select control register
         /// 4
-        pub const BCR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR4 = @intToPtr(*volatile align(4) packed struct {
             /// MBKEN
             MBKEN: u1,
             /// MUXEN
@@ -13726,12 +13728,12 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0xa000001c
         /// SRAM/NOR-Flash chip-select timing register
         /// 4
-        pub const BTR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BTR4 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13748,12 +13750,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0xa0000080
         /// PC Card/NAND Flash control
         /// register
-        pub const PCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PCR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// PWAITEN
             PWAITEN: u1,
@@ -13785,12 +13787,12 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
 
         /// address: 0xa0000084
         /// FIFO status and interrupt
         /// register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// IRS
             IRS: u1,
             /// ILS
@@ -13830,12 +13832,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x84);
+        }, base_address + 0x84);
 
         /// address: 0xa0000088
         /// Common memory space timing
         /// register
-        pub const PMEM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PMEM = @intToPtr(*volatile align(4) packed struct {
             /// MEMSETx
             MEMSETx: u8,
             /// MEMWAITx
@@ -13844,12 +13846,12 @@ pub const registers = struct {
             MEMHOLDx: u8,
             /// MEMHIZx
             MEMHIZx: u8,
-        }), base_address + 0x88);
+        }, base_address + 0x88);
 
         /// address: 0xa000008c
         /// Attribute memory space timing
         /// register
-        pub const PATT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PATT = @intToPtr(*volatile align(4) packed struct {
             /// ATTSETx
             ATTSETx: u8,
             /// ATTWAITx
@@ -13858,19 +13860,19 @@ pub const registers = struct {
             ATTHOLDx: u8,
             /// ATTHIZx
             ATTHIZx: u8,
-        }), base_address + 0x8c);
+        }, base_address + 0x8c);
 
         /// address: 0xa0000094
         /// ECC result register
-        pub const ECCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ECCR = @intToPtr(*volatile align(4) packed struct {
             /// ECCx
             ECCx: u32,
-        }), base_address + 0x94);
+        }, base_address + 0x94);
 
         /// address: 0xa0000104
         /// SRAM/NOR-Flash write timing registers
         /// 1
-        pub const BWTR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BWTR1 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13892,12 +13894,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x104);
+        }, base_address + 0x104);
 
         /// address: 0xa000010c
         /// SRAM/NOR-Flash write timing registers
         /// 2
-        pub const BWTR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BWTR2 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13919,12 +13921,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x10c);
+        }, base_address + 0x10c);
 
         /// address: 0xa0000114
         /// SRAM/NOR-Flash write timing registers
         /// 3
-        pub const BWTR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BWTR3 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13946,12 +13948,12 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x114);
+        }, base_address + 0x114);
 
         /// address: 0xa000011c
         /// SRAM/NOR-Flash write timing registers
         /// 4
-        pub const BWTR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BWTR4 = @intToPtr(*volatile align(4) packed struct {
             /// ADDSET
             ADDSET: u4,
             /// ADDHLD
@@ -13973,11 +13975,11 @@ pub const registers = struct {
             ACCMOD: u2,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x11c);
+        }, base_address + 0x11c);
 
         /// address: 0xa0000140
         /// SDRAM Control Register 1
-        pub const SDCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Number of column address
             /// bits
             NC: u2,
@@ -14014,11 +14016,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x140);
+        }, base_address + 0x140);
 
         /// address: 0xa0000144
         /// SDRAM Control Register 2
-        pub const SDCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDCR2 = @intToPtr(*volatile align(4) packed struct {
             /// Number of column address
             /// bits
             NC: u2,
@@ -14055,11 +14057,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x144);
+        }, base_address + 0x144);
 
         /// address: 0xa0000148
         /// SDRAM Timing register 1
-        pub const SDTR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDTR1 = @intToPtr(*volatile align(4) packed struct {
             /// Load Mode Register to
             /// Active
             TMRD: u4,
@@ -14079,11 +14081,11 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x148);
+        }, base_address + 0x148);
 
         /// address: 0xa000014c
         /// SDRAM Timing register 2
-        pub const SDTR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDTR2 = @intToPtr(*volatile align(4) packed struct {
             /// Load Mode Register to
             /// Active
             TMRD: u4,
@@ -14103,11 +14105,11 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x14c);
+        }, base_address + 0x14c);
 
         /// address: 0xa0000150
         /// SDRAM Command Mode register
-        pub const SDCMR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDCMR = @intToPtr(*volatile align(4) packed struct {
             /// Command mode
             MODE: u3,
             /// Command target bank 2
@@ -14128,11 +14130,11 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x150);
+        }, base_address + 0x150);
 
         /// address: 0xa0000154
         /// SDRAM Refresh Timer register
-        pub const SDRTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDRTR = @intToPtr(*volatile align(4) packed struct {
             /// Clear Refresh error flag
             CRE: u1,
             /// Refresh Timer Count
@@ -14156,11 +14158,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x154);
+        }, base_address + 0x154);
 
         /// address: 0xa0000158
         /// SDRAM Status register
-        pub const SDSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SDSR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Status Mode for Bank 1
             MODES1: u2,
@@ -14194,7 +14196,7 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x158);
+        }, base_address + 0x158);
     };
 
     /// General purpose timers
@@ -14203,7 +14205,7 @@ pub const registers = struct {
 
         /// address: 0x40014000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -14241,11 +14243,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40014008
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection
             SMS: u3,
             reserved0: u1,
@@ -14277,11 +14279,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001400c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -14320,11 +14322,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40014010
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -14367,11 +14369,11 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40014014
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -14410,12 +14412,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40014018
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -14460,12 +14462,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40014018
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -14498,12 +14500,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40014020
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -14548,34 +14550,34 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40014024
         /// counter
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x24);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x24);
 
         /// address: 0x40014028
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4001402c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40014034
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40014038
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x38);
+        pub const CCR2 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x38);
     };
     pub const TIM12 = struct {
         pub const base_address = 0x40001800;
 
         /// address: 0x40001800
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -14613,11 +14615,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40001808
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection
             SMS: u3,
             reserved0: u1,
@@ -14649,11 +14651,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000180c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -14692,11 +14694,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40001810
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -14739,11 +14741,11 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40001814
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -14782,12 +14784,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40001818
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -14832,12 +14834,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40001818
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -14870,12 +14872,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40001820
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -14920,27 +14922,27 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40001824
         /// counter
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x24);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x24);
 
         /// address: 0x40001828
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000182c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40001834
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40001838
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x38);
+        pub const CCR2 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x38);
     };
 
     /// General purpose timers
@@ -14949,7 +14951,7 @@ pub const registers = struct {
 
         /// address: 0x40000000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -14990,11 +14992,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40000004
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -15029,11 +15031,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40000008
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection
             SMS: u3,
             reserved0: u1,
@@ -15067,11 +15069,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000000c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -15124,11 +15126,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40000010
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -15179,11 +15181,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40000014
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -15226,12 +15228,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40000018
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC1S
             CC1S: u2,
             /// OC1FE
@@ -15272,12 +15274,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40000018
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -15308,12 +15310,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000001c
         /// capture/compare mode register 2 (output
         /// mode)
-        pub const CCMR2_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC3S
             CC3S: u2,
             /// OC3FE
@@ -15354,12 +15356,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x4000001c
         /// capture/compare mode register 2 (input
         /// mode)
-        pub const CCMR2_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare 3
             /// selection
             CC3S: u2,
@@ -15390,12 +15392,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40000020
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -15452,73 +15454,73 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40000024
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// Low counter value
             CNT_L: u16,
             /// High counter value
             CNT_H: u16,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40000028
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000002c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ARR = @intToPtr(*volatile align(4) packed struct {
             /// Low Auto-reload value
             ARR_L: u16,
             /// High Auto-reload value
             ARR_H: u16,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40000034
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 1
             /// value
             CCR1_L: u16,
             /// High Capture/Compare 1
             /// value
             CCR1_H: u16,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40000038
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR2 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 2
             /// value
             CCR2_L: u16,
             /// High Capture/Compare 2
             /// value
             CCR2_H: u16,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4000003c
         /// capture/compare register 3
-        pub const CCR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR3 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR3_L: u16,
             /// High Capture/Compare value
             CCR3_H: u16,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40000040
         /// capture/compare register 4
-        pub const CCR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR4 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR4_L: u16,
             /// High Capture/Compare value
             CCR4_H: u16,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40000048
         /// DMA control register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// DMA base address
             DBA: u5,
             reserved0: u1,
@@ -15545,11 +15547,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4000004c
         /// DMA address for full transfer
-        pub const DMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DMAR = @intToPtr(*volatile align(4) packed struct {
             /// DMA register for burst
             /// accesses
             DMAB: u16,
@@ -15569,11 +15571,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40000050
         /// TIM2 option register 1
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -15606,7 +15608,7 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
     };
 
     /// General purpose timers
@@ -15615,7 +15617,7 @@ pub const registers = struct {
 
         /// address: 0x40000400
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -15656,11 +15658,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40000404
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -15695,11 +15697,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40000408
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection
             SMS: u3,
             reserved0: u1,
@@ -15733,11 +15735,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000040c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -15790,11 +15792,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40000410
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -15845,11 +15847,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40000414
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -15892,12 +15894,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40000418
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC1S
             CC1S: u2,
             /// OC1FE
@@ -15938,12 +15940,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40000418
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -15974,12 +15976,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000041c
         /// capture/compare mode register 2 (output
         /// mode)
-        pub const CCMR2_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC3S
             CC3S: u2,
             /// OC3FE
@@ -16020,12 +16022,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x4000041c
         /// capture/compare mode register 2 (input
         /// mode)
-        pub const CCMR2_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare 3
             /// selection
             CC3S: u2,
@@ -16056,12 +16058,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40000420
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -16118,73 +16120,73 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40000424
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// Low counter value
             CNT_L: u16,
             /// High counter value
             CNT_H: u16,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40000428
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000042c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ARR = @intToPtr(*volatile align(4) packed struct {
             /// Low Auto-reload value
             ARR_L: u16,
             /// High Auto-reload value
             ARR_H: u16,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40000434
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 1
             /// value
             CCR1_L: u16,
             /// High Capture/Compare 1
             /// value
             CCR1_H: u16,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40000438
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR2 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 2
             /// value
             CCR2_L: u16,
             /// High Capture/Compare 2
             /// value
             CCR2_H: u16,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4000043c
         /// capture/compare register 3
-        pub const CCR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR3 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR3_L: u16,
             /// High Capture/Compare value
             CCR3_H: u16,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40000440
         /// capture/compare register 4
-        pub const CCR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR4 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR4_L: u16,
             /// High Capture/Compare value
             CCR4_H: u16,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40000448
         /// DMA control register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// DMA base address
             DBA: u5,
             reserved0: u1,
@@ -16211,11 +16213,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4000044c
         /// DMA address for full transfer
-        pub const DMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DMAR = @intToPtr(*volatile align(4) packed struct {
             /// DMA register for burst
             /// accesses
             DMAB: u16,
@@ -16235,14 +16237,14 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
     };
     pub const TIM4 = struct {
         pub const base_address = 0x40000800;
 
         /// address: 0x40000800
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -16283,11 +16285,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40000804
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -16322,11 +16324,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40000808
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection
             SMS: u3,
             reserved0: u1,
@@ -16360,11 +16362,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000080c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -16417,11 +16419,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40000810
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -16472,11 +16474,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40000814
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -16519,12 +16521,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40000818
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC1S
             CC1S: u2,
             /// OC1FE
@@ -16565,12 +16567,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40000818
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -16601,12 +16603,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000081c
         /// capture/compare mode register 2 (output
         /// mode)
-        pub const CCMR2_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC3S
             CC3S: u2,
             /// OC3FE
@@ -16647,12 +16649,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x4000081c
         /// capture/compare mode register 2 (input
         /// mode)
-        pub const CCMR2_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare 3
             /// selection
             CC3S: u2,
@@ -16683,12 +16685,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40000820
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -16745,73 +16747,73 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40000824
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// Low counter value
             CNT_L: u16,
             /// High counter value
             CNT_H: u16,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40000828
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000082c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ARR = @intToPtr(*volatile align(4) packed struct {
             /// Low Auto-reload value
             ARR_L: u16,
             /// High Auto-reload value
             ARR_H: u16,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40000834
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 1
             /// value
             CCR1_L: u16,
             /// High Capture/Compare 1
             /// value
             CCR1_H: u16,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40000838
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR2 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 2
             /// value
             CCR2_L: u16,
             /// High Capture/Compare 2
             /// value
             CCR2_H: u16,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4000083c
         /// capture/compare register 3
-        pub const CCR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR3 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR3_L: u16,
             /// High Capture/Compare value
             CCR3_H: u16,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40000840
         /// capture/compare register 4
-        pub const CCR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR4 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR4_L: u16,
             /// High Capture/Compare value
             CCR4_H: u16,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40000848
         /// DMA control register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// DMA base address
             DBA: u5,
             reserved0: u1,
@@ -16838,11 +16840,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4000084c
         /// DMA address for full transfer
-        pub const DMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DMAR = @intToPtr(*volatile align(4) packed struct {
             /// DMA register for burst
             /// accesses
             DMAB: u16,
@@ -16862,7 +16864,7 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
     };
 
     /// General purpose timers
@@ -16871,7 +16873,7 @@ pub const registers = struct {
 
         /// address: 0x40000c00
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -16912,11 +16914,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40000c04
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -16951,11 +16953,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40000c08
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Slave mode selection
             SMS: u3,
             reserved0: u1,
@@ -16989,11 +16991,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40000c0c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -17046,11 +17048,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40000c10
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -17101,11 +17103,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40000c14
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -17148,12 +17150,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40000c18
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC1S
             CC1S: u2,
             /// OC1FE
@@ -17194,12 +17196,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40000c18
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -17230,12 +17232,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40000c1c
         /// capture/compare mode register 2 (output
         /// mode)
-        pub const CCMR2_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Output = @intToPtr(*volatile align(4) packed struct {
             /// CC3S
             CC3S: u2,
             /// OC3FE
@@ -17276,12 +17278,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40000c1c
         /// capture/compare mode register 2 (input
         /// mode)
-        pub const CCMR2_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR2_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/compare 3
             /// selection
             CC3S: u2,
@@ -17312,12 +17314,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40000c20
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -17374,73 +17376,73 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40000c24
         /// counter
-        pub const CNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CNT = @intToPtr(*volatile align(4) packed struct {
             /// Low counter value
             CNT_L: u16,
             /// High counter value
             CNT_H: u16,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40000c28
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x40000c2c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ARR = @intToPtr(*volatile align(4) packed struct {
             /// Low Auto-reload value
             ARR_L: u16,
             /// High Auto-reload value
             ARR_H: u16,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40000c34
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 1
             /// value
             CCR1_L: u16,
             /// High Capture/Compare 1
             /// value
             CCR1_H: u16,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40000c38
         /// capture/compare register 2
-        pub const CCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR2 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare 2
             /// value
             CCR2_L: u16,
             /// High Capture/Compare 2
             /// value
             CCR2_H: u16,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x40000c3c
         /// capture/compare register 3
-        pub const CCR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR3 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR3_L: u16,
             /// High Capture/Compare value
             CCR3_H: u16,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40000c40
         /// capture/compare register 4
-        pub const CCR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR4 = @intToPtr(*volatile align(4) packed struct {
             /// Low Capture/Compare value
             CCR4_L: u16,
             /// High Capture/Compare value
             CCR4_H: u16,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40000c48
         /// DMA control register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// DMA base address
             DBA: u5,
             reserved0: u1,
@@ -17467,11 +17469,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x40000c4c
         /// DMA address for full transfer
-        pub const DMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DMAR = @intToPtr(*volatile align(4) packed struct {
             /// DMA register for burst
             /// accesses
             DMAB: u16,
@@ -17491,11 +17493,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40000c50
         /// option register 1
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -17528,7 +17530,7 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
     };
 
     /// General-purpose I/Os
@@ -17537,7 +17539,7 @@ pub const registers = struct {
 
         /// address: 0x40021c00
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -17586,11 +17588,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40021c04
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -17655,12 +17657,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40021c08
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -17709,12 +17711,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40021c0c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -17763,11 +17765,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40021c10
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -17832,11 +17834,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40021c14
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -17901,12 +17903,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40021c18
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -18003,12 +18005,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40021c1c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -18075,12 +18077,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40021c20
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -18105,12 +18107,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40021c24
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -18135,14 +18137,14 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
     pub const GPIOF = struct {
         pub const base_address = 0x40021400;
 
         /// address: 0x40021400
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -18191,11 +18193,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40021404
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -18260,12 +18262,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40021408
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -18314,12 +18316,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002140c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -18368,11 +18370,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40021410
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -18437,11 +18439,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40021414
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -18506,12 +18508,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40021418
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -18608,12 +18610,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002141c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -18680,12 +18682,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40021420
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -18710,12 +18712,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40021424
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -18740,14 +18742,14 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
     pub const GPIOG = struct {
         pub const base_address = 0x40021800;
 
         /// address: 0x40021800
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -18796,11 +18798,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40021804
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -18865,12 +18867,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40021808
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -18919,12 +18921,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002180c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -18973,11 +18975,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40021810
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -19042,11 +19044,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40021814
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -19111,12 +19113,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40021818
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -19213,12 +19215,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002181c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -19285,12 +19287,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40021820
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -19315,12 +19317,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40021824
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -19345,14 +19347,14 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
     pub const GPIOI = struct {
         pub const base_address = 0x40022000;
 
         /// address: 0x40022000
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -19401,11 +19403,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40022004
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -19470,12 +19472,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40022008
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -19524,12 +19526,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002200c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -19578,11 +19580,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40022010
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -19647,11 +19649,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40022014
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -19716,12 +19718,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40022018
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -19818,12 +19820,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002201c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -19890,12 +19892,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40022020
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -19920,12 +19922,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40022024
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -19950,14 +19952,14 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
     pub const GPIOE = struct {
         pub const base_address = 0x40021000;
 
         /// address: 0x40021000
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -20006,11 +20008,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40021004
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -20075,12 +20077,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40021008
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -20129,12 +20131,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002100c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -20183,11 +20185,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40021010
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -20252,11 +20254,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40021014
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -20321,12 +20323,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40021018
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -20423,12 +20425,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002101c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -20495,12 +20497,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40021020
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -20525,12 +20527,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40021024
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -20555,14 +20557,14 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
     pub const GPIOD = struct {
         pub const base_address = 0x40020c00;
 
         /// address: 0x40020c00
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -20611,11 +20613,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40020c04
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -20680,12 +20682,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40020c08
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -20734,12 +20736,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40020c0c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -20788,11 +20790,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40020c10
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -20857,11 +20859,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40020c14
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -20926,12 +20928,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40020c18
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -21028,12 +21030,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40020c1c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -21100,12 +21102,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40020c20
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -21130,12 +21132,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40020c24
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -21160,14 +21162,14 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
     pub const GPIOC = struct {
         pub const base_address = 0x40020800;
 
         /// address: 0x40020800
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -21216,11 +21218,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40020804
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -21285,12 +21287,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40020808
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -21339,12 +21341,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002080c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -21393,11 +21395,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40020810
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -21462,11 +21464,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40020814
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -21531,12 +21533,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40020818
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -21633,12 +21635,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002081c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -21705,12 +21707,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40020820
         /// GPIO alternate function
         /// lowregister
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -21735,12 +21737,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40020824
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -21765,7 +21767,7 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
 
     /// General-purpose I/Os
@@ -21774,7 +21776,7 @@ pub const registers = struct {
 
         /// address: 0x40020400
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -21823,11 +21825,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40020404
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -21892,12 +21894,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40020408
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -21946,12 +21948,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002040c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -22000,11 +22002,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40020410
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -22069,11 +22071,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40020414
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -22138,12 +22140,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40020418
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -22240,12 +22242,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002041c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -22312,12 +22314,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40020420
         /// GPIO alternate function low
         /// register
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -22342,12 +22344,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40020424
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -22372,7 +22374,7 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
 
     /// General-purpose I/Os
@@ -22381,7 +22383,7 @@ pub const registers = struct {
 
         /// address: 0x40020000
         /// GPIO port mode register
-        pub const MODER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MODER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER0: u2,
@@ -22430,11 +22432,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             MODER15: u2,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40020004
         /// GPIO port output type register
-        pub const OTYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTYPER = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OT0: u1,
@@ -22499,12 +22501,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40020008
         /// GPIO port output speed
         /// register
-        pub const OSPEEDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OSPEEDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR0: u2,
@@ -22553,12 +22555,12 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             OSPEEDR15: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002000c
         /// GPIO port pull-up/pull-down
         /// register
-        pub const PUPDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PUPDR = @intToPtr(*volatile align(4) packed struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR0: u2,
@@ -22607,11 +22609,11 @@ pub const registers = struct {
             /// Port x configuration bits (y =
             /// 0..15)
             PUPDR15: u2,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40020010
         /// GPIO port input data register
-        pub const IDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IDR = @intToPtr(*volatile align(4) packed struct {
             /// Port input data (y =
             /// 0..15)
             IDR0: u1,
@@ -22676,11 +22678,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40020014
         /// GPIO port output data register
-        pub const ODR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ODR = @intToPtr(*volatile align(4) packed struct {
             /// Port output data (y =
             /// 0..15)
             ODR0: u1,
@@ -22745,12 +22747,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40020018
         /// GPIO port bit set/reset
         /// register
-        pub const BSRR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSRR = @intToPtr(*volatile align(4) packed struct {
             /// Port x set bit y (y=
             /// 0..15)
             BS0: u1,
@@ -22847,12 +22849,12 @@ pub const registers = struct {
             /// Port x reset bit y (y =
             /// 0..15)
             BR15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4002001c
         /// GPIO port configuration lock
         /// register
-        pub const LCKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LCKR = @intToPtr(*volatile align(4) packed struct {
             /// Port x lock bit y (y=
             /// 0..15)
             LCK0: u1,
@@ -22919,12 +22921,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40020020
         /// GPIO alternate function low
         /// register
-        pub const AFRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRL = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL0: u4,
@@ -22949,12 +22951,12 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 0..7)
             AFRL7: u4,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40020024
         /// GPIO alternate function high
         /// register
-        pub const AFRH = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRH = @intToPtr(*volatile align(4) packed struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH8: u4,
@@ -22979,7 +22981,7 @@ pub const registers = struct {
             /// Alternate function selection for port x
             /// bit y (y = 8..15)
             AFRH15: u4,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
     };
 
     /// General-purpose-timers
@@ -22988,7 +22990,7 @@ pub const registers = struct {
 
         /// address: 0x40001c00
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -23026,11 +23028,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40001c0c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -23066,11 +23068,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40001c10
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -23108,11 +23110,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40001c14
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -23148,12 +23150,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40001c18
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -23192,12 +23194,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40001c18
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -23229,12 +23231,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40001c20
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -23273,34 +23275,34 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40001c24
         /// counter
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x24);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x24);
 
         /// address: 0x40001c28
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x40001c2c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40001c34
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40001c08
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Res.
             Res: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40001c50
         /// option register
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             /// TIM11 Input 1 remapping
             /// capability
             TI1_RMP: u2,
@@ -23334,14 +23336,14 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
     };
     pub const TIM14 = struct {
         pub const base_address = 0x40002000;
 
         /// address: 0x40002000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -23379,11 +23381,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x4000200c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -23419,11 +23421,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40002010
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -23461,11 +23463,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40002014
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -23501,12 +23503,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40002018
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -23545,12 +23547,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40002018
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -23582,12 +23584,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40002020
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -23626,34 +23628,34 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40002024
         /// counter
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x24);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x24);
 
         /// address: 0x40002028
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4000202c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40002034
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40002008
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Res.
             Res: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40002050
         /// option register
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             /// TIM11 Input 1 remapping
             /// capability
             TI1_RMP: u2,
@@ -23687,14 +23689,14 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
     };
     pub const TIM10 = struct {
         pub const base_address = 0x40014400;
 
         /// address: 0x40014400
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -23732,11 +23734,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x4001440c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -23772,11 +23774,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40014410
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -23814,11 +23816,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40014414
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -23854,12 +23856,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40014418
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -23898,12 +23900,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40014418
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -23935,12 +23937,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40014420
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -23979,34 +23981,34 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40014424
         /// counter
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x24);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x24);
 
         /// address: 0x40014428
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4001442c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40014434
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40014408
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Res.
             Res: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40014450
         /// option register
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             /// TIM11 Input 1 remapping
             /// capability
             TI1_RMP: u2,
@@ -24040,14 +24042,14 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
     };
     pub const TIM11 = struct {
         pub const base_address = 0x40014800;
 
         /// address: 0x40014800
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             CEN: u1,
             /// Update disable
@@ -24085,11 +24087,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x4001480c
         /// DMA/Interrupt enable register
-        pub const DIER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DIER = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt enable
             UIE: u1,
             /// Capture/Compare 1 interrupt
@@ -24125,11 +24127,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40014810
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Update interrupt flag
             UIF: u1,
             /// Capture/compare 1 interrupt
@@ -24167,11 +24169,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40014814
         /// event generation register
-        pub const EGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EGR = @intToPtr(*volatile align(4) packed struct {
             /// Update generation
             UG: u1,
             /// Capture/compare 1
@@ -24207,12 +24209,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40014818
         /// capture/compare mode register 1 (output
         /// mode)
-        pub const CCMR1_Output = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Output = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -24251,12 +24253,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40014818
         /// capture/compare mode register 1 (input
         /// mode)
-        pub const CCMR1_Input = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCMR1_Input = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1
             /// selection
             CC1S: u2,
@@ -24288,12 +24290,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40014820
         /// capture/compare enable
         /// register
-        pub const CCER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCER = @intToPtr(*volatile align(4) packed struct {
             /// Capture/Compare 1 output
             /// enable
             CC1E: u1,
@@ -24332,34 +24334,34 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40014824
         /// counter
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x24);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x24);
 
         /// address: 0x40014828
         /// prescaler
-        pub const PSC = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x28);
+        pub const PSC = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x28);
 
         /// address: 0x4001482c
         /// auto-reload register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x2c);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x2c);
 
         /// address: 0x40014834
         /// capture/compare register 1
-        pub const CCR1 = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x34);
+        pub const CCR1 = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x34);
 
         /// address: 0x40014808
         /// slave mode control register
-        pub const SMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SMCR = @intToPtr(*volatile align(4) packed struct {
             /// Res.
             Res: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40014850
         /// option register
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             /// TIM11 Input 1 remapping
             /// capability
             TI1_RMP: u2,
@@ -24393,7 +24395,7 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
     };
 
     /// Independent watchdog
@@ -24402,7 +24404,7 @@ pub const registers = struct {
 
         /// address: 0x40003000
         /// Key register
-        pub const KR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const KR = @intToPtr(*volatile align(4) packed struct {
             /// Key value (write only, read
             /// 0000h)
             KEY: u16,
@@ -24422,15 +24424,15 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40003004
         /// Prescaler register
-        pub const PR = @intToPtr(*volatile MmioInt(32, u3), base_address + 0x4);
+        pub const PR = @intToPtr(*volatile align(4) MmioInt(32, u3), base_address + 0x4);
 
         /// address: 0x40003008
         /// Reload register
-        pub const RLR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RLR = @intToPtr(*volatile align(4) packed struct {
             /// Watchdog counter reload
             /// value
             RL: u12,
@@ -24454,11 +24456,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000300c
         /// Status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Watchdog prescaler value
             /// update
             PVU: u1,
@@ -24497,11 +24499,11 @@ pub const registers = struct {
             padding26: u1,
             padding27: u1,
             padding28: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40003010
         /// Window register
-        pub const WINR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const WINR = @intToPtr(*volatile align(4) packed struct {
             /// Watchdog counter window
             /// value
             WIN: u12,
@@ -24525,7 +24527,7 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
     };
 
     /// Inter-integrated circuit
@@ -24534,7 +24536,7 @@ pub const registers = struct {
 
         /// address: 0x40005400
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral enable
             PE: u1,
             /// TX Interrupt enable
@@ -24590,11 +24592,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40005404
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Slave address bit (master
             /// mode)
             SADD: u10,
@@ -24629,11 +24631,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40005408
         /// Own address register 1
-        pub const OAR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OAR1 = @intToPtr(*volatile align(4) packed struct {
             /// Interface address
             OA1: u10,
             /// Own Address 1 10-bit mode
@@ -24660,11 +24662,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000540c
         /// Own address register 2
-        pub const OAR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OAR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Interface address
             OA2: u7,
@@ -24692,11 +24694,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40005410
         /// Timing register
-        pub const TIMINGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TIMINGR = @intToPtr(*volatile align(4) packed struct {
             /// SCL low period (master
             /// mode)
             SCLL: u8,
@@ -24713,11 +24715,11 @@ pub const registers = struct {
             reserved3: u1,
             /// Timing prescaler
             PRESC: u4,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40005414
         /// Status register 1
-        pub const TIMEOUTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TIMEOUTR = @intToPtr(*volatile align(4) packed struct {
             /// Bus timeout A
             TIMEOUTA: u12,
             /// Idle clock timeout
@@ -24735,11 +24737,11 @@ pub const registers = struct {
             /// Extended clock timeout
             /// enable
             TEXTEN: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40005418
         /// Interrupt and Status register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// Transmit data register empty
             /// (transmitters)
             TXE: u1,
@@ -24793,11 +24795,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000541c
         /// Interrupt clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -24842,11 +24844,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40005420
         /// PEC register
-        pub const PECR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PECR = @intToPtr(*volatile align(4) packed struct {
             /// Packet error checking
             /// register
             PEC: u8,
@@ -24874,11 +24876,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40005424
         /// Receive data register
-        pub const RXDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXDR = @intToPtr(*volatile align(4) packed struct {
             /// 8-bit receive data
             RXDATA: u8,
             padding0: u1,
@@ -24905,11 +24907,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40005428
         /// Transmit data register
-        pub const TXDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXDR = @intToPtr(*volatile align(4) packed struct {
             /// 8-bit transmit data
             TXDATA: u8,
             padding0: u1,
@@ -24936,14 +24938,14 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
     };
     pub const I2C2 = struct {
         pub const base_address = 0x40005800;
 
         /// address: 0x40005800
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral enable
             PE: u1,
             /// TX Interrupt enable
@@ -24999,11 +25001,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40005804
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Slave address bit (master
             /// mode)
             SADD: u10,
@@ -25038,11 +25040,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40005808
         /// Own address register 1
-        pub const OAR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OAR1 = @intToPtr(*volatile align(4) packed struct {
             /// Interface address
             OA1: u10,
             /// Own Address 1 10-bit mode
@@ -25069,11 +25071,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000580c
         /// Own address register 2
-        pub const OAR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OAR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Interface address
             OA2: u7,
@@ -25101,11 +25103,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40005810
         /// Timing register
-        pub const TIMINGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TIMINGR = @intToPtr(*volatile align(4) packed struct {
             /// SCL low period (master
             /// mode)
             SCLL: u8,
@@ -25122,11 +25124,11 @@ pub const registers = struct {
             reserved3: u1,
             /// Timing prescaler
             PRESC: u4,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40005814
         /// Status register 1
-        pub const TIMEOUTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TIMEOUTR = @intToPtr(*volatile align(4) packed struct {
             /// Bus timeout A
             TIMEOUTA: u12,
             /// Idle clock timeout
@@ -25144,11 +25146,11 @@ pub const registers = struct {
             /// Extended clock timeout
             /// enable
             TEXTEN: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40005818
         /// Interrupt and Status register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// Transmit data register empty
             /// (transmitters)
             TXE: u1,
@@ -25202,11 +25204,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000581c
         /// Interrupt clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -25251,11 +25253,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40005820
         /// PEC register
-        pub const PECR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PECR = @intToPtr(*volatile align(4) packed struct {
             /// Packet error checking
             /// register
             PEC: u8,
@@ -25283,11 +25285,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40005824
         /// Receive data register
-        pub const RXDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXDR = @intToPtr(*volatile align(4) packed struct {
             /// 8-bit receive data
             RXDATA: u8,
             padding0: u1,
@@ -25314,11 +25316,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40005828
         /// Transmit data register
-        pub const TXDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXDR = @intToPtr(*volatile align(4) packed struct {
             /// 8-bit transmit data
             TXDATA: u8,
             padding0: u1,
@@ -25345,14 +25347,14 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
     };
     pub const I2C3 = struct {
         pub const base_address = 0x40005c00;
 
         /// address: 0x40005c00
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Peripheral enable
             PE: u1,
             /// TX Interrupt enable
@@ -25408,11 +25410,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40005c04
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Slave address bit (master
             /// mode)
             SADD: u10,
@@ -25447,11 +25449,11 @@ pub const registers = struct {
             padding2: u1,
             padding3: u1,
             padding4: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40005c08
         /// Own address register 1
-        pub const OAR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OAR1 = @intToPtr(*volatile align(4) packed struct {
             /// Interface address
             OA1: u10,
             /// Own Address 1 10-bit mode
@@ -25478,11 +25480,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40005c0c
         /// Own address register 2
-        pub const OAR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OAR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Interface address
             OA2: u7,
@@ -25510,11 +25512,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40005c10
         /// Timing register
-        pub const TIMINGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TIMINGR = @intToPtr(*volatile align(4) packed struct {
             /// SCL low period (master
             /// mode)
             SCLL: u8,
@@ -25531,11 +25533,11 @@ pub const registers = struct {
             reserved3: u1,
             /// Timing prescaler
             PRESC: u4,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40005c14
         /// Status register 1
-        pub const TIMEOUTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TIMEOUTR = @intToPtr(*volatile align(4) packed struct {
             /// Bus timeout A
             TIMEOUTA: u12,
             /// Idle clock timeout
@@ -25553,11 +25555,11 @@ pub const registers = struct {
             /// Extended clock timeout
             /// enable
             TEXTEN: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40005c18
         /// Interrupt and Status register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// Transmit data register empty
             /// (transmitters)
             TXE: u1,
@@ -25611,11 +25613,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40005c1c
         /// Interrupt clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -25660,11 +25662,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40005c20
         /// PEC register
-        pub const PECR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PECR = @intToPtr(*volatile align(4) packed struct {
             /// Packet error checking
             /// register
             PEC: u8,
@@ -25692,11 +25694,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40005c24
         /// Receive data register
-        pub const RXDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXDR = @intToPtr(*volatile align(4) packed struct {
             /// 8-bit receive data
             RXDATA: u8,
             padding0: u1,
@@ -25723,11 +25725,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40005c28
         /// Transmit data register
-        pub const TXDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXDR = @intToPtr(*volatile align(4) packed struct {
             /// 8-bit transmit data
             TXDATA: u8,
             padding0: u1,
@@ -25754,7 +25756,7 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
     };
 
     /// Low power timer
@@ -25763,7 +25765,7 @@ pub const registers = struct {
 
         /// address: 0x40002400
         /// Interrupt and Status Register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// Compare match
             CMPM: u1,
             /// Autoreload match
@@ -25807,11 +25809,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40002404
         /// Interrupt Clear Register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// compare match Clear Flag
             CMPMCF: u1,
             /// Autoreload match Clear
@@ -25857,11 +25859,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40002408
         /// Interrupt Enable Register
-        pub const IER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IER = @intToPtr(*volatile align(4) packed struct {
             /// Compare match Interrupt
             /// Enable
             CMPMIE: u1,
@@ -25908,11 +25910,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000240c
         /// Configuration Register
-        pub const CFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CFGR = @intToPtr(*volatile align(4) packed struct {
             /// Clock selector
             CKSEL: u1,
             /// Clock Polarity
@@ -25953,11 +25955,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40002410
         /// Control Register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// LPTIM Enable
             ENABLE: u1,
             /// LPTIM start in single mode
@@ -25994,19 +25996,19 @@ pub const registers = struct {
             padding26: u1,
             padding27: u1,
             padding28: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40002414
         /// Compare Register
-        pub const CMP = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x14);
+        pub const CMP = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x14);
 
         /// address: 0x40002418
         /// Autoreload Register
-        pub const ARR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x18);
+        pub const ARR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x18);
 
         /// address: 0x4000241c
         /// Counter Register
-        pub const CNT = @intToPtr(*volatile MmioInt(32, u16), base_address + 0x1c);
+        pub const CNT = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0x1c);
     };
 
     /// Nested Vectored Interrupt
@@ -26016,118 +26018,118 @@ pub const registers = struct {
 
         /// address: 0xe000e100
         /// Interrupt Set-Enable Register
-        pub const ISER0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISER0 = @intToPtr(*volatile align(4) packed struct {
             /// SETENA
             SETENA: u32,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000e104
         /// Interrupt Set-Enable Register
-        pub const ISER1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISER1 = @intToPtr(*volatile align(4) packed struct {
             /// SETENA
             SETENA: u32,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000e108
         /// Interrupt Set-Enable Register
-        pub const ISER2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISER2 = @intToPtr(*volatile align(4) packed struct {
             /// SETENA
             SETENA: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xe000e180
         /// Interrupt Clear-Enable
         /// Register
-        pub const ICER0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICER0 = @intToPtr(*volatile align(4) packed struct {
             /// CLRENA
             CLRENA: u32,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
 
         /// address: 0xe000e184
         /// Interrupt Clear-Enable
         /// Register
-        pub const ICER1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICER1 = @intToPtr(*volatile align(4) packed struct {
             /// CLRENA
             CLRENA: u32,
-        }), base_address + 0x84);
+        }, base_address + 0x84);
 
         /// address: 0xe000e188
         /// Interrupt Clear-Enable
         /// Register
-        pub const ICER2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICER2 = @intToPtr(*volatile align(4) packed struct {
             /// CLRENA
             CLRENA: u32,
-        }), base_address + 0x88);
+        }, base_address + 0x88);
 
         /// address: 0xe000e200
         /// Interrupt Set-Pending Register
-        pub const ISPR0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISPR0 = @intToPtr(*volatile align(4) packed struct {
             /// SETPEND
             SETPEND: u32,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0xe000e204
         /// Interrupt Set-Pending Register
-        pub const ISPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISPR1 = @intToPtr(*volatile align(4) packed struct {
             /// SETPEND
             SETPEND: u32,
-        }), base_address + 0x104);
+        }, base_address + 0x104);
 
         /// address: 0xe000e208
         /// Interrupt Set-Pending Register
-        pub const ISPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISPR2 = @intToPtr(*volatile align(4) packed struct {
             /// SETPEND
             SETPEND: u32,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0xe000e280
         /// Interrupt Clear-Pending
         /// Register
-        pub const ICPR0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICPR0 = @intToPtr(*volatile align(4) packed struct {
             /// CLRPEND
             CLRPEND: u32,
-        }), base_address + 0x180);
+        }, base_address + 0x180);
 
         /// address: 0xe000e284
         /// Interrupt Clear-Pending
         /// Register
-        pub const ICPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICPR1 = @intToPtr(*volatile align(4) packed struct {
             /// CLRPEND
             CLRPEND: u32,
-        }), base_address + 0x184);
+        }, base_address + 0x184);
 
         /// address: 0xe000e288
         /// Interrupt Clear-Pending
         /// Register
-        pub const ICPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICPR2 = @intToPtr(*volatile align(4) packed struct {
             /// CLRPEND
             CLRPEND: u32,
-        }), base_address + 0x188);
+        }, base_address + 0x188);
 
         /// address: 0xe000e300
         /// Interrupt Active Bit Register
-        pub const IABR0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IABR0 = @intToPtr(*volatile align(4) packed struct {
             /// ACTIVE
             ACTIVE: u32,
-        }), base_address + 0x200);
+        }, base_address + 0x200);
 
         /// address: 0xe000e304
         /// Interrupt Active Bit Register
-        pub const IABR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IABR1 = @intToPtr(*volatile align(4) packed struct {
             /// ACTIVE
             ACTIVE: u32,
-        }), base_address + 0x204);
+        }, base_address + 0x204);
 
         /// address: 0xe000e308
         /// Interrupt Active Bit Register
-        pub const IABR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IABR2 = @intToPtr(*volatile align(4) packed struct {
             /// ACTIVE
             ACTIVE: u32,
-        }), base_address + 0x208);
+        }, base_address + 0x208);
 
         /// address: 0xe000e400
         /// Interrupt Priority Register
-        pub const IPR0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR0 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26136,11 +26138,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x300);
+        }, base_address + 0x300);
 
         /// address: 0xe000e404
         /// Interrupt Priority Register
-        pub const IPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR1 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26149,11 +26151,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x304);
+        }, base_address + 0x304);
 
         /// address: 0xe000e408
         /// Interrupt Priority Register
-        pub const IPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR2 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26162,11 +26164,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x308);
+        }, base_address + 0x308);
 
         /// address: 0xe000e40c
         /// Interrupt Priority Register
-        pub const IPR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR3 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26175,11 +26177,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x30c);
+        }, base_address + 0x30c);
 
         /// address: 0xe000e410
         /// Interrupt Priority Register
-        pub const IPR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR4 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26188,11 +26190,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x310);
+        }, base_address + 0x310);
 
         /// address: 0xe000e414
         /// Interrupt Priority Register
-        pub const IPR5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR5 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26201,11 +26203,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x314);
+        }, base_address + 0x314);
 
         /// address: 0xe000e418
         /// Interrupt Priority Register
-        pub const IPR6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR6 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26214,11 +26216,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x318);
+        }, base_address + 0x318);
 
         /// address: 0xe000e41c
         /// Interrupt Priority Register
-        pub const IPR7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR7 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26227,11 +26229,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x31c);
+        }, base_address + 0x31c);
 
         /// address: 0xe000e420
         /// Interrupt Priority Register
-        pub const IPR8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR8 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26240,11 +26242,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x320);
+        }, base_address + 0x320);
 
         /// address: 0xe000e424
         /// Interrupt Priority Register
-        pub const IPR9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR9 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26253,11 +26255,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x324);
+        }, base_address + 0x324);
 
         /// address: 0xe000e428
         /// Interrupt Priority Register
-        pub const IPR10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR10 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26266,11 +26268,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x328);
+        }, base_address + 0x328);
 
         /// address: 0xe000e42c
         /// Interrupt Priority Register
-        pub const IPR11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR11 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26279,11 +26281,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x32c);
+        }, base_address + 0x32c);
 
         /// address: 0xe000e430
         /// Interrupt Priority Register
-        pub const IPR12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR12 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26292,11 +26294,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x330);
+        }, base_address + 0x330);
 
         /// address: 0xe000e434
         /// Interrupt Priority Register
-        pub const IPR13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR13 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26305,11 +26307,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x334);
+        }, base_address + 0x334);
 
         /// address: 0xe000e438
         /// Interrupt Priority Register
-        pub const IPR14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR14 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26318,11 +26320,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x338);
+        }, base_address + 0x338);
 
         /// address: 0xe000e43c
         /// Interrupt Priority Register
-        pub const IPR15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR15 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26331,11 +26333,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x33c);
+        }, base_address + 0x33c);
 
         /// address: 0xe000e440
         /// Interrupt Priority Register
-        pub const IPR16 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR16 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26344,11 +26346,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x340);
+        }, base_address + 0x340);
 
         /// address: 0xe000e444
         /// Interrupt Priority Register
-        pub const IPR17 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR17 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26357,11 +26359,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x344);
+        }, base_address + 0x344);
 
         /// address: 0xe000e448
         /// Interrupt Priority Register
-        pub const IPR18 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR18 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26370,11 +26372,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x348);
+        }, base_address + 0x348);
 
         /// address: 0xe000e44c
         /// Interrupt Priority Register
-        pub const IPR19 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR19 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26383,11 +26385,11 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x34c);
+        }, base_address + 0x34c);
 
         /// address: 0xe000e450
         /// Interrupt Priority Register
-        pub const IPR20 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const IPR20 = @intToPtr(*volatile align(4) packed struct {
             /// IPR_N0
             IPR_N0: u8,
             /// IPR_N1
@@ -26396,7 +26398,7 @@ pub const registers = struct {
             IPR_N2: u8,
             /// IPR_N3
             IPR_N3: u8,
-        }), base_address + 0x350);
+        }, base_address + 0x350);
     };
 
     /// Power control
@@ -26405,7 +26407,7 @@ pub const registers = struct {
 
         /// address: 0x40007000
         /// power control register
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Low-power deep sleep
             LPDS: u1,
             /// Power down deepsleep
@@ -26456,11 +26458,11 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40007004
         /// power control/status register
-        pub const CSR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CSR1 = @intToPtr(*volatile align(4) packed struct {
             /// Wakeup internal flag
             WUIF: u1,
             /// Standby flag
@@ -26504,11 +26506,11 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40007008
         /// power control register
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Clear Wakeup Pin flag for
             /// PA0
             CWUPF1: u1,
@@ -26565,11 +26567,11 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000700c
         /// power control/status register
-        pub const CSR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CSR2 = @intToPtr(*volatile align(4) packed struct {
             /// Wakeup Pin flag for PA0
             WUPF1: u1,
             /// Wakeup Pin flag for PA2
@@ -26614,7 +26616,7 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
     };
 
     /// QuadSPI interface
@@ -26623,7 +26625,7 @@ pub const registers = struct {
 
         /// address: 0xa0001000
         /// control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// Enable
             EN: u1,
             /// Abort request
@@ -26665,11 +26667,11 @@ pub const registers = struct {
             PMM: u1,
             /// Clock prescaler
             PRESCALER: u8,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xa0001004
         /// device configuration register
-        pub const DCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCR = @intToPtr(*volatile align(4) packed struct {
             /// Mode 0 / mode 3
             CKMODE: u1,
             reserved0: u1,
@@ -26699,11 +26701,11 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xa0001008
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Transfer error flag
             TEF: u1,
             /// Transfer complete flag
@@ -26737,11 +26739,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xa000100c
         /// flag clear register
-        pub const FCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FCR = @intToPtr(*volatile align(4) packed struct {
             /// Clear transfer error flag
             CTEF: u1,
             /// Clear transfer complete
@@ -26779,19 +26781,19 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0xa0001010
         /// data length register
-        pub const DLR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DLR = @intToPtr(*volatile align(4) packed struct {
             /// Data length
             DL: u32,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0xa0001014
         /// communication configuration
         /// register
-        pub const CCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR = @intToPtr(*volatile align(4) packed struct {
             /// Instruction
             INSTRUCTION: u8,
             /// Instruction mode
@@ -26819,46 +26821,46 @@ pub const registers = struct {
             DHHC: u1,
             /// Double data rate mode
             DDRM: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0xa0001018
         /// address register
-        pub const AR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AR = @intToPtr(*volatile align(4) packed struct {
             /// Address
             ADDRESS: u32,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0xa000101c
         /// ABR
-        pub const ABR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ABR = @intToPtr(*volatile align(4) packed struct {
             /// ALTERNATE
             ALTERNATE: u32,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0xa0001020
         /// data register
-        pub const DR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DR = @intToPtr(*volatile align(4) packed struct {
             /// Data
             DATA: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0xa0001024
         /// polling status mask register
-        pub const PSMKR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PSMKR = @intToPtr(*volatile align(4) packed struct {
             /// Status mask
             MASK: u32,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0xa0001028
         /// polling status match register
-        pub const PSMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PSMAR = @intToPtr(*volatile align(4) packed struct {
             /// Status match
             MATCH: u32,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0xa000102c
         /// polling interval register
-        pub const PIR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PIR = @intToPtr(*volatile align(4) packed struct {
             /// Polling interval
             INTERVAL: u16,
             padding0: u1,
@@ -26877,11 +26879,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0xa0001030
         /// low-power timeout register
-        pub const LPTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const LPTR = @intToPtr(*volatile align(4) packed struct {
             /// Timeout period
             TIMEOUT: u16,
             padding0: u1,
@@ -26900,7 +26902,7 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
     };
 
     /// Random number generator
@@ -26909,7 +26911,7 @@ pub const registers = struct {
 
         /// address: 0x50060800
         /// control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             /// Random number generator
@@ -26945,11 +26947,11 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x50060804
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Data ready
             DRDY: u1,
             /// Clock error current status
@@ -26989,14 +26991,14 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x50060808
         /// data register
-        pub const DR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DR = @intToPtr(*volatile align(4) packed struct {
             /// Random data
             RNDATA: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
     };
 
     /// Real-time clock
@@ -27005,7 +27007,7 @@ pub const registers = struct {
 
         /// address: 0x40002800
         /// time register
-        pub const TR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TR = @intToPtr(*volatile align(4) packed struct {
             /// Second units in BCD format
             SU: u4,
             /// Second tens in BCD format
@@ -27031,11 +27033,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40002804
         /// date register
-        pub const DR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DR = @intToPtr(*volatile align(4) packed struct {
             /// Date units in BCD format
             DU: u4,
             /// Date tens in BCD format
@@ -27060,11 +27062,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40002808
         /// control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// Wakeup clock selection
             WCKSEL: u3,
             /// Time-stamp event active
@@ -27124,12 +27126,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000280c
         /// initialization and status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// Alarm A write flag
             ALRAWF: u1,
             /// Alarm B write flag
@@ -27181,11 +27183,11 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40002810
         /// prescaler register
-        pub const PRER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PRER = @intToPtr(*volatile align(4) packed struct {
             /// Synchronous prescaler
             /// factor
             PREDIV_S: u15,
@@ -27202,11 +27204,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40002814
         /// wakeup timer register
-        pub const WUTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const WUTR = @intToPtr(*volatile align(4) packed struct {
             /// Wakeup auto-reload value
             /// bits
             WUT: u16,
@@ -27226,11 +27228,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x4000281c
         /// alarm A register
-        pub const ALRMAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ALRMAR = @intToPtr(*volatile align(4) packed struct {
             /// Second units in BCD format
             SU: u4,
             /// Second tens in BCD format
@@ -27260,11 +27262,11 @@ pub const registers = struct {
             WDSEL: u1,
             /// Alarm A date mask
             MSK4: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40002820
         /// alarm B register
-        pub const ALRMBR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ALRMBR = @intToPtr(*volatile align(4) packed struct {
             /// Second units in BCD format
             SU: u4,
             /// Second tens in BCD format
@@ -27294,11 +27296,11 @@ pub const registers = struct {
             WDSEL: u1,
             /// Alarm B date mask
             MSK4: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40002824
         /// write protection register
-        pub const WPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const WPR = @intToPtr(*volatile align(4) packed struct {
             /// Write protection key
             KEY: u8,
             padding0: u1,
@@ -27325,11 +27327,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40002828
         /// sub second register
-        pub const SSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SSR = @intToPtr(*volatile align(4) packed struct {
             /// Sub second value
             SS: u16,
             padding0: u1,
@@ -27348,11 +27350,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4000282c
         /// shift control register
-        pub const SHIFTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SHIFTR = @intToPtr(*volatile align(4) packed struct {
             /// Subtract a fraction of a
             /// second
             SUBFS: u15,
@@ -27374,11 +27376,11 @@ pub const registers = struct {
             reserved15: u1,
             /// Add one second
             ADD1S: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40002830
         /// time stamp time register
-        pub const TSTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TSTR = @intToPtr(*volatile align(4) packed struct {
             /// Second units in BCD format
             SU: u4,
             /// Second tens in BCD format
@@ -27404,11 +27406,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40002834
         /// time stamp date register
-        pub const TSDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TSDR = @intToPtr(*volatile align(4) packed struct {
             /// Date units in BCD format
             DU: u4,
             /// Date tens in BCD format
@@ -27437,11 +27439,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40002838
         /// timestamp sub second register
-        pub const TSSSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TSSSR = @intToPtr(*volatile align(4) packed struct {
             /// Sub second value
             SS: u16,
             padding0: u1,
@@ -27460,11 +27462,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4000283c
         /// calibration register
-        pub const CALR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CALR = @intToPtr(*volatile align(4) packed struct {
             /// Calibration minus
             CALM: u9,
             reserved0: u1,
@@ -27496,11 +27498,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40002840
         /// tamper configuration register
-        pub const TAMPCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TAMPCR = @intToPtr(*volatile align(4) packed struct {
             /// Tamper 1 detection enable
             TAMP1E: u1,
             /// Active level for tamper 1
@@ -27551,11 +27553,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40002844
         /// alarm A sub second register
-        pub const ALRMASSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ALRMASSR = @intToPtr(*volatile align(4) packed struct {
             /// Sub seconds value
             SS: u15,
             reserved0: u1,
@@ -27574,11 +27576,11 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40002848
         /// alarm B sub second register
-        pub const ALRMBSSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ALRMBSSR = @intToPtr(*volatile align(4) packed struct {
             /// Sub seconds value
             SS: u15,
             reserved0: u1,
@@ -27597,11 +27599,11 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x4000284c
         /// option register
-        pub const OR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// TIMESTAMP mapping
             TSINSEL: u1,
@@ -27637,231 +27639,231 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x4c);
+        }, base_address + 0x4c);
 
         /// address: 0x40002850
         /// backup register
-        pub const BKP0R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP0R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
 
         /// address: 0x40002854
         /// backup register
-        pub const BKP1R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP1R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40002858
         /// backup register
-        pub const BKP2R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP2R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x58);
+        }, base_address + 0x58);
 
         /// address: 0x4000285c
         /// backup register
-        pub const BKP3R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP3R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x5c);
+        }, base_address + 0x5c);
 
         /// address: 0x40002860
         /// backup register
-        pub const BKP4R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP4R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x60);
+        }, base_address + 0x60);
 
         /// address: 0x40002864
         /// backup register
-        pub const BKP5R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP5R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x64);
+        }, base_address + 0x64);
 
         /// address: 0x40002868
         /// backup register
-        pub const BKP6R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP6R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x68);
+        }, base_address + 0x68);
 
         /// address: 0x4000286c
         /// backup register
-        pub const BKP7R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP7R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x6c);
+        }, base_address + 0x6c);
 
         /// address: 0x40002870
         /// backup register
-        pub const BKP8R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP8R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x70);
+        }, base_address + 0x70);
 
         /// address: 0x40002874
         /// backup register
-        pub const BKP9R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP9R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x74);
+        }, base_address + 0x74);
 
         /// address: 0x40002878
         /// backup register
-        pub const BKP10R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP10R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x78);
+        }, base_address + 0x78);
 
         /// address: 0x4000287c
         /// backup register
-        pub const BKP11R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP11R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x7c);
+        }, base_address + 0x7c);
 
         /// address: 0x40002880
         /// backup register
-        pub const BKP12R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP12R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
 
         /// address: 0x40002884
         /// backup register
-        pub const BKP13R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP13R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x84);
+        }, base_address + 0x84);
 
         /// address: 0x40002888
         /// backup register
-        pub const BKP14R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP14R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x88);
+        }, base_address + 0x88);
 
         /// address: 0x4000288c
         /// backup register
-        pub const BKP15R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP15R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x8c);
+        }, base_address + 0x8c);
 
         /// address: 0x40002890
         /// backup register
-        pub const BKP16R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP16R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x90);
+        }, base_address + 0x90);
 
         /// address: 0x40002894
         /// backup register
-        pub const BKP17R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP17R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x94);
+        }, base_address + 0x94);
 
         /// address: 0x40002898
         /// backup register
-        pub const BKP18R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP18R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x98);
+        }, base_address + 0x98);
 
         /// address: 0x4000289c
         /// backup register
-        pub const BKP19R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP19R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0x9c);
+        }, base_address + 0x9c);
 
         /// address: 0x400028a0
         /// backup register
-        pub const BKP20R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP20R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xa0);
+        }, base_address + 0xa0);
 
         /// address: 0x400028a4
         /// backup register
-        pub const BKP21R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP21R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xa4);
+        }, base_address + 0xa4);
 
         /// address: 0x400028a8
         /// backup register
-        pub const BKP22R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP22R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xa8);
+        }, base_address + 0xa8);
 
         /// address: 0x400028ac
         /// backup register
-        pub const BKP23R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP23R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xac);
+        }, base_address + 0xac);
 
         /// address: 0x400028b0
         /// backup register
-        pub const BKP24R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP24R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xb0);
+        }, base_address + 0xb0);
 
         /// address: 0x400028b4
         /// backup register
-        pub const BKP25R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP25R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xb4);
+        }, base_address + 0xb4);
 
         /// address: 0x400028b8
         /// backup register
-        pub const BKP26R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP26R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xb8);
+        }, base_address + 0xb8);
 
         /// address: 0x400028bc
         /// backup register
-        pub const BKP27R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP27R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xbc);
+        }, base_address + 0xbc);
 
         /// address: 0x400028c0
         /// backup register
-        pub const BKP28R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP28R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xc0);
+        }, base_address + 0xc0);
 
         /// address: 0x400028c4
         /// backup register
-        pub const BKP29R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP29R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xc4);
+        }, base_address + 0xc4);
 
         /// address: 0x400028c8
         /// backup register
-        pub const BKP30R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP30R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xc8);
+        }, base_address + 0xc8);
 
         /// address: 0x400028cc
         /// backup register
-        pub const BKP31R = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BKP31R = @intToPtr(*volatile align(4) packed struct {
             /// BKP
             BKP: u32,
-        }), base_address + 0xcc);
+        }, base_address + 0xcc);
     };
 
     /// Reset and clock control
@@ -27870,7 +27872,7 @@ pub const registers = struct {
 
         /// address: 0x40023800
         /// clock control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// Internal high-speed clock
             /// enable
             HSION: u1,
@@ -27912,11 +27914,11 @@ pub const registers = struct {
             PLLSAIRDY: u1,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40023804
         /// PLL configuration register
-        pub const PLLCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PLLCFGR = @intToPtr(*volatile align(4) packed struct {
             /// Division factor for the main PLL (PLL)
             /// and audio PLL (PLLI2S) input clock
             PLLM: u6,
@@ -27946,19 +27948,15 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40023808
         /// clock configuration register
-        pub const CFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CFGR = @intToPtr(*volatile align(4) packed struct {
             /// System clock switch
-            SW0: u1,
-            /// System clock switch
-            SW1: u1,
+            SW: u2,
             /// System clock switch status
-            SWS0: u1,
-            /// System clock switch status
-            SWS1: u1,
+            SWS: u2,
             /// AHB prescaler
             HPRE: u4,
             reserved0: u1,
@@ -27984,11 +27982,11 @@ pub const registers = struct {
             /// Microcontroller clock output
             /// 2
             MCO2: u2,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4002380c
         /// clock interrupt register
-        pub const CIR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CIR = @intToPtr(*volatile align(4) packed struct {
             /// LSI ready interrupt flag
             LSIRDYF: u1,
             /// LSE ready interrupt flag
@@ -28055,11 +28053,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40023810
         /// AHB1 peripheral reset register
-        pub const AHB1RSTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB1RSTR = @intToPtr(*volatile align(4) packed struct {
             /// IO port A reset
             GPIOARST: u1,
             /// IO port B reset
@@ -28105,11 +28103,11 @@ pub const registers = struct {
             OTGHSRST: u1,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40023814
         /// AHB2 peripheral reset register
-        pub const AHB2RSTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB2RSTR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -28146,11 +28144,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40023818
         /// AHB3 peripheral reset register
-        pub const AHB3RSTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB3RSTR = @intToPtr(*volatile align(4) packed struct {
             /// Flexible memory controller module
             /// reset
             FMCRST: u1,
@@ -28187,11 +28185,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40023820
         /// APB1 peripheral reset register
-        pub const APB1RSTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const APB1RSTR = @intToPtr(*volatile align(4) packed struct {
             /// TIM2 reset
             TIM2RST: u1,
             /// TIM3 reset
@@ -28250,11 +28248,11 @@ pub const registers = struct {
             UART7RST: u1,
             /// UART8 reset
             UART8RST: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40023824
         /// APB2 peripheral reset register
-        pub const APB2RSTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const APB2RSTR = @intToPtr(*volatile align(4) packed struct {
             /// TIM1 reset
             TIM1RST: u1,
             /// TIM8 reset
@@ -28307,11 +28305,11 @@ pub const registers = struct {
             /// USB OTG HS PHY controller
             /// reset
             USBPHYCRST: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40023830
         /// AHB1 peripheral clock register
-        pub const AHB1ENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB1ENR = @intToPtr(*volatile align(4) packed struct {
             /// IO port A clock enable
             GPIOAEN: u1,
             /// IO port B clock enable
@@ -28362,12 +28360,12 @@ pub const registers = struct {
             /// enable
             OTGHSULPIEN: u1,
             padding0: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40023834
         /// AHB2 peripheral clock enable
         /// register
-        pub const AHB2ENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB2ENR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -28404,12 +28402,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40023838
         /// AHB3 peripheral clock enable
         /// register
-        pub const AHB3ENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB3ENR = @intToPtr(*volatile align(4) packed struct {
             /// Flexible memory controller module clock
             /// enable
             FMCEN: u1,
@@ -28446,12 +28444,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x40023840
         /// APB1 peripheral clock enable
         /// register
-        pub const APB1ENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const APB1ENR = @intToPtr(*volatile align(4) packed struct {
             /// TIM2 clock enable
             TIM2EN: u1,
             /// TIM3 clock enable
@@ -28513,12 +28511,12 @@ pub const registers = struct {
             UART7EN: u1,
             /// UART8 clock enable
             UART8EN: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40023844
         /// APB2 peripheral clock enable
         /// register
-        pub const APB2ENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const APB2ENR = @intToPtr(*volatile align(4) packed struct {
             /// TIM1 clock enable
             TIM1EN: u1,
             /// TIM8 clock enable
@@ -28572,12 +28570,12 @@ pub const registers = struct {
             /// USB OTG HS PHY controller clock
             /// enable
             USBPHYCEN: u1,
-        }), base_address + 0x44);
+        }, base_address + 0x44);
 
         /// address: 0x40023850
         /// AHB1 peripheral clock enable in low power
         /// mode register
-        pub const AHB1LPENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB1LPENR = @intToPtr(*volatile align(4) packed struct {
             /// IO port A clock enable during sleep
             /// mode
             GPIOALPEN: u1,
@@ -28666,12 +28664,12 @@ pub const registers = struct {
             /// Sleep mode
             OTGHSULPILPEN: u1,
             padding0: u1,
-        }), base_address + 0x50);
+        }, base_address + 0x50);
 
         /// address: 0x40023854
         /// AHB2 peripheral clock enable in low power
         /// mode register
-        pub const AHB2LPENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB2LPENR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -28710,12 +28708,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40023858
         /// AHB3 peripheral clock enable in low power
         /// mode register
-        pub const AHB3LPENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHB3LPENR = @intToPtr(*volatile align(4) packed struct {
             /// Flexible memory controller module clock
             /// enable during Sleep mode
             FMCLPEN: u1,
@@ -28752,12 +28750,12 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x58);
+        }, base_address + 0x58);
 
         /// address: 0x40023860
         /// APB1 peripheral clock enable in low power
         /// mode register
-        pub const APB1LPENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const APB1LPENR = @intToPtr(*volatile align(4) packed struct {
             /// TIM2 clock enable during Sleep
             /// mode
             TIM2LPEN: u1,
@@ -28842,12 +28840,12 @@ pub const registers = struct {
             /// UART8 clock enable during Sleep
             /// mode
             UART8LPEN: u1,
-        }), base_address + 0x60);
+        }, base_address + 0x60);
 
         /// address: 0x40023864
         /// APB2 peripheral clock enabled in low power
         /// mode register
-        pub const APB2LPENR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const APB2LPENR = @intToPtr(*volatile align(4) packed struct {
             /// TIM1 clock enable during Sleep
             /// mode
             TIM1LPEN: u1,
@@ -28916,11 +28914,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x64);
+        }, base_address + 0x64);
 
         /// address: 0x40023870
         /// Backup domain control register
-        pub const BDCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BDCR = @intToPtr(*volatile align(4) packed struct {
             /// External low-speed oscillator
             /// enable
             LSEON: u1,
@@ -28964,12 +28962,12 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x70);
+        }, base_address + 0x70);
 
         /// address: 0x40023874
         /// clock control & status
         /// register
-        pub const CSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CSR = @intToPtr(*volatile align(4) packed struct {
             /// Internal low-speed oscillator
             /// enable
             LSION: u1,
@@ -29015,12 +29013,12 @@ pub const registers = struct {
             WWDGRSTF: u1,
             /// Low-power reset flag
             LPWRRSTF: u1,
-        }), base_address + 0x74);
+        }, base_address + 0x74);
 
         /// address: 0x40023880
         /// spread spectrum clock generation
         /// register
-        pub const SSCGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SSCGR = @intToPtr(*volatile align(4) packed struct {
             /// Modulation period
             MODPER: u13,
             /// Incrementation step
@@ -29032,11 +29030,11 @@ pub const registers = struct {
             /// Spread spectrum modulation
             /// enable
             SSCGEN: u1,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
 
         /// address: 0x40023884
         /// PLLI2S configuration register
-        pub const PLLI2SCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PLLI2SCFGR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -29062,11 +29060,11 @@ pub const registers = struct {
             /// clocks
             PLLI2SR: u3,
             padding0: u1,
-        }), base_address + 0x84);
+        }, base_address + 0x84);
 
         /// address: 0x40023888
         /// PLL configuration register
-        pub const PLLSAICFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PLLSAICFGR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -29093,12 +29091,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x88);
+        }, base_address + 0x88);
 
         /// address: 0x4002388c
         /// dedicated clocks configuration
         /// register
-        pub const DCKCFGR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCKCFGR1 = @intToPtr(*volatile align(4) packed struct {
             /// PLLI2S division factor for SAI1
             /// clock
             PLLI2SDIV: u5,
@@ -29131,12 +29129,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8c);
+        }, base_address + 0x8c);
 
         /// address: 0x40023890
         /// dedicated clocks configuration
         /// register
-        pub const DCKCFGR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCKCFGR2 = @intToPtr(*volatile align(4) packed struct {
             /// USART 1 clock source
             /// selection
             UART1SEL: u2,
@@ -29187,7 +29185,7 @@ pub const registers = struct {
             SDMMC2SEL: u1,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x90);
+        }, base_address + 0x90);
     };
 
     /// Secure digital input/output
@@ -29197,7 +29195,7 @@ pub const registers = struct {
 
         /// address: 0x40012c00
         /// power control register
-        pub const POWER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const POWER = @intToPtr(*volatile align(4) packed struct {
             /// PWRCTRL
             PWRCTRL: u2,
             padding0: u1,
@@ -29230,11 +29228,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40012c04
         /// SDI clock control register
-        pub const CLKCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CLKCR = @intToPtr(*volatile align(4) packed struct {
             /// Clock divide factor
             CLKDIV: u8,
             /// Clock enable bit
@@ -29269,18 +29267,18 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40012c08
         /// argument register
-        pub const ARG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ARG = @intToPtr(*volatile align(4) packed struct {
             /// Command argument
             CMDARG: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40012c0c
         /// command register
-        pub const CMD = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CMD = @intToPtr(*volatile align(4) packed struct {
             /// Command index
             CMDINDEX: u6,
             /// Wait for response bits
@@ -29316,50 +29314,50 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40012c10
         /// command response register
-        pub const RESPCMD = @intToPtr(*volatile MmioInt(32, u6), base_address + 0x10);
+        pub const RESPCMD = @intToPtr(*volatile align(4) MmioInt(32, u6), base_address + 0x10);
 
         /// address: 0x40012c14
         /// response 1..4 register
-        pub const RESP1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP1 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS1: u32,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40012c18
         /// response 1..4 register
-        pub const RESP2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP2 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS2: u32,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40012c1c
         /// response 1..4 register
-        pub const RESP3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP3 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS3: u32,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40012c20
         /// response 1..4 register
-        pub const RESP4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP4 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS4: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40012c24
         /// data timer register
-        pub const DTIMER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DTIMER = @intToPtr(*volatile align(4) packed struct {
             /// Data timeout period
             DATATIME: u32,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40012c28
         /// data length register
-        pub const DLEN = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DLEN = @intToPtr(*volatile align(4) packed struct {
             /// Data length value
             DATALENGTH: u25,
             padding0: u1,
@@ -29369,11 +29367,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x40012c2c
         /// data control register
-        pub const DCTRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCTRL = @intToPtr(*volatile align(4) packed struct {
             /// DTEN
             DTEN: u1,
             /// Data transfer direction
@@ -29414,11 +29412,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40012c30
         /// data counter register
-        pub const DCOUNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCOUNT = @intToPtr(*volatile align(4) packed struct {
             /// Data count value
             DATACOUNT: u25,
             padding0: u1,
@@ -29428,11 +29426,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40012c34
         /// status register
-        pub const STA = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const STA = @intToPtr(*volatile align(4) packed struct {
             /// Command response received (CRC check
             /// failed)
             CCRCFAIL: u1,
@@ -29500,11 +29498,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40012c38
         /// interrupt clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// CCRCFAIL flag clear bit
             CCRCFAILC: u1,
             /// DCRCFAIL flag clear bit
@@ -29548,11 +29546,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x40012c3c
         /// mask register
-        pub const MASK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MASK = @intToPtr(*volatile align(4) packed struct {
             /// Command CRC fail interrupt
             /// enable
             CCRCFAILIE: u1,
@@ -29628,11 +29626,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40012c48
         /// FIFO counter register
-        pub const FIFOCNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FIFOCNT = @intToPtr(*volatile align(4) packed struct {
             /// Remaining number of words to be written
             /// to or read from the FIFO
             FIFOCOUNT: u24,
@@ -29644,22 +29642,22 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x40012c80
         /// data FIFO register
-        pub const FIFO = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FIFO = @intToPtr(*volatile align(4) packed struct {
             /// Receive and transmit FIFO
             /// data
             FIFOData: u32,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
     };
     pub const SDMMC2 = struct {
         pub const base_address = 0x40011c00;
 
         /// address: 0x40011c00
         /// power control register
-        pub const POWER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const POWER = @intToPtr(*volatile align(4) packed struct {
             /// PWRCTRL
             PWRCTRL: u2,
             padding0: u1,
@@ -29692,11 +29690,11 @@ pub const registers = struct {
             padding27: u1,
             padding28: u1,
             padding29: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40011c04
         /// SDI clock control register
-        pub const CLKCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CLKCR = @intToPtr(*volatile align(4) packed struct {
             /// Clock divide factor
             CLKDIV: u8,
             /// Clock enable bit
@@ -29731,18 +29729,18 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40011c08
         /// argument register
-        pub const ARG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ARG = @intToPtr(*volatile align(4) packed struct {
             /// Command argument
             CMDARG: u32,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40011c0c
         /// command register
-        pub const CMD = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CMD = @intToPtr(*volatile align(4) packed struct {
             /// Command index
             CMDINDEX: u6,
             /// Wait for response bits
@@ -29778,50 +29776,50 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40011c10
         /// command response register
-        pub const RESPCMD = @intToPtr(*volatile MmioInt(32, u6), base_address + 0x10);
+        pub const RESPCMD = @intToPtr(*volatile align(4) MmioInt(32, u6), base_address + 0x10);
 
         /// address: 0x40011c14
         /// response 1..4 register
-        pub const RESP1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP1 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS1: u32,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40011c18
         /// response 1..4 register
-        pub const RESP2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP2 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS2: u32,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40011c1c
         /// response 1..4 register
-        pub const RESP3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP3 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS3: u32,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40011c20
         /// response 1..4 register
-        pub const RESP4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RESP4 = @intToPtr(*volatile align(4) packed struct {
             /// see Table 132
             CARDSTATUS4: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40011c24
         /// data timer register
-        pub const DTIMER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DTIMER = @intToPtr(*volatile align(4) packed struct {
             /// Data timeout period
             DATATIME: u32,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40011c28
         /// data length register
-        pub const DLEN = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DLEN = @intToPtr(*volatile align(4) packed struct {
             /// Data length value
             DATALENGTH: u25,
             padding0: u1,
@@ -29831,11 +29829,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x40011c2c
         /// data control register
-        pub const DCTRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCTRL = @intToPtr(*volatile align(4) packed struct {
             /// DTEN
             DTEN: u1,
             /// Data transfer direction
@@ -29876,11 +29874,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40011c30
         /// data counter register
-        pub const DCOUNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DCOUNT = @intToPtr(*volatile align(4) packed struct {
             /// Data count value
             DATACOUNT: u25,
             padding0: u1,
@@ -29890,11 +29888,11 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40011c34
         /// status register
-        pub const STA = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const STA = @intToPtr(*volatile align(4) packed struct {
             /// Command response received (CRC check
             /// failed)
             CCRCFAIL: u1,
@@ -29962,11 +29960,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40011c38
         /// interrupt clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// CCRCFAIL flag clear bit
             CCRCFAILC: u1,
             /// DCRCFAIL flag clear bit
@@ -30010,11 +30008,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x40011c3c
         /// mask register
-        pub const MASK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MASK = @intToPtr(*volatile align(4) packed struct {
             /// Command CRC fail interrupt
             /// enable
             CCRCFAILIE: u1,
@@ -30090,11 +30088,11 @@ pub const registers = struct {
             padding6: u1,
             padding7: u1,
             padding8: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40011c48
         /// FIFO counter register
-        pub const FIFOCNT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FIFOCNT = @intToPtr(*volatile align(4) packed struct {
             /// Remaining number of words to be written
             /// to or read from the FIFO
             FIFOCOUNT: u24,
@@ -30106,15 +30104,15 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x48);
+        }, base_address + 0x48);
 
         /// address: 0x40011c80
         /// data FIFO register
-        pub const FIFO = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FIFO = @intToPtr(*volatile align(4) packed struct {
             /// Receive and transmit FIFO
             /// data
             FIFOData: u32,
-        }), base_address + 0x80);
+        }, base_address + 0x80);
     };
 
     /// Serial audio interface
@@ -30123,7 +30121,7 @@ pub const registers = struct {
 
         /// address: 0x40015824
         /// BConfiguration register 1
-        pub const BCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Audio block mode
             MODE: u2,
             /// Protocol configuration
@@ -30161,11 +30159,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40015828
         /// BConfiguration register 2
-        pub const BCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR2 = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold
             FTH: u3,
             /// FIFO flush
@@ -30199,11 +30197,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4001582c
         /// BFRCR
-        pub const BFRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BFRCR = @intToPtr(*volatile align(4) packed struct {
             /// Frame length
             FRL: u8,
             /// Frame synchronization active level
@@ -30232,11 +30230,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40015830
         /// BSlot register
-        pub const BSLOTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSLOTR = @intToPtr(*volatile align(4) packed struct {
             /// First bit offset
             FBOFF: u5,
             reserved0: u1,
@@ -30251,11 +30249,11 @@ pub const registers = struct {
             reserved4: u1,
             /// Slot enable
             SLOTEN: u16,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40015834
         /// BInterrupt mask register2
-        pub const BIM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BIM = @intToPtr(*volatile align(4) packed struct {
             /// Overrun/underrun interrupt
             /// enable
             OVRUDRIE: u1,
@@ -30302,11 +30300,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40015838
         /// BStatus register
-        pub const BSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSR = @intToPtr(*volatile align(4) packed struct {
             /// Overrun / underrun
             OVRUDR: u1,
             /// Mute detection
@@ -30348,11 +30346,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4001583c
         /// BClear flag register
-        pub const BCLRFR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCLRFR = @intToPtr(*volatile align(4) packed struct {
             /// Clear overrun / underrun
             COVRUDR: u1,
             /// Mute detection flag
@@ -30394,18 +30392,18 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40015840
         /// BData register
-        pub const BDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BDR = @intToPtr(*volatile align(4) packed struct {
             /// Data
             DATA: u32,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40015804
         /// AConfiguration register 1
-        pub const ACR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACR1 = @intToPtr(*volatile align(4) packed struct {
             /// Audio block mode
             MODE: u2,
             /// Protocol configuration
@@ -30443,11 +30441,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40015808
         /// AConfiguration register 2
-        pub const ACR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACR2 = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold
             FTH: u3,
             /// FIFO flush
@@ -30481,11 +30479,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001580c
         /// AFRCR
-        pub const AFRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRCR = @intToPtr(*volatile align(4) packed struct {
             /// Frame length
             FRL: u8,
             /// Frame synchronization active level
@@ -30514,11 +30512,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40015810
         /// ASlot register
-        pub const ASLOTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ASLOTR = @intToPtr(*volatile align(4) packed struct {
             /// First bit offset
             FBOFF: u5,
             reserved0: u1,
@@ -30533,11 +30531,11 @@ pub const registers = struct {
             reserved4: u1,
             /// Slot enable
             SLOTEN: u16,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40015814
         /// AInterrupt mask register2
-        pub const AIM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AIM = @intToPtr(*volatile align(4) packed struct {
             /// Overrun/underrun interrupt
             /// enable
             OVRUDRIE: u1,
@@ -30584,11 +30582,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40015818
         /// AStatus register
-        pub const ASR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ASR = @intToPtr(*volatile align(4) packed struct {
             /// Overrun / underrun
             OVRUDR: u1,
             /// Mute detection
@@ -30630,11 +30628,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001581c
         /// AClear flag register
-        pub const ACLRFR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACLRFR = @intToPtr(*volatile align(4) packed struct {
             /// Clear overrun / underrun
             COVRUDR: u1,
             /// Mute detection flag
@@ -30676,18 +30674,18 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40015820
         /// AData register
-        pub const ADR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ADR = @intToPtr(*volatile align(4) packed struct {
             /// Data
             DATA: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40015800
         /// Global configuration register
-        pub const GCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GCR = @intToPtr(*volatile align(4) packed struct {
             /// Synchronization inputs
             SYNCIN: u2,
             reserved0: u1,
@@ -30720,14 +30718,14 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
     pub const SAI2 = struct {
         pub const base_address = 0x40015c00;
 
         /// address: 0x40015c24
         /// BConfiguration register 1
-        pub const BCR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR1 = @intToPtr(*volatile align(4) packed struct {
             /// Audio block mode
             MODE: u2,
             /// Protocol configuration
@@ -30765,11 +30763,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40015c28
         /// BConfiguration register 2
-        pub const BCR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCR2 = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold
             FTH: u3,
             /// FIFO flush
@@ -30803,11 +30801,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x40015c2c
         /// BFRCR
-        pub const BFRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BFRCR = @intToPtr(*volatile align(4) packed struct {
             /// Frame length
             FRL: u8,
             /// Frame synchronization active level
@@ -30836,11 +30834,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40015c30
         /// BSlot register
-        pub const BSLOTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSLOTR = @intToPtr(*volatile align(4) packed struct {
             /// First bit offset
             FBOFF: u5,
             reserved0: u1,
@@ -30855,11 +30853,11 @@ pub const registers = struct {
             reserved4: u1,
             /// Slot enable
             SLOTEN: u16,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40015c34
         /// BInterrupt mask register2
-        pub const BIM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BIM = @intToPtr(*volatile align(4) packed struct {
             /// Overrun/underrun interrupt
             /// enable
             OVRUDRIE: u1,
@@ -30906,11 +30904,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40015c38
         /// BStatus register
-        pub const BSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BSR = @intToPtr(*volatile align(4) packed struct {
             /// Overrun / underrun
             OVRUDR: u1,
             /// Mute detection
@@ -30952,11 +30950,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x40015c3c
         /// BClear flag register
-        pub const BCLRFR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BCLRFR = @intToPtr(*volatile align(4) packed struct {
             /// Clear overrun / underrun
             COVRUDR: u1,
             /// Mute detection flag
@@ -30998,18 +30996,18 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40015c40
         /// BData register
-        pub const BDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BDR = @intToPtr(*volatile align(4) packed struct {
             /// Data
             DATA: u32,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40015c04
         /// AConfiguration register 1
-        pub const ACR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACR1 = @intToPtr(*volatile align(4) packed struct {
             /// Audio block mode
             MODE: u2,
             /// Protocol configuration
@@ -31047,11 +31045,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40015c08
         /// AConfiguration register 2
-        pub const ACR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACR2 = @intToPtr(*volatile align(4) packed struct {
             /// FIFO threshold
             FTH: u3,
             /// FIFO flush
@@ -31085,11 +31083,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40015c0c
         /// AFRCR
-        pub const AFRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AFRCR = @intToPtr(*volatile align(4) packed struct {
             /// Frame length
             FRL: u8,
             /// Frame synchronization active level
@@ -31118,11 +31116,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40015c10
         /// ASlot register
-        pub const ASLOTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ASLOTR = @intToPtr(*volatile align(4) packed struct {
             /// First bit offset
             FBOFF: u5,
             reserved0: u1,
@@ -31137,11 +31135,11 @@ pub const registers = struct {
             reserved4: u1,
             /// Slot enable
             SLOTEN: u16,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40015c14
         /// AInterrupt mask register2
-        pub const AIM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AIM = @intToPtr(*volatile align(4) packed struct {
             /// Overrun/underrun interrupt
             /// enable
             OVRUDRIE: u1,
@@ -31188,11 +31186,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40015c18
         /// AStatus register
-        pub const ASR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ASR = @intToPtr(*volatile align(4) packed struct {
             /// Overrun / underrun
             OVRUDR: u1,
             /// Mute detection
@@ -31234,11 +31232,11 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40015c1c
         /// AClear flag register
-        pub const ACLRFR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACLRFR = @intToPtr(*volatile align(4) packed struct {
             /// Clear overrun / underrun
             COVRUDR: u1,
             /// Mute detection flag
@@ -31280,18 +31278,18 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40015c20
         /// AData register
-        pub const ADR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ADR = @intToPtr(*volatile align(4) packed struct {
             /// Data
             DATA: u32,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40015c00
         /// Global configuration register
-        pub const GCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GCR = @intToPtr(*volatile align(4) packed struct {
             /// Synchronization inputs
             SYNCIN: u2,
             reserved0: u1,
@@ -31324,7 +31322,7 @@ pub const registers = struct {
             padding23: u1,
             padding24: u1,
             padding25: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
 
     /// Serial peripheral interface
@@ -31333,7 +31331,7 @@ pub const registers = struct {
 
         /// address: 0x40015000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Clock phase
             CPHA: u1,
             /// Clock polarity
@@ -31381,11 +31379,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40015004
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Rx buffer DMA enable
             RXDMAEN: u1,
             /// Tx buffer DMA enable
@@ -31431,11 +31429,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40015008
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Receive buffer not empty
             RXNE: u1,
             /// Transmit buffer empty
@@ -31477,15 +31475,15 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001500c
         /// data register
-        pub const DR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const DR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40015010
         /// CRC polynomial register
-        pub const CRCPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CRCPR = @intToPtr(*volatile align(4) packed struct {
             /// CRC polynomial register
             CRCPOLY: u16,
             padding0: u1,
@@ -31504,11 +31502,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40015014
         /// RX CRC register
-        pub const RXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Rx CRC register
             RxCRC: u16,
             padding0: u1,
@@ -31527,11 +31525,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40015018
         /// TX CRC register
-        pub const TXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Tx CRC register
             TxCRC: u16,
             padding0: u1,
@@ -31550,11 +31548,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001501c
         /// I2S configuration register
-        pub const I2SCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SCFGR = @intToPtr(*volatile align(4) packed struct {
             /// Channel length (number of bits per audio
             /// channel)
             CHLEN: u1,
@@ -31596,11 +31594,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40015020
         /// I2S prescaler register
-        pub const I2SPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SPR = @intToPtr(*volatile align(4) packed struct {
             /// I2S Linear prescaler
             I2SDIV: u8,
             /// Odd factor for the
@@ -31630,14 +31628,14 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
     };
     pub const SPI1 = struct {
         pub const base_address = 0x40013000;
 
         /// address: 0x40013000
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Clock phase
             CPHA: u1,
             /// Clock polarity
@@ -31685,11 +31683,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40013004
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Rx buffer DMA enable
             RXDMAEN: u1,
             /// Tx buffer DMA enable
@@ -31735,11 +31733,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40013008
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Receive buffer not empty
             RXNE: u1,
             /// Transmit buffer empty
@@ -31781,15 +31779,15 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001300c
         /// data register
-        pub const DR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const DR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40013010
         /// CRC polynomial register
-        pub const CRCPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CRCPR = @intToPtr(*volatile align(4) packed struct {
             /// CRC polynomial register
             CRCPOLY: u16,
             padding0: u1,
@@ -31808,11 +31806,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40013014
         /// RX CRC register
-        pub const RXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Rx CRC register
             RxCRC: u16,
             padding0: u1,
@@ -31831,11 +31829,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40013018
         /// TX CRC register
-        pub const TXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Tx CRC register
             TxCRC: u16,
             padding0: u1,
@@ -31854,11 +31852,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001301c
         /// I2S configuration register
-        pub const I2SCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SCFGR = @intToPtr(*volatile align(4) packed struct {
             /// Channel length (number of bits per audio
             /// channel)
             CHLEN: u1,
@@ -31900,11 +31898,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40013020
         /// I2S prescaler register
-        pub const I2SPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SPR = @intToPtr(*volatile align(4) packed struct {
             /// I2S Linear prescaler
             I2SDIV: u8,
             /// Odd factor for the
@@ -31934,14 +31932,14 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
     };
     pub const SPI2 = struct {
         pub const base_address = 0x40003800;
 
         /// address: 0x40003800
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Clock phase
             CPHA: u1,
             /// Clock polarity
@@ -31989,11 +31987,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40003804
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Rx buffer DMA enable
             RXDMAEN: u1,
             /// Tx buffer DMA enable
@@ -32039,11 +32037,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40003808
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Receive buffer not empty
             RXNE: u1,
             /// Transmit buffer empty
@@ -32085,15 +32083,15 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000380c
         /// data register
-        pub const DR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const DR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40003810
         /// CRC polynomial register
-        pub const CRCPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CRCPR = @intToPtr(*volatile align(4) packed struct {
             /// CRC polynomial register
             CRCPOLY: u16,
             padding0: u1,
@@ -32112,11 +32110,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40003814
         /// RX CRC register
-        pub const RXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Rx CRC register
             RxCRC: u16,
             padding0: u1,
@@ -32135,11 +32133,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40003818
         /// TX CRC register
-        pub const TXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Tx CRC register
             TxCRC: u16,
             padding0: u1,
@@ -32158,11 +32156,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000381c
         /// I2S configuration register
-        pub const I2SCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SCFGR = @intToPtr(*volatile align(4) packed struct {
             /// Channel length (number of bits per audio
             /// channel)
             CHLEN: u1,
@@ -32204,11 +32202,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40003820
         /// I2S prescaler register
-        pub const I2SPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SPR = @intToPtr(*volatile align(4) packed struct {
             /// I2S Linear prescaler
             I2SDIV: u8,
             /// Odd factor for the
@@ -32238,14 +32236,14 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
     };
     pub const SPI4 = struct {
         pub const base_address = 0x40013400;
 
         /// address: 0x40013400
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Clock phase
             CPHA: u1,
             /// Clock polarity
@@ -32293,11 +32291,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40013404
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Rx buffer DMA enable
             RXDMAEN: u1,
             /// Tx buffer DMA enable
@@ -32343,11 +32341,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40013408
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Receive buffer not empty
             RXNE: u1,
             /// Transmit buffer empty
@@ -32389,15 +32387,15 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001340c
         /// data register
-        pub const DR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const DR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40013410
         /// CRC polynomial register
-        pub const CRCPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CRCPR = @intToPtr(*volatile align(4) packed struct {
             /// CRC polynomial register
             CRCPOLY: u16,
             padding0: u1,
@@ -32416,11 +32414,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40013414
         /// RX CRC register
-        pub const RXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Rx CRC register
             RxCRC: u16,
             padding0: u1,
@@ -32439,11 +32437,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40013418
         /// TX CRC register
-        pub const TXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Tx CRC register
             TxCRC: u16,
             padding0: u1,
@@ -32462,11 +32460,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001341c
         /// I2S configuration register
-        pub const I2SCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SCFGR = @intToPtr(*volatile align(4) packed struct {
             /// Channel length (number of bits per audio
             /// channel)
             CHLEN: u1,
@@ -32508,11 +32506,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40013420
         /// I2S prescaler register
-        pub const I2SPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SPR = @intToPtr(*volatile align(4) packed struct {
             /// I2S Linear prescaler
             I2SDIV: u8,
             /// Odd factor for the
@@ -32542,14 +32540,14 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
     };
     pub const SPI3 = struct {
         pub const base_address = 0x40003c00;
 
         /// address: 0x40003c00
         /// control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// Clock phase
             CPHA: u1,
             /// Clock polarity
@@ -32597,11 +32595,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40003c04
         /// control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             /// Rx buffer DMA enable
             RXDMAEN: u1,
             /// Tx buffer DMA enable
@@ -32647,11 +32645,11 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40003c08
         /// status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Receive buffer not empty
             RXNE: u1,
             /// Transmit buffer empty
@@ -32693,15 +32691,15 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40003c0c
         /// data register
-        pub const DR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const DR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40003c10
         /// CRC polynomial register
-        pub const CRCPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CRCPR = @intToPtr(*volatile align(4) packed struct {
             /// CRC polynomial register
             CRCPOLY: u16,
             padding0: u1,
@@ -32720,11 +32718,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40003c14
         /// RX CRC register
-        pub const RXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Rx CRC register
             RxCRC: u16,
             padding0: u1,
@@ -32743,11 +32741,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40003c18
         /// TX CRC register
-        pub const TXCRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const TXCRCR = @intToPtr(*volatile align(4) packed struct {
             /// Tx CRC register
             TxCRC: u16,
             padding0: u1,
@@ -32766,11 +32764,11 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40003c1c
         /// I2S configuration register
-        pub const I2SCFGR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SCFGR = @intToPtr(*volatile align(4) packed struct {
             /// Channel length (number of bits per audio
             /// channel)
             CHLEN: u1,
@@ -32812,11 +32810,11 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40003c20
         /// I2S prescaler register
-        pub const I2SPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const I2SPR = @intToPtr(*volatile align(4) packed struct {
             /// I2S Linear prescaler
             I2SDIV: u8,
             /// Odd factor for the
@@ -32846,7 +32844,7 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
     };
 
     /// System configuration controller
@@ -32855,7 +32853,7 @@ pub const registers = struct {
 
         /// address: 0x40013800
         /// memory remap register
-        pub const MEMRMP = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MEMRMP = @intToPtr(*volatile align(4) packed struct {
             /// Memory boot mapping
             MEM_BOOT: u1,
             reserved0: u1,
@@ -32889,12 +32887,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40013804
         /// peripheral mode configuration
         /// register
-        pub const PMC = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const PMC = @intToPtr(*volatile align(4) packed struct {
             /// I2C1_FMP I2C1 Fast Mode +
             /// Enable
             I2C1_FMP: u1,
@@ -32936,12 +32934,12 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40013808
         /// external interrupt configuration register
         /// 1
-        pub const EXTICR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EXTICR1 = @intToPtr(*volatile align(4) packed struct {
             /// EXTI x configuration (x = 0 to
             /// 3)
             EXTI0: u4,
@@ -32970,12 +32968,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001380c
         /// external interrupt configuration register
         /// 2
-        pub const EXTICR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EXTICR2 = @intToPtr(*volatile align(4) packed struct {
             /// EXTI x configuration (x = 4 to
             /// 7)
             EXTI4: u4,
@@ -33004,12 +33002,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40013810
         /// external interrupt configuration register
         /// 3
-        pub const EXTICR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EXTICR3 = @intToPtr(*volatile align(4) packed struct {
             /// EXTI x configuration (x = 8 to
             /// 11)
             EXTI8: u4,
@@ -33037,12 +33035,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40013814
         /// external interrupt configuration register
         /// 4
-        pub const EXTICR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const EXTICR4 = @intToPtr(*volatile align(4) packed struct {
             /// EXTI x configuration (x = 12 to
             /// 15)
             EXTI12: u4,
@@ -33071,12 +33069,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40013820
         /// Compensation cell control
         /// register
-        pub const CMPCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CMPCR = @intToPtr(*volatile align(4) packed struct {
             /// Compensation cell
             /// power-down
             CMP_PD: u1,
@@ -33112,7 +33110,7 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
     };
 
     /// Universal synchronous asynchronous receiver
@@ -33122,7 +33120,7 @@ pub const registers = struct {
 
         /// address: 0x40004800
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -33189,11 +33187,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40004804
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -33243,11 +33241,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40004808
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -33300,16 +33298,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000480c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40004810
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -33330,20 +33328,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40004814
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40004818
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -33382,12 +33380,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000481c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -33441,11 +33439,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40004820
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -33495,22 +33493,22 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40004824
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40004828
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
     pub const USART6 = struct {
         pub const base_address = 0x40011400;
 
         /// address: 0x40011400
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -33577,11 +33575,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40011404
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -33631,11 +33629,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40011408
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -33688,16 +33686,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001140c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40011410
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -33718,20 +33716,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40011414
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40011418
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -33770,12 +33768,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001141c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -33829,11 +33827,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40011420
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -33883,22 +33881,22 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40011424
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40011428
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
     pub const UART8 = struct {
         pub const base_address = 0x40007c00;
 
         /// address: 0x40007c00
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -33965,11 +33963,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40007c04
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -34019,11 +34017,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40007c08
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -34076,16 +34074,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40007c0c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40007c10
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -34106,20 +34104,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40007c14
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40007c18
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -34158,12 +34156,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40007c1c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -34217,11 +34215,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40007c20
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -34271,22 +34269,22 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40007c24
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40007c28
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
     pub const USART2 = struct {
         pub const base_address = 0x40004400;
 
         /// address: 0x40004400
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -34353,11 +34351,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40004404
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -34407,11 +34405,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40004408
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -34464,16 +34462,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000440c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40004410
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -34494,20 +34492,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40004414
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40004418
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -34546,12 +34544,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000441c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -34605,11 +34603,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40004420
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -34659,22 +34657,22 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40004424
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40004428
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
     pub const UART7 = struct {
         pub const base_address = 0x40007800;
 
         /// address: 0x40007800
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -34741,11 +34739,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40007804
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -34795,11 +34793,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40007808
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -34852,16 +34850,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000780c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40007810
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -34882,20 +34880,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40007814
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40007818
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -34934,12 +34932,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000781c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -34993,11 +34991,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40007820
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -35047,22 +35045,22 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40007824
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40007828
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
     pub const UART4 = struct {
         pub const base_address = 0x40004c00;
 
         /// address: 0x40004c00
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -35129,11 +35127,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40004c04
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -35183,11 +35181,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40004c08
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -35240,16 +35238,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40004c0c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40004c10
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -35270,20 +35268,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40004c14
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40004c18
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -35322,12 +35320,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40004c1c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -35381,11 +35379,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40004c20
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -35435,22 +35433,22 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40004c24
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40004c28
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
     pub const UART5 = struct {
         pub const base_address = 0x40005000;
 
         /// address: 0x40005000
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -35517,11 +35515,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40005004
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -35571,11 +35569,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40005008
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -35628,16 +35626,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4000500c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40005010
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -35658,20 +35656,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40005014
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40005018
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -35710,12 +35708,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4000501c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -35769,11 +35767,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40005020
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -35823,15 +35821,15 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40005024
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40005028
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
 
     /// Universal synchronous asynchronous receiver
@@ -35841,7 +35839,7 @@ pub const registers = struct {
 
         /// address: 0x40011000
         /// Control register 1
-        pub const CR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR1 = @intToPtr(*volatile align(4) packed struct {
             /// USART enable
             UE: u1,
             reserved0: u1,
@@ -35908,11 +35906,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40011004
         /// Control register 2
-        pub const CR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -35962,11 +35960,11 @@ pub const registers = struct {
             ADD0_3: u4,
             /// Address of the USART node
             ADD4_7: u4,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40011008
         /// Control register 3
-        pub const CR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR3 = @intToPtr(*volatile align(4) packed struct {
             /// Error interrupt enable
             EIE: u1,
             /// Ir mode enable
@@ -36019,16 +36017,16 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4001100c
         /// Baud rate register
-        pub const BRR = @intToPtr(*volatile MmioInt(32, u16), base_address + 0xc);
+        pub const BRR = @intToPtr(*volatile align(4) MmioInt(32, u16), base_address + 0xc);
 
         /// address: 0x40011010
         /// Guard time and prescaler
         /// register
-        pub const GTPR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const GTPR = @intToPtr(*volatile align(4) packed struct {
             /// Prescaler value
             PSC: u8,
             /// Guard time value
@@ -36049,20 +36047,20 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40011014
         /// Receiver timeout register
-        pub const RTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RTOR = @intToPtr(*volatile align(4) packed struct {
             /// Receiver timeout value
             RTO: u24,
             /// Block Length
             BLEN: u8,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40011018
         /// Request register
-        pub const RQR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RQR = @intToPtr(*volatile align(4) packed struct {
             /// Auto baud rate request
             ABRRQ: u1,
             /// Send break request
@@ -36101,12 +36099,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4001101c
         /// Interrupt & status
         /// register
-        pub const ISR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ISR = @intToPtr(*volatile align(4) packed struct {
             /// PE
             PE: u1,
             /// FE
@@ -36160,11 +36158,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40011020
         /// Interrupt flag clear register
-        pub const ICR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICR = @intToPtr(*volatile align(4) packed struct {
             /// Parity error clear flag
             PECF: u1,
             /// Framing error clear flag
@@ -36214,15 +36212,15 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40011024
         /// Receive data register
-        pub const RDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x24);
+        pub const RDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x24);
 
         /// address: 0x40011028
         /// Transmit data register
-        pub const TDR = @intToPtr(*volatile MmioInt(32, u9), base_address + 0x28);
+        pub const TDR = @intToPtr(*volatile align(4) MmioInt(32, u9), base_address + 0x28);
     };
 
     /// USB on the go full speed
@@ -36232,7 +36230,7 @@ pub const registers = struct {
         /// address: 0x50000000
         /// OTG_FS control and status register
         /// (OTG_FS_GOTGCTL)
-        pub const OTG_FS_GOTGCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GOTGCTL = @intToPtr(*volatile align(4) packed struct {
             /// Session request success
             SRQSCS: u1,
             /// Session request
@@ -36287,12 +36285,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x50000004
         /// OTG_FS interrupt register
         /// (OTG_FS_GOTGINT)
-        pub const OTG_FS_GOTGINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GOTGINT = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             /// Session end detected
@@ -36334,12 +36332,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x50000008
         /// OTG_FS AHB configuration register
         /// (OTG_FS_GAHBCFG)
-        pub const OTG_FS_GAHBCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GAHBCFG = @intToPtr(*volatile align(4) packed struct {
             /// Global interrupt mask
             GINT: u1,
             reserved0: u1,
@@ -36376,12 +36374,12 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x5000000c
         /// OTG_FS USB configuration register
         /// (OTG_FS_GUSBCFG)
-        pub const OTG_FS_GUSBCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GUSBCFG = @intToPtr(*volatile align(4) packed struct {
             /// FS timeout calibration
             TOCAL: u3,
             reserved0: u1,
@@ -36417,12 +36415,12 @@ pub const registers = struct {
             /// Force device mode
             FDMOD: u1,
             padding0: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x50000010
         /// OTG_FS reset register
         /// (OTG_FS_GRSTCTL)
-        pub const OTG_FS_GRSTCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GRSTCTL = @intToPtr(*volatile align(4) packed struct {
             /// Core soft reset
             CSRST: u1,
             /// HCLK soft reset
@@ -36458,12 +36456,12 @@ pub const registers = struct {
             reserved20: u1,
             /// AHB master idle
             AHBIDL: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x50000014
         /// OTG_FS core interrupt register
         /// (OTG_FS_GINTSTS)
-        pub const OTG_FS_GINTSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GINTSTS = @intToPtr(*volatile align(4) packed struct {
             /// Current mode of operation
             CMOD: u1,
             /// Mode mismatch interrupt
@@ -36531,12 +36529,12 @@ pub const registers = struct {
             /// Resume/remote wakeup detected
             /// interrupt
             WKUPINT: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x50000018
         /// OTG_FS interrupt mask register
         /// (OTG_FS_GINTMSK)
-        pub const OTG_FS_GINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GINTMSK = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Mode mismatch interrupt
             /// mask
@@ -36613,12 +36611,12 @@ pub const registers = struct {
             /// Resume/remote wakeup detected interrupt
             /// mask
             WUIM: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x5000001c
         /// OTG_FS Receive status debug read(Device
         /// mode)
-        pub const OTG_FS_GRXSTSR_Device = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GRXSTSR_Device = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint number
             EPNUM: u4,
             /// Byte count
@@ -36636,12 +36634,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x5000001c
         /// OTG_FS Receive status debug read(Host
         /// mode)
-        pub const OTG_FS_GRXSTSR_Host = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GRXSTSR_Host = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint number
             CHNUM: u4,
             /// Byte count
@@ -36661,12 +36659,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x50000024
         /// OTG_FS Receive FIFO size register
         /// (OTG_FS_GRXFSIZ)
-        pub const OTG_FS_GRXFSIZ = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GRXFSIZ = @intToPtr(*volatile align(4) packed struct {
             /// RxFIFO depth
             RXFD: u16,
             padding0: u1,
@@ -36685,34 +36683,34 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x50000028
         /// OTG_FS Endpoint 0 Transmit FIFO
         /// size
-        pub const OTG_FS_DIEPTXF0_Device = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTXF0_Device = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint 0 transmit RAM start
             /// address
             TX0FSA: u16,
             /// Endpoint 0 TxFIFO depth
             TX0FD: u16,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x50000028
         /// OTG_FS Host non-periodic transmit FIFO size
         /// register
-        pub const OTG_FS_HNPTXFSIZ_Host = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HNPTXFSIZ_Host = @intToPtr(*volatile align(4) packed struct {
             /// Non-periodic transmit RAM start
             /// address
             NPTXFSA: u16,
             /// Non-periodic TxFIFO depth
             NPTXFD: u16,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x5000002c
         /// OTG_FS non-periodic transmit FIFO/queue
         /// status register (OTG_FS_GNPTXSTS)
-        pub const OTG_FS_HNPTXSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HNPTXSTS = @intToPtr(*volatile align(4) packed struct {
             /// Non-periodic TxFIFO space
             /// available
             NPTXFSAV: u16,
@@ -36723,12 +36721,12 @@ pub const registers = struct {
             /// queue
             NPTXQTOP: u7,
             padding0: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x50000038
         /// OTG_FS general core configuration register
         /// (OTG_FS_GCCFG)
-        pub const OTG_FS_GCCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GCCFG = @intToPtr(*volatile align(4) packed struct {
             /// Data contact detection (DCD)
             /// status
             DCDET: u1,
@@ -36779,63 +36777,63 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x5000003c
         /// core ID register
-        pub const OTG_FS_CID = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_CID = @intToPtr(*volatile align(4) packed struct {
             /// Product ID field
             PRODUCT_ID: u32,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x50000100
         /// OTG_FS Host periodic transmit FIFO size
         /// register (OTG_FS_HPTXFSIZ)
-        pub const OTG_FS_HPTXFSIZ = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HPTXFSIZ = @intToPtr(*volatile align(4) packed struct {
             /// Host periodic TxFIFO start
             /// address
             PTXSA: u16,
             /// Host periodic TxFIFO depth
             PTXFSIZ: u16,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0x50000104
         /// OTG_FS device IN endpoint transmit FIFO size
         /// register (OTG_FS_DIEPTXF1)
-        pub const OTG_FS_DIEPTXF1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTXF1 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFO2 transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x104);
+        }, base_address + 0x104);
 
         /// address: 0x50000108
         /// OTG_FS device IN endpoint transmit FIFO size
         /// register (OTG_FS_DIEPTXF2)
-        pub const OTG_FS_DIEPTXF2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTXF2 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFO3 transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0x5000010c
         /// OTG_FS device IN endpoint transmit FIFO size
         /// register (OTG_FS_DIEPTXF3)
-        pub const OTG_FS_DIEPTXF3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTXF3 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFO4 transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x10c);
+        }, base_address + 0x10c);
 
         /// address: 0x50000020
         /// OTG status read and pop register (Device
         /// mode)
-        pub const OTG_FS_GRXSTSP_Device = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GRXSTSP_Device = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint number
             EPNUM: u4,
             /// Byte count
@@ -36853,12 +36851,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x50000020
         /// OTG status read and pop register (Host
         /// mode)
-        pub const OTG_FS_GRXSTSP_Host = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GRXSTSP_Host = @intToPtr(*volatile align(4) packed struct {
             /// Channel number
             CHNUM: u4,
             /// Byte count
@@ -36878,11 +36876,11 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x50000030
         /// OTG I2C access register
-        pub const OTG_FS_GI2CCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GI2CCTL = @intToPtr(*volatile align(4) packed struct {
             /// I2C Read/Write Data
             RWDATA: u8,
             /// I2C Register Address
@@ -36903,34 +36901,34 @@ pub const registers = struct {
             RW: u1,
             /// I2C Busy/Done
             BSYDNE: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x50000110
         /// OTG_FS device IN endpoint transmit FIFO size
         /// register (OTG_FS_DIEPTXF4)
-        pub const OTG_FS_DIEPTXF4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTXF4 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint Tx FIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x110);
+        }, base_address + 0x110);
 
         /// address: 0x50000114
         /// OTG_FS device IN endpoint transmit FIFO size
         /// register (OTG_FS_DIEPTXF5)
-        pub const OTG_FS_DIEPTXF5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTXF5 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint Tx FIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x114);
+        }, base_address + 0x114);
 
         /// address: 0x50000054
         /// OTG core LPM configuration
         /// register
-        pub const OTG_FS_GLPMCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_GLPMCFG = @intToPtr(*volatile align(4) packed struct {
             /// LPM support enable
             LPMEN: u1,
             /// LPM token acknowledge
@@ -36967,7 +36965,7 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
     };
 
     /// USB on the go full speed
@@ -36977,7 +36975,7 @@ pub const registers = struct {
         /// address: 0x50000400
         /// OTG_FS host configuration register
         /// (OTG_FS_HCFG)
-        pub const OTG_FS_HCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCFG = @intToPtr(*volatile align(4) packed struct {
             /// FS/LS PHY clock select
             FSLSPCS: u2,
             /// FS- and LS-only support
@@ -37011,12 +37009,12 @@ pub const registers = struct {
             padding26: u1,
             padding27: u1,
             padding28: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x50000404
         /// OTG_FS Host frame interval
         /// register
-        pub const OTG_FS_HFIR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HFIR = @intToPtr(*volatile align(4) packed struct {
             /// Frame interval
             FRIVL: u16,
             padding0: u1,
@@ -37035,22 +37033,22 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x50000408
         /// OTG_FS host frame number/frame time
         /// remaining register (OTG_FS_HFNUM)
-        pub const OTG_FS_HFNUM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HFNUM = @intToPtr(*volatile align(4) packed struct {
             /// Frame number
             FRNUM: u16,
             /// Frame time remaining
             FTREM: u16,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x50000410
         /// OTG_FS_Host periodic transmit FIFO/queue
         /// status register (OTG_FS_HPTXSTS)
-        pub const OTG_FS_HPTXSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HPTXSTS = @intToPtr(*volatile align(4) packed struct {
             /// Periodic transmit data FIFO space
             /// available
             PTXFSAVL: u16,
@@ -37060,12 +37058,12 @@ pub const registers = struct {
             /// Top of the periodic transmit request
             /// queue
             PTXQTOP: u8,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x50000414
         /// OTG_FS Host all channels interrupt
         /// register
-        pub const OTG_FS_HAINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HAINT = @intToPtr(*volatile align(4) packed struct {
             /// Channel interrupts
             HAINT: u16,
             padding0: u1,
@@ -37084,12 +37082,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x50000418
         /// OTG_FS host all channels interrupt mask
         /// register
-        pub const OTG_FS_HAINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HAINTMSK = @intToPtr(*volatile align(4) packed struct {
             /// Channel interrupt mask
             HAINTM: u16,
             padding0: u1,
@@ -37108,12 +37106,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x50000440
         /// OTG_FS host port control and status register
         /// (OTG_FS_HPRT)
-        pub const OTG_FS_HPRT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HPRT = @intToPtr(*volatile align(4) packed struct {
             /// Port connect status
             PCSTS: u1,
             /// Port connect detected
@@ -37154,12 +37152,12 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x50000500
         /// OTG_FS host channel-0 characteristics
         /// register (OTG_FS_HCCHAR0)
-        pub const OTG_FS_HCCHAR0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR0 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37181,12 +37179,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0x50000520
         /// OTG_FS host channel-1 characteristics
         /// register (OTG_FS_HCCHAR1)
-        pub const OTG_FS_HCCHAR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR1 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37208,12 +37206,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x120);
+        }, base_address + 0x120);
 
         /// address: 0x50000540
         /// OTG_FS host channel-2 characteristics
         /// register (OTG_FS_HCCHAR2)
-        pub const OTG_FS_HCCHAR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR2 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37235,12 +37233,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x140);
+        }, base_address + 0x140);
 
         /// address: 0x50000560
         /// OTG_FS host channel-3 characteristics
         /// register (OTG_FS_HCCHAR3)
-        pub const OTG_FS_HCCHAR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR3 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37262,12 +37260,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x160);
+        }, base_address + 0x160);
 
         /// address: 0x50000580
         /// OTG_FS host channel-4 characteristics
         /// register (OTG_FS_HCCHAR4)
-        pub const OTG_FS_HCCHAR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR4 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37289,12 +37287,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x180);
+        }, base_address + 0x180);
 
         /// address: 0x500005a0
         /// OTG_FS host channel-5 characteristics
         /// register (OTG_FS_HCCHAR5)
-        pub const OTG_FS_HCCHAR5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR5 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37316,12 +37314,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x1a0);
+        }, base_address + 0x1a0);
 
         /// address: 0x500005c0
         /// OTG_FS host channel-6 characteristics
         /// register (OTG_FS_HCCHAR6)
-        pub const OTG_FS_HCCHAR6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR6 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37343,12 +37341,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x1c0);
+        }, base_address + 0x1c0);
 
         /// address: 0x500005e0
         /// OTG_FS host channel-7 characteristics
         /// register (OTG_FS_HCCHAR7)
-        pub const OTG_FS_HCCHAR7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR7 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -37370,12 +37368,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x1e0);
+        }, base_address + 0x1e0);
 
         /// address: 0x50000508
         /// OTG_FS host channel-0 interrupt register
         /// (OTG_FS_HCINT0)
-        pub const OTG_FS_HCINT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37420,12 +37418,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0x50000528
         /// OTG_FS host channel-1 interrupt register
         /// (OTG_FS_HCINT1)
-        pub const OTG_FS_HCINT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37470,12 +37468,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x128);
+        }, base_address + 0x128);
 
         /// address: 0x50000548
         /// OTG_FS host channel-2 interrupt register
         /// (OTG_FS_HCINT2)
-        pub const OTG_FS_HCINT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37520,12 +37518,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x148);
+        }, base_address + 0x148);
 
         /// address: 0x50000568
         /// OTG_FS host channel-3 interrupt register
         /// (OTG_FS_HCINT3)
-        pub const OTG_FS_HCINT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37570,12 +37568,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x168);
+        }, base_address + 0x168);
 
         /// address: 0x50000588
         /// OTG_FS host channel-4 interrupt register
         /// (OTG_FS_HCINT4)
-        pub const OTG_FS_HCINT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37620,12 +37618,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x188);
+        }, base_address + 0x188);
 
         /// address: 0x500005a8
         /// OTG_FS host channel-5 interrupt register
         /// (OTG_FS_HCINT5)
-        pub const OTG_FS_HCINT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37670,12 +37668,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1a8);
+        }, base_address + 0x1a8);
 
         /// address: 0x500005c8
         /// OTG_FS host channel-6 interrupt register
         /// (OTG_FS_HCINT6)
-        pub const OTG_FS_HCINT6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37720,12 +37718,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1c8);
+        }, base_address + 0x1c8);
 
         /// address: 0x500005e8
         /// OTG_FS host channel-7 interrupt register
         /// (OTG_FS_HCINT7)
-        pub const OTG_FS_HCINT7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -37770,12 +37768,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1e8);
+        }, base_address + 0x1e8);
 
         /// address: 0x5000050c
         /// OTG_FS host channel-0 mask register
         /// (OTG_FS_HCINTMSK0)
-        pub const OTG_FS_HCINTMSK0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -37822,12 +37820,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x10c);
+        }, base_address + 0x10c);
 
         /// address: 0x5000052c
         /// OTG_FS host channel-1 mask register
         /// (OTG_FS_HCINTMSK1)
-        pub const OTG_FS_HCINTMSK1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -37874,12 +37872,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x12c);
+        }, base_address + 0x12c);
 
         /// address: 0x5000054c
         /// OTG_FS host channel-2 mask register
         /// (OTG_FS_HCINTMSK2)
-        pub const OTG_FS_HCINTMSK2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -37926,12 +37924,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x14c);
+        }, base_address + 0x14c);
 
         /// address: 0x5000056c
         /// OTG_FS host channel-3 mask register
         /// (OTG_FS_HCINTMSK3)
-        pub const OTG_FS_HCINTMSK3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -37978,12 +37976,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x16c);
+        }, base_address + 0x16c);
 
         /// address: 0x5000058c
         /// OTG_FS host channel-4 mask register
         /// (OTG_FS_HCINTMSK4)
-        pub const OTG_FS_HCINTMSK4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38030,12 +38028,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x18c);
+        }, base_address + 0x18c);
 
         /// address: 0x500005ac
         /// OTG_FS host channel-5 mask register
         /// (OTG_FS_HCINTMSK5)
-        pub const OTG_FS_HCINTMSK5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38082,12 +38080,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1ac);
+        }, base_address + 0x1ac);
 
         /// address: 0x500005cc
         /// OTG_FS host channel-6 mask register
         /// (OTG_FS_HCINTMSK6)
-        pub const OTG_FS_HCINTMSK6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38134,12 +38132,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1cc);
+        }, base_address + 0x1cc);
 
         /// address: 0x500005ec
         /// OTG_FS host channel-7 mask register
         /// (OTG_FS_HCINTMSK7)
-        pub const OTG_FS_HCINTMSK7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38186,12 +38184,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1ec);
+        }, base_address + 0x1ec);
 
         /// address: 0x50000510
         /// OTG_FS host channel-0 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38199,12 +38197,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x110);
+        }, base_address + 0x110);
 
         /// address: 0x50000530
         /// OTG_FS host channel-1 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38212,12 +38210,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x130);
+        }, base_address + 0x130);
 
         /// address: 0x50000550
         /// OTG_FS host channel-2 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38225,12 +38223,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x150);
+        }, base_address + 0x150);
 
         /// address: 0x50000570
         /// OTG_FS host channel-3 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38238,12 +38236,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x170);
+        }, base_address + 0x170);
 
         /// address: 0x50000590
         /// OTG_FS host channel-x transfer size
         /// register
-        pub const OTG_FS_HCTSIZ4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38251,12 +38249,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x190);
+        }, base_address + 0x190);
 
         /// address: 0x500005b0
         /// OTG_FS host channel-5 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38264,12 +38262,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x1b0);
+        }, base_address + 0x1b0);
 
         /// address: 0x500005d0
         /// OTG_FS host channel-6 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38277,12 +38275,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x1d0);
+        }, base_address + 0x1d0);
 
         /// address: 0x500005f0
         /// OTG_FS host channel-7 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38290,12 +38288,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x1f0);
+        }, base_address + 0x1f0);
 
         /// address: 0x50000600
         /// OTG_FS host channel-8 characteristics
         /// register
-        pub const OTG_FS_HCCHAR8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR8 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -38317,12 +38315,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x200);
+        }, base_address + 0x200);
 
         /// address: 0x50000608
         /// OTG_FS host channel-8 interrupt
         /// register
-        pub const OTG_FS_HCINT8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT8 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -38367,12 +38365,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x208);
+        }, base_address + 0x208);
 
         /// address: 0x5000060c
         /// OTG_FS host channel-8 mask
         /// register
-        pub const OTG_FS_HCINTMSK8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK8 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38419,12 +38417,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x20c);
+        }, base_address + 0x20c);
 
         /// address: 0x50000610
         /// OTG_FS host channel-8 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ8 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38432,12 +38430,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x210);
+        }, base_address + 0x210);
 
         /// address: 0x50000620
         /// OTG_FS host channel-9 characteristics
         /// register
-        pub const OTG_FS_HCCHAR9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR9 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -38459,12 +38457,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x220);
+        }, base_address + 0x220);
 
         /// address: 0x50000628
         /// OTG_FS host channel-9 interrupt
         /// register
-        pub const OTG_FS_HCINT9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT9 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -38509,12 +38507,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x228);
+        }, base_address + 0x228);
 
         /// address: 0x5000062c
         /// OTG_FS host channel-9 mask
         /// register
-        pub const OTG_FS_HCINTMSK9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK9 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38561,12 +38559,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x22c);
+        }, base_address + 0x22c);
 
         /// address: 0x50000630
         /// OTG_FS host channel-9 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ9 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38574,12 +38572,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x230);
+        }, base_address + 0x230);
 
         /// address: 0x50000640
         /// OTG_FS host channel-10 characteristics
         /// register
-        pub const OTG_FS_HCCHAR10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR10 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -38601,12 +38599,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x240);
+        }, base_address + 0x240);
 
         /// address: 0x50000648
         /// OTG_FS host channel-10 interrupt
         /// register
-        pub const OTG_FS_HCINT10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT10 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -38651,12 +38649,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x248);
+        }, base_address + 0x248);
 
         /// address: 0x5000064c
         /// OTG_FS host channel-10 mask
         /// register
-        pub const OTG_FS_HCINTMSK10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK10 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38703,12 +38701,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x24c);
+        }, base_address + 0x24c);
 
         /// address: 0x50000650
         /// OTG_FS host channel-10 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ10 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38716,12 +38714,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x250);
+        }, base_address + 0x250);
 
         /// address: 0x50000660
         /// OTG_FS host channel-11 characteristics
         /// register
-        pub const OTG_FS_HCCHAR11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCCHAR11 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -38743,12 +38741,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x260);
+        }, base_address + 0x260);
 
         /// address: 0x50000668
         /// OTG_FS host channel-11 interrupt
         /// register
-        pub const OTG_FS_HCINT11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINT11 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -38793,12 +38791,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x268);
+        }, base_address + 0x268);
 
         /// address: 0x5000066c
         /// OTG_FS host channel-11 mask
         /// register
-        pub const OTG_FS_HCINTMSK11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCINTMSK11 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -38845,12 +38843,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x26c);
+        }, base_address + 0x26c);
 
         /// address: 0x50000670
         /// OTG_FS host channel-11 transfer size
         /// register
-        pub const OTG_FS_HCTSIZ11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_HCTSIZ11 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -38858,7 +38856,7 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x270);
+        }, base_address + 0x270);
     };
 
     /// USB on the go full speed
@@ -38868,7 +38866,7 @@ pub const registers = struct {
         /// address: 0x50000800
         /// OTG_FS device configuration register
         /// (OTG_FS_DCFG)
-        pub const OTG_FS_DCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DCFG = @intToPtr(*volatile align(4) packed struct {
             /// Device speed
             DSPD: u2,
             /// Non-zero-length status OUT
@@ -38898,12 +38896,12 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x50000804
         /// OTG_FS device control register
         /// (OTG_FS_DCTL)
-        pub const OTG_FS_DCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DCTL = @intToPtr(*volatile align(4) packed struct {
             /// Remote wakeup signaling
             RWUSIG: u1,
             /// Soft disconnect
@@ -38944,12 +38942,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x50000808
         /// OTG_FS device status register
         /// (OTG_FS_DSTS)
-        pub const OTG_FS_DSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DSTS = @intToPtr(*volatile align(4) packed struct {
             /// Suspend status
             SUSPSTS: u1,
             /// Enumerated speed
@@ -38973,12 +38971,12 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x50000810
         /// OTG_FS device IN endpoint common interrupt
         /// mask register (OTG_FS_DIEPMSK)
-        pub const OTG_FS_DIEPMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPMSK = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed interrupt
             /// mask
             XFRCM: u1,
@@ -39023,12 +39021,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x50000814
         /// OTG_FS device OUT endpoint common interrupt
         /// mask register (OTG_FS_DOEPMSK)
-        pub const OTG_FS_DOEPMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPMSK = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed interrupt
             /// mask
             XFRCM: u1,
@@ -39068,34 +39066,34 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x50000818
         /// OTG_FS device all endpoints interrupt
         /// register (OTG_FS_DAINT)
-        pub const OTG_FS_DAINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DAINT = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint interrupt bits
             IEPINT: u16,
             /// OUT endpoint interrupt
             /// bits
             OEPINT: u16,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x5000081c
         /// OTG_FS all endpoints interrupt mask register
         /// (OTG_FS_DAINTMSK)
-        pub const OTG_FS_DAINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DAINTMSK = @intToPtr(*volatile align(4) packed struct {
             /// IN EP interrupt mask bits
             IEPM: u16,
             /// OUT endpoint interrupt
             /// bits
             OEPINT: u16,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x50000828
         /// OTG_FS device VBUS discharge time
         /// register
-        pub const OTG_FS_DVBUSDIS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DVBUSDIS = @intToPtr(*volatile align(4) packed struct {
             /// Device VBUS discharge time
             VBUSDT: u16,
             padding0: u1,
@@ -39114,12 +39112,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x5000082c
         /// OTG_FS device VBUS pulsing time
         /// register
-        pub const OTG_FS_DVBUSPULSE = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DVBUSPULSE = @intToPtr(*volatile align(4) packed struct {
             /// Device VBUS pulsing time
             DVBUSP: u12,
             padding0: u1,
@@ -39142,12 +39140,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x50000834
         /// OTG_FS device IN endpoint FIFO empty
         /// interrupt mask register
-        pub const OTG_FS_DIEPEMPMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPEMPMSK = @intToPtr(*volatile align(4) packed struct {
             /// IN EP Tx FIFO empty interrupt mask
             /// bits
             INEPTXFEM: u16,
@@ -39167,12 +39165,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x50000900
         /// OTG_FS device control IN endpoint 0 control
         /// register (OTG_FS_DIEPCTL0)
-        pub const OTG_FS_DIEPCTL0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPCTL0 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u2,
             reserved0: u1,
@@ -39210,12 +39208,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0x50000920
         /// OTG device endpoint-1 control
         /// register
-        pub const OTG_FS_DIEPCTL1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPCTL1 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -39247,12 +39245,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x120);
+        }, base_address + 0x120);
 
         /// address: 0x50000940
         /// OTG device endpoint-2 control
         /// register
-        pub const OTG_FS_DIEPCTL2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPCTL2 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -39284,12 +39282,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x140);
+        }, base_address + 0x140);
 
         /// address: 0x50000960
         /// OTG device endpoint-3 control
         /// register
-        pub const OTG_FS_DIEPCTL3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPCTL3 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -39321,12 +39319,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x160);
+        }, base_address + 0x160);
 
         /// address: 0x50000b00
         /// device endpoint-0 control
         /// register
-        pub const OTG_FS_DOEPCTL0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPCTL0 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u2,
             reserved0: u1,
@@ -39367,12 +39365,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x300);
+        }, base_address + 0x300);
 
         /// address: 0x50000b20
         /// device endpoint-1 control
         /// register
-        pub const OTG_FS_DOEPCTL1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPCTL1 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -39407,12 +39405,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x320);
+        }, base_address + 0x320);
 
         /// address: 0x50000b40
         /// device endpoint-2 control
         /// register
-        pub const OTG_FS_DOEPCTL2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPCTL2 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -39447,12 +39445,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x340);
+        }, base_address + 0x340);
 
         /// address: 0x50000b60
         /// device endpoint-3 control
         /// register
-        pub const OTG_FS_DOEPCTL3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPCTL3 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -39487,12 +39485,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x360);
+        }, base_address + 0x360);
 
         /// address: 0x50000908
         /// device endpoint-x interrupt
         /// register
-        pub const OTG_FS_DIEPINT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPINT0 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39531,12 +39529,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0x50000928
         /// device endpoint-1 interrupt
         /// register
-        pub const OTG_FS_DIEPINT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPINT1 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39575,12 +39573,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x128);
+        }, base_address + 0x128);
 
         /// address: 0x50000948
         /// device endpoint-2 interrupt
         /// register
-        pub const OTG_FS_DIEPINT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPINT2 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39619,12 +39617,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x148);
+        }, base_address + 0x148);
 
         /// address: 0x50000968
         /// device endpoint-3 interrupt
         /// register
-        pub const OTG_FS_DIEPINT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPINT3 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39663,12 +39661,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x168);
+        }, base_address + 0x168);
 
         /// address: 0x50000b08
         /// device endpoint-0 interrupt
         /// register
-        pub const OTG_FS_DOEPINT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPINT0 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39706,12 +39704,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x308);
+        }, base_address + 0x308);
 
         /// address: 0x50000b28
         /// device endpoint-1 interrupt
         /// register
-        pub const OTG_FS_DOEPINT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPINT1 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39749,12 +39747,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x328);
+        }, base_address + 0x328);
 
         /// address: 0x50000b48
         /// device endpoint-2 interrupt
         /// register
-        pub const OTG_FS_DOEPINT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPINT2 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39792,12 +39790,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x348);
+        }, base_address + 0x348);
 
         /// address: 0x50000b68
         /// device endpoint-3 interrupt
         /// register
-        pub const OTG_FS_DOEPINT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPINT3 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -39835,12 +39833,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x368);
+        }, base_address + 0x368);
 
         /// address: 0x50000910
         /// device endpoint-0 transfer size
         /// register
-        pub const OTG_FS_DIEPTSIZ0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTSIZ0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u7,
             reserved0: u1,
@@ -39868,12 +39866,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x110);
+        }, base_address + 0x110);
 
         /// address: 0x50000b10
         /// device OUT endpoint-0 transfer size
         /// register
-        pub const OTG_FS_DOEPTSIZ0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPTSIZ0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u7,
             reserved0: u1,
@@ -39902,12 +39900,12 @@ pub const registers = struct {
             /// SETUP packet count
             STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x310);
+        }, base_address + 0x310);
 
         /// address: 0x50000930
         /// device endpoint-1 transfer size
         /// register
-        pub const OTG_FS_DIEPTSIZ1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTSIZ1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -39915,12 +39913,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x130);
+        }, base_address + 0x130);
 
         /// address: 0x50000950
         /// device endpoint-2 transfer size
         /// register
-        pub const OTG_FS_DIEPTSIZ2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTSIZ2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -39928,12 +39926,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x150);
+        }, base_address + 0x150);
 
         /// address: 0x50000970
         /// device endpoint-3 transfer size
         /// register
-        pub const OTG_FS_DIEPTSIZ3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTSIZ3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -39941,12 +39939,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x170);
+        }, base_address + 0x170);
 
         /// address: 0x50000918
         /// OTG_FS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_FS_DTXFSTS0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DTXFSTS0 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// available
             INEPTFSAV: u16,
@@ -39966,12 +39964,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x118);
+        }, base_address + 0x118);
 
         /// address: 0x50000938
         /// OTG_FS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_FS_DTXFSTS1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DTXFSTS1 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// available
             INEPTFSAV: u16,
@@ -39991,12 +39989,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x138);
+        }, base_address + 0x138);
 
         /// address: 0x50000958
         /// OTG_FS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_FS_DTXFSTS2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DTXFSTS2 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// available
             INEPTFSAV: u16,
@@ -40016,12 +40014,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x158);
+        }, base_address + 0x158);
 
         /// address: 0x50000978
         /// OTG_FS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_FS_DTXFSTS3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DTXFSTS3 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// available
             INEPTFSAV: u16,
@@ -40041,12 +40039,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x178);
+        }, base_address + 0x178);
 
         /// address: 0x50000b30
         /// device OUT endpoint-1 transfer size
         /// register
-        pub const OTG_FS_DOEPTSIZ1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPTSIZ1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40055,12 +40053,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x330);
+        }, base_address + 0x330);
 
         /// address: 0x50000b50
         /// device OUT endpoint-2 transfer size
         /// register
-        pub const OTG_FS_DOEPTSIZ2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPTSIZ2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40069,12 +40067,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x350);
+        }, base_address + 0x350);
 
         /// address: 0x50000b70
         /// device OUT endpoint-3 transfer size
         /// register
-        pub const OTG_FS_DOEPTSIZ3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPTSIZ3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40083,12 +40081,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x370);
+        }, base_address + 0x370);
 
         /// address: 0x50000980
         /// OTG device endpoint-4 control
         /// register
-        pub const OTG_FS_DIEPCTL4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPCTL4 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -40120,12 +40118,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x180);
+        }, base_address + 0x180);
 
         /// address: 0x50000988
         /// device endpoint-4 interrupt
         /// register
-        pub const OTG_FS_DIEPINT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPINT4 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -40164,12 +40162,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x188);
+        }, base_address + 0x188);
 
         /// address: 0x50000990
         /// device endpoint-4 transfer size
         /// register
-        pub const OTG_FS_DIEPTSIZ4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTSIZ4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40177,12 +40175,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x190);
+        }, base_address + 0x190);
 
         /// address: 0x50000998
         /// OTG_FS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_FS_DTXFSTS4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DTXFSTS4 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// available
             INEPTFSAV: u16,
@@ -40202,12 +40200,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x198);
+        }, base_address + 0x198);
 
         /// address: 0x500009a0
         /// OTG device endpoint-5 control
         /// register
-        pub const OTG_FS_DIEPCTL5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPCTL5 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -40239,12 +40237,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x1a0);
+        }, base_address + 0x1a0);
 
         /// address: 0x500009a8
         /// device endpoint-5 interrupt
         /// register
-        pub const OTG_FS_DIEPINT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPINT5 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -40283,12 +40281,12 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x1a8);
+        }, base_address + 0x1a8);
 
         /// address: 0x500009b0
         /// device endpoint-5 transfer size
         /// register
-        pub const OTG_FS_DIEPTSIZ5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DIEPTSIZ5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40296,12 +40294,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x1b0);
+        }, base_address + 0x1b0);
 
         /// address: 0x500009b8
         /// OTG_FS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_FS_DTXFSTS5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DTXFSTS5 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// available
             INEPTFSAV: u16,
@@ -40321,12 +40319,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1b8);
+        }, base_address + 0x1b8);
 
         /// address: 0x50000b80
         /// device endpoint-4 control
         /// register
-        pub const OTG_FS_DOEPCTL4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPCTL4 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -40361,12 +40359,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x380);
+        }, base_address + 0x380);
 
         /// address: 0x50000b88
         /// device endpoint-4 interrupt
         /// register
-        pub const OTG_FS_DOEPINT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPINT4 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -40404,12 +40402,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x388);
+        }, base_address + 0x388);
 
         /// address: 0x50000b90
         /// device OUT endpoint-4 transfer size
         /// register
-        pub const OTG_FS_DOEPTSIZ4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPTSIZ4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40418,12 +40416,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x390);
+        }, base_address + 0x390);
 
         /// address: 0x50000ba0
         /// device endpoint-5 control
         /// register
-        pub const OTG_FS_DOEPCTL5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPCTL5 = @intToPtr(*volatile align(4) packed struct {
             /// MPSIZ
             MPSIZ: u11,
             reserved0: u1,
@@ -40458,12 +40456,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// EPENA
             EPENA: u1,
-        }), base_address + 0x3a0);
+        }, base_address + 0x3a0);
 
         /// address: 0x50000ba8
         /// device endpoint-5 interrupt
         /// register
-        pub const OTG_FS_DOEPINT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPINT5 = @intToPtr(*volatile align(4) packed struct {
             /// XFRC
             XFRC: u1,
             /// EPDISD
@@ -40501,12 +40499,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x3a8);
+        }, base_address + 0x3a8);
 
         /// address: 0x50000bb0
         /// device OUT endpoint-5 transfer size
         /// register
-        pub const OTG_FS_DOEPTSIZ5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_DOEPTSIZ5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -40515,7 +40513,7 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x3b0);
+        }, base_address + 0x3b0);
     };
 
     /// USB on the go full speed
@@ -40525,7 +40523,7 @@ pub const registers = struct {
         /// address: 0x50000e00
         /// OTG_FS power and clock gating control
         /// register (OTG_FS_PCGCCTL)
-        pub const OTG_FS_PCGCCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_FS_PCGCCTL = @intToPtr(*volatile align(4) packed struct {
             /// Stop PHY clock
             STPPCLK: u1,
             /// Gate HCLK
@@ -40561,7 +40559,7 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
 
     /// USB on the go high speed
@@ -40571,7 +40569,7 @@ pub const registers = struct {
         /// address: 0x40040400
         /// OTG_HS host configuration
         /// register
-        pub const OTG_HS_HCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCFG = @intToPtr(*volatile align(4) packed struct {
             /// FS/LS PHY clock select
             FSLSPCS: u2,
             /// FS- and LS-only support
@@ -40605,12 +40603,12 @@ pub const registers = struct {
             padding26: u1,
             padding27: u1,
             padding28: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40040404
         /// OTG_HS Host frame interval
         /// register
-        pub const OTG_HS_HFIR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HFIR = @intToPtr(*volatile align(4) packed struct {
             /// Frame interval
             FRIVL: u16,
             padding0: u1,
@@ -40629,22 +40627,22 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40040408
         /// OTG_HS host frame number/frame time
         /// remaining register
-        pub const OTG_HS_HFNUM = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HFNUM = @intToPtr(*volatile align(4) packed struct {
             /// Frame number
             FRNUM: u16,
             /// Frame time remaining
             FTREM: u16,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40040410
         /// OTG_HS_Host periodic transmit FIFO/queue
         /// status register
-        pub const OTG_HS_HPTXSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HPTXSTS = @intToPtr(*volatile align(4) packed struct {
             /// Periodic transmit data FIFO space
             /// available
             PTXFSAVL: u16,
@@ -40654,12 +40652,12 @@ pub const registers = struct {
             /// Top of the periodic transmit request
             /// queue
             PTXQTOP: u8,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40040414
         /// OTG_HS Host all channels interrupt
         /// register
-        pub const OTG_HS_HAINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HAINT = @intToPtr(*volatile align(4) packed struct {
             /// Channel interrupts
             HAINT: u16,
             padding0: u1,
@@ -40678,12 +40676,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40040418
         /// OTG_HS host all channels interrupt mask
         /// register
-        pub const OTG_HS_HAINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HAINTMSK = @intToPtr(*volatile align(4) packed struct {
             /// Channel interrupt mask
             HAINTM: u16,
             padding0: u1,
@@ -40702,12 +40700,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x40040440
         /// OTG_HS host port control and status
         /// register
-        pub const OTG_HS_HPRT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HPRT = @intToPtr(*volatile align(4) packed struct {
             /// Port connect status
             PCSTS: u1,
             /// Port connect detected
@@ -40748,12 +40746,12 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x40);
+        }, base_address + 0x40);
 
         /// address: 0x40040500
         /// OTG_HS host channel-0 characteristics
         /// register
-        pub const OTG_HS_HCCHAR0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR0 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40776,12 +40774,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0x40040520
         /// OTG_HS host channel-1 characteristics
         /// register
-        pub const OTG_HS_HCCHAR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR1 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40804,12 +40802,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x120);
+        }, base_address + 0x120);
 
         /// address: 0x40040540
         /// OTG_HS host channel-2 characteristics
         /// register
-        pub const OTG_HS_HCCHAR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR2 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40832,12 +40830,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x140);
+        }, base_address + 0x140);
 
         /// address: 0x40040560
         /// OTG_HS host channel-3 characteristics
         /// register
-        pub const OTG_HS_HCCHAR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR3 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40860,12 +40858,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x160);
+        }, base_address + 0x160);
 
         /// address: 0x40040580
         /// OTG_HS host channel-4 characteristics
         /// register
-        pub const OTG_HS_HCCHAR4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR4 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40888,12 +40886,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x180);
+        }, base_address + 0x180);
 
         /// address: 0x400405a0
         /// OTG_HS host channel-5 characteristics
         /// register
-        pub const OTG_HS_HCCHAR5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR5 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40916,12 +40914,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x1a0);
+        }, base_address + 0x1a0);
 
         /// address: 0x400405c0
         /// OTG_HS host channel-6 characteristics
         /// register
-        pub const OTG_HS_HCCHAR6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR6 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40944,12 +40942,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x1c0);
+        }, base_address + 0x1c0);
 
         /// address: 0x400405e0
         /// OTG_HS host channel-7 characteristics
         /// register
-        pub const OTG_HS_HCCHAR7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR7 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -40972,12 +40970,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x1e0);
+        }, base_address + 0x1e0);
 
         /// address: 0x40040600
         /// OTG_HS host channel-8 characteristics
         /// register
-        pub const OTG_HS_HCCHAR8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR8 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -41000,12 +40998,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x200);
+        }, base_address + 0x200);
 
         /// address: 0x40040620
         /// OTG_HS host channel-9 characteristics
         /// register
-        pub const OTG_HS_HCCHAR9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR9 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -41028,12 +41026,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x220);
+        }, base_address + 0x220);
 
         /// address: 0x40040640
         /// OTG_HS host channel-10 characteristics
         /// register
-        pub const OTG_HS_HCCHAR10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR10 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -41056,12 +41054,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x240);
+        }, base_address + 0x240);
 
         /// address: 0x40040660
         /// OTG_HS host channel-11 characteristics
         /// register
-        pub const OTG_HS_HCCHAR11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR11 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -41084,12 +41082,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x260);
+        }, base_address + 0x260);
 
         /// address: 0x40040504
         /// OTG_HS host channel-0 split control
         /// register
-        pub const OTG_HS_HCSPLT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT0 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41114,12 +41112,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x104);
+        }, base_address + 0x104);
 
         /// address: 0x40040524
         /// OTG_HS host channel-1 split control
         /// register
-        pub const OTG_HS_HCSPLT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT1 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41144,12 +41142,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x124);
+        }, base_address + 0x124);
 
         /// address: 0x40040544
         /// OTG_HS host channel-2 split control
         /// register
-        pub const OTG_HS_HCSPLT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT2 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41174,12 +41172,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x144);
+        }, base_address + 0x144);
 
         /// address: 0x40040564
         /// OTG_HS host channel-3 split control
         /// register
-        pub const OTG_HS_HCSPLT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT3 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41204,12 +41202,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x164);
+        }, base_address + 0x164);
 
         /// address: 0x40040584
         /// OTG_HS host channel-4 split control
         /// register
-        pub const OTG_HS_HCSPLT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT4 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41234,12 +41232,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x184);
+        }, base_address + 0x184);
 
         /// address: 0x400405a4
         /// OTG_HS host channel-5 split control
         /// register
-        pub const OTG_HS_HCSPLT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT5 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41264,12 +41262,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x1a4);
+        }, base_address + 0x1a4);
 
         /// address: 0x400405c4
         /// OTG_HS host channel-6 split control
         /// register
-        pub const OTG_HS_HCSPLT6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT6 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41294,12 +41292,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x1c4);
+        }, base_address + 0x1c4);
 
         /// address: 0x400405e4
         /// OTG_HS host channel-7 split control
         /// register
-        pub const OTG_HS_HCSPLT7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT7 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41324,12 +41322,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x1e4);
+        }, base_address + 0x1e4);
 
         /// address: 0x40040604
         /// OTG_HS host channel-8 split control
         /// register
-        pub const OTG_HS_HCSPLT8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT8 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41354,12 +41352,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x204);
+        }, base_address + 0x204);
 
         /// address: 0x40040624
         /// OTG_HS host channel-9 split control
         /// register
-        pub const OTG_HS_HCSPLT9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT9 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41384,12 +41382,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x224);
+        }, base_address + 0x224);
 
         /// address: 0x40040644
         /// OTG_HS host channel-10 split control
         /// register
-        pub const OTG_HS_HCSPLT10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT10 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41414,12 +41412,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x244);
+        }, base_address + 0x244);
 
         /// address: 0x40040664
         /// OTG_HS host channel-11 split control
         /// register
-        pub const OTG_HS_HCSPLT11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT11 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -41444,12 +41442,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x264);
+        }, base_address + 0x264);
 
         /// address: 0x40040508
         /// OTG_HS host channel-11 interrupt
         /// register
-        pub const OTG_HS_HCINT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41497,12 +41495,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0x40040528
         /// OTG_HS host channel-1 interrupt
         /// register
-        pub const OTG_HS_HCINT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41550,12 +41548,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x128);
+        }, base_address + 0x128);
 
         /// address: 0x40040548
         /// OTG_HS host channel-2 interrupt
         /// register
-        pub const OTG_HS_HCINT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41603,12 +41601,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x148);
+        }, base_address + 0x148);
 
         /// address: 0x40040568
         /// OTG_HS host channel-3 interrupt
         /// register
-        pub const OTG_HS_HCINT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41656,12 +41654,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x168);
+        }, base_address + 0x168);
 
         /// address: 0x40040588
         /// OTG_HS host channel-4 interrupt
         /// register
-        pub const OTG_HS_HCINT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41709,12 +41707,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x188);
+        }, base_address + 0x188);
 
         /// address: 0x400405a8
         /// OTG_HS host channel-5 interrupt
         /// register
-        pub const OTG_HS_HCINT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41762,12 +41760,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1a8);
+        }, base_address + 0x1a8);
 
         /// address: 0x400405c8
         /// OTG_HS host channel-6 interrupt
         /// register
-        pub const OTG_HS_HCINT6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41815,12 +41813,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1c8);
+        }, base_address + 0x1c8);
 
         /// address: 0x400405e8
         /// OTG_HS host channel-7 interrupt
         /// register
-        pub const OTG_HS_HCINT7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41868,12 +41866,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1e8);
+        }, base_address + 0x1e8);
 
         /// address: 0x40040608
         /// OTG_HS host channel-8 interrupt
         /// register
-        pub const OTG_HS_HCINT8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT8 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41921,12 +41919,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x208);
+        }, base_address + 0x208);
 
         /// address: 0x40040628
         /// OTG_HS host channel-9 interrupt
         /// register
-        pub const OTG_HS_HCINT9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT9 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -41974,12 +41972,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x228);
+        }, base_address + 0x228);
 
         /// address: 0x40040648
         /// OTG_HS host channel-10 interrupt
         /// register
-        pub const OTG_HS_HCINT10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT10 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -42027,12 +42025,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x248);
+        }, base_address + 0x248);
 
         /// address: 0x40040668
         /// OTG_HS host channel-11 interrupt
         /// register
-        pub const OTG_HS_HCINT11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT11 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -42080,12 +42078,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x268);
+        }, base_address + 0x268);
 
         /// address: 0x4004050c
         /// OTG_HS host channel-11 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42133,12 +42131,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x10c);
+        }, base_address + 0x10c);
 
         /// address: 0x4004052c
         /// OTG_HS host channel-1 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42186,12 +42184,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x12c);
+        }, base_address + 0x12c);
 
         /// address: 0x4004054c
         /// OTG_HS host channel-2 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42239,12 +42237,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x14c);
+        }, base_address + 0x14c);
 
         /// address: 0x4004056c
         /// OTG_HS host channel-3 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42292,12 +42290,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x16c);
+        }, base_address + 0x16c);
 
         /// address: 0x4004058c
         /// OTG_HS host channel-4 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42345,12 +42343,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x18c);
+        }, base_address + 0x18c);
 
         /// address: 0x400405ac
         /// OTG_HS host channel-5 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42398,12 +42396,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1ac);
+        }, base_address + 0x1ac);
 
         /// address: 0x400405cc
         /// OTG_HS host channel-6 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42451,12 +42449,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1cc);
+        }, base_address + 0x1cc);
 
         /// address: 0x400405ec
         /// OTG_HS host channel-7 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42504,12 +42502,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x1ec);
+        }, base_address + 0x1ec);
 
         /// address: 0x4004060c
         /// OTG_HS host channel-8 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK8 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42557,12 +42555,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x20c);
+        }, base_address + 0x20c);
 
         /// address: 0x4004062c
         /// OTG_HS host channel-9 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK9 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42610,12 +42608,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x22c);
+        }, base_address + 0x22c);
 
         /// address: 0x4004064c
         /// OTG_HS host channel-10 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK10 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42663,12 +42661,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x24c);
+        }, base_address + 0x24c);
 
         /// address: 0x4004066c
         /// OTG_HS host channel-11 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK11 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -42716,12 +42714,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x26c);
+        }, base_address + 0x26c);
 
         /// address: 0x40040510
         /// OTG_HS host channel-11 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42729,12 +42727,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x110);
+        }, base_address + 0x110);
 
         /// address: 0x40040530
         /// OTG_HS host channel-1 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42742,12 +42740,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x130);
+        }, base_address + 0x130);
 
         /// address: 0x40040550
         /// OTG_HS host channel-2 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42755,12 +42753,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x150);
+        }, base_address + 0x150);
 
         /// address: 0x40040570
         /// OTG_HS host channel-3 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42768,12 +42766,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x170);
+        }, base_address + 0x170);
 
         /// address: 0x40040590
         /// OTG_HS host channel-4 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42781,12 +42779,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x190);
+        }, base_address + 0x190);
 
         /// address: 0x400405b0
         /// OTG_HS host channel-5 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42794,12 +42792,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x1b0);
+        }, base_address + 0x1b0);
 
         /// address: 0x400405d0
         /// OTG_HS host channel-6 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42807,12 +42805,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x1d0);
+        }, base_address + 0x1d0);
 
         /// address: 0x400405f0
         /// OTG_HS host channel-7 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42820,12 +42818,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x1f0);
+        }, base_address + 0x1f0);
 
         /// address: 0x40040610
         /// OTG_HS host channel-8 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ8 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42833,12 +42831,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x210);
+        }, base_address + 0x210);
 
         /// address: 0x40040630
         /// OTG_HS host channel-9 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ9 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42846,12 +42844,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x230);
+        }, base_address + 0x230);
 
         /// address: 0x40040650
         /// OTG_HS host channel-10 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ10 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42859,12 +42857,12 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x250);
+        }, base_address + 0x250);
 
         /// address: 0x40040670
         /// OTG_HS host channel-11 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ11 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -42872,108 +42870,108 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x270);
+        }, base_address + 0x270);
 
         /// address: 0x40040514
         /// OTG_HS host channel-0 DMA address
         /// register
-        pub const OTG_HS_HCDMA0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA0 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x114);
+        }, base_address + 0x114);
 
         /// address: 0x40040534
         /// OTG_HS host channel-1 DMA address
         /// register
-        pub const OTG_HS_HCDMA1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA1 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x134);
+        }, base_address + 0x134);
 
         /// address: 0x40040554
         /// OTG_HS host channel-2 DMA address
         /// register
-        pub const OTG_HS_HCDMA2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA2 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x154);
+        }, base_address + 0x154);
 
         /// address: 0x40040574
         /// OTG_HS host channel-3 DMA address
         /// register
-        pub const OTG_HS_HCDMA3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA3 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x174);
+        }, base_address + 0x174);
 
         /// address: 0x40040594
         /// OTG_HS host channel-4 DMA address
         /// register
-        pub const OTG_HS_HCDMA4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA4 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x194);
+        }, base_address + 0x194);
 
         /// address: 0x400405b4
         /// OTG_HS host channel-5 DMA address
         /// register
-        pub const OTG_HS_HCDMA5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA5 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x1b4);
+        }, base_address + 0x1b4);
 
         /// address: 0x400405d4
         /// OTG_HS host channel-6 DMA address
         /// register
-        pub const OTG_HS_HCDMA6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA6 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x1d4);
+        }, base_address + 0x1d4);
 
         /// address: 0x400405f4
         /// OTG_HS host channel-7 DMA address
         /// register
-        pub const OTG_HS_HCDMA7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA7 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x1f4);
+        }, base_address + 0x1f4);
 
         /// address: 0x40040614
         /// OTG_HS host channel-8 DMA address
         /// register
-        pub const OTG_HS_HCDMA8 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA8 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x214);
+        }, base_address + 0x214);
 
         /// address: 0x40040634
         /// OTG_HS host channel-9 DMA address
         /// register
-        pub const OTG_HS_HCDMA9 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA9 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x234);
+        }, base_address + 0x234);
 
         /// address: 0x40040654
         /// OTG_HS host channel-10 DMA address
         /// register
-        pub const OTG_HS_HCDMA10 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA10 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x254);
+        }, base_address + 0x254);
 
         /// address: 0x40040674
         /// OTG_HS host channel-11 DMA address
         /// register
-        pub const OTG_HS_HCDMA11 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA11 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x274);
+        }, base_address + 0x274);
 
         /// address: 0x40040680
         /// OTG_HS host channel-12 characteristics
         /// register
-        pub const OTG_HS_HCCHAR12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR12 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -42996,12 +42994,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x280);
+        }, base_address + 0x280);
 
         /// address: 0x40040684
         /// OTG_HS host channel-12 split control
         /// register
-        pub const OTG_HS_HCSPLT12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT12 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -43026,12 +43024,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x284);
+        }, base_address + 0x284);
 
         /// address: 0x40040688
         /// OTG_HS host channel-12 interrupt
         /// register
-        pub const OTG_HS_HCINT12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT12 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -43079,12 +43077,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x288);
+        }, base_address + 0x288);
 
         /// address: 0x4004068c
         /// OTG_HS host channel-12 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK12 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -43132,12 +43130,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x28c);
+        }, base_address + 0x28c);
 
         /// address: 0x40040690
         /// OTG_HS host channel-12 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ12 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -43145,20 +43143,20 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x290);
+        }, base_address + 0x290);
 
         /// address: 0x40040694
         /// OTG_HS host channel-12 DMA address
         /// register
-        pub const OTG_HS_HCDMA12 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA12 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x294);
+        }, base_address + 0x294);
 
         /// address: 0x400406a0
         /// OTG_HS host channel-13 characteristics
         /// register
-        pub const OTG_HS_HCCHAR13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR13 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -43181,12 +43179,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x2a0);
+        }, base_address + 0x2a0);
 
         /// address: 0x400406a4
         /// OTG_HS host channel-13 split control
         /// register
-        pub const OTG_HS_HCSPLT13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT13 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -43211,12 +43209,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x2a4);
+        }, base_address + 0x2a4);
 
         /// address: 0x400406a8
         /// OTG_HS host channel-13 interrupt
         /// register
-        pub const OTG_HS_HCINT13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT13 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -43264,12 +43262,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x2a8);
+        }, base_address + 0x2a8);
 
         /// address: 0x400406ac
         /// OTG_HS host channel-13 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK13 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -43317,12 +43315,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x2ac);
+        }, base_address + 0x2ac);
 
         /// address: 0x400406b0
         /// OTG_HS host channel-13 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ13 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -43330,20 +43328,20 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x2b0);
+        }, base_address + 0x2b0);
 
         /// address: 0x400406b4
         /// OTG_HS host channel-13 DMA address
         /// register
-        pub const OTG_HS_HCDMA13 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA13 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x2b4);
+        }, base_address + 0x2b4);
 
         /// address: 0x400406c0
         /// OTG_HS host channel-14 characteristics
         /// register
-        pub const OTG_HS_HCCHAR14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR14 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -43366,12 +43364,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x2c0);
+        }, base_address + 0x2c0);
 
         /// address: 0x400406c4
         /// OTG_HS host channel-14 split control
         /// register
-        pub const OTG_HS_HCSPLT14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT14 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -43396,12 +43394,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x2c4);
+        }, base_address + 0x2c4);
 
         /// address: 0x400406c8
         /// OTG_HS host channel-14 interrupt
         /// register
-        pub const OTG_HS_HCINT14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT14 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -43449,12 +43447,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x2c8);
+        }, base_address + 0x2c8);
 
         /// address: 0x400406cc
         /// OTG_HS host channel-14 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK14 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -43502,12 +43500,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x2cc);
+        }, base_address + 0x2cc);
 
         /// address: 0x400406d0
         /// OTG_HS host channel-14 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ14 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -43515,20 +43513,20 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x2d0);
+        }, base_address + 0x2d0);
 
         /// address: 0x400406d4
         /// OTG_HS host channel-14 DMA address
         /// register
-        pub const OTG_HS_HCDMA14 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA14 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x2d4);
+        }, base_address + 0x2d4);
 
         /// address: 0x400406e0
         /// OTG_HS host channel-15 characteristics
         /// register
-        pub const OTG_HS_HCCHAR15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCCHAR15 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             /// Endpoint number
@@ -43551,12 +43549,12 @@ pub const registers = struct {
             CHDIS: u1,
             /// Channel enable
             CHENA: u1,
-        }), base_address + 0x2e0);
+        }, base_address + 0x2e0);
 
         /// address: 0x400406e4
         /// OTG_HS host channel-15 split control
         /// register
-        pub const OTG_HS_HCSPLT15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCSPLT15 = @intToPtr(*volatile align(4) packed struct {
             /// Port address
             PRTADDR: u7,
             /// Hub address
@@ -43581,12 +43579,12 @@ pub const registers = struct {
             reserved13: u1,
             /// Split enable
             SPLITEN: u1,
-        }), base_address + 0x2e4);
+        }, base_address + 0x2e4);
 
         /// address: 0x400406e8
         /// OTG_HS host channel-15 interrupt
         /// register
-        pub const OTG_HS_HCINT15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINT15 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             XFRC: u1,
             /// Channel halted
@@ -43634,12 +43632,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x2e8);
+        }, base_address + 0x2e8);
 
         /// address: 0x400406ec
         /// OTG_HS host channel-15 interrupt mask
         /// register
-        pub const OTG_HS_HCINTMSK15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCINTMSK15 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed mask
             XFRCM: u1,
             /// Channel halted mask
@@ -43687,12 +43685,12 @@ pub const registers = struct {
             padding18: u1,
             padding19: u1,
             padding20: u1,
-        }), base_address + 0x2ec);
+        }, base_address + 0x2ec);
 
         /// address: 0x400406f0
         /// OTG_HS host channel-15 transfer size
         /// register
-        pub const OTG_HS_HCTSIZ15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCTSIZ15 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -43700,15 +43698,15 @@ pub const registers = struct {
             /// Data PID
             DPID: u2,
             padding0: u1,
-        }), base_address + 0x2f0);
+        }, base_address + 0x2f0);
 
         /// address: 0x400406f4
         /// OTG_HS host channel-15 DMA address
         /// register
-        pub const OTG_HS_HCDMA15 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HCDMA15 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x2f4);
+        }, base_address + 0x2f4);
     };
 
     /// USB on the go high speed
@@ -43718,7 +43716,7 @@ pub const registers = struct {
         /// address: 0x40040000
         /// OTG_HS control and status
         /// register
-        pub const OTG_HS_GOTGCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GOTGCTL = @intToPtr(*volatile align(4) packed struct {
             /// Session request success
             SRQSCS: u1,
             /// Session request
@@ -43762,11 +43760,11 @@ pub const registers = struct {
             padding9: u1,
             padding10: u1,
             padding11: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40040004
         /// OTG_HS interrupt register
-        pub const OTG_HS_GOTGINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GOTGINT = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             /// Session end detected
@@ -43808,12 +43806,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40040008
         /// OTG_HS AHB configuration
         /// register
-        pub const OTG_HS_GAHBCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GAHBCFG = @intToPtr(*volatile align(4) packed struct {
             /// Global interrupt mask
             GINT: u1,
             /// Burst length/type
@@ -43849,12 +43847,12 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x4004000c
         /// OTG_HS USB configuration
         /// register
-        pub const OTG_HS_GUSBCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GUSBCFG = @intToPtr(*volatile align(4) packed struct {
             /// FS timeout calibration
             TOCAL: u3,
             reserved0: u1,
@@ -43903,11 +43901,11 @@ pub const registers = struct {
             /// Forced peripheral mode
             FDMOD: u1,
             padding0: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0x40040010
         /// OTG_HS reset register
-        pub const OTG_HS_GRSTCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GRSTCTL = @intToPtr(*volatile align(4) packed struct {
             /// Core soft reset
             CSRST: u1,
             /// HCLK soft reset
@@ -43945,11 +43943,11 @@ pub const registers = struct {
             DMAREQ: u1,
             /// AHB master idle
             AHBIDL: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40040014
         /// OTG_HS core interrupt register
-        pub const OTG_HS_GINTSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GINTSTS = @intToPtr(*volatile align(4) packed struct {
             /// Current mode of operation
             CMOD: u1,
             /// Mode mismatch interrupt
@@ -44016,11 +44014,11 @@ pub const registers = struct {
             /// Resume/remote wakeup detected
             /// interrupt
             WKUINT: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40040018
         /// OTG_HS interrupt mask register
-        pub const OTG_HS_GINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GINTMSK = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Mode mismatch interrupt
             /// mask
@@ -44096,12 +44094,12 @@ pub const registers = struct {
             /// Resume/remote wakeup detected interrupt
             /// mask
             WUIM: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4004001c
         /// OTG_HS Receive status debug read register
         /// (host mode)
-        pub const OTG_HS_GRXSTSR_Host = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GRXSTSR_Host = @intToPtr(*volatile align(4) packed struct {
             /// Channel number
             CHNUM: u4,
             /// Byte count
@@ -44121,12 +44119,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40040020
         /// OTG_HS status read and pop register (host
         /// mode)
-        pub const OTG_HS_GRXSTSP_Host = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GRXSTSP_Host = @intToPtr(*volatile align(4) packed struct {
             /// Channel number
             CHNUM: u4,
             /// Byte count
@@ -44146,12 +44144,12 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40040024
         /// OTG_HS Receive FIFO size
         /// register
-        pub const OTG_HS_GRXFSIZ = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GRXFSIZ = @intToPtr(*volatile align(4) packed struct {
             /// RxFIFO depth
             RXFD: u16,
             padding0: u1,
@@ -44170,34 +44168,34 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0x40040028
         /// OTG_HS nonperiodic transmit FIFO size
         /// register (host mode)
-        pub const OTG_HS_HNPTXFSIZ_Host = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HNPTXFSIZ_Host = @intToPtr(*volatile align(4) packed struct {
             /// Nonperiodic transmit RAM start
             /// address
             NPTXFSA: u16,
             /// Nonperiodic TxFIFO depth
             NPTXFD: u16,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x40040028
         /// Endpoint 0 transmit FIFO size (peripheral
         /// mode)
-        pub const OTG_HS_DIEPTXF0_Device = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF0_Device = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint 0 transmit RAM start
             /// address
             TX0FSA: u16,
             /// Endpoint 0 TxFIFO depth
             TX0FD: u16,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4004002c
         /// OTG_HS nonperiodic transmit FIFO/queue
         /// status register
-        pub const OTG_HS_HNPTXSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HNPTXSTS = @intToPtr(*volatile align(4) packed struct {
             /// Nonperiodic TxFIFO space
             /// available
             NPTXFSAV: u16,
@@ -44208,12 +44206,12 @@ pub const registers = struct {
             /// queue
             NPTXQTOP: u7,
             padding0: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40040038
         /// OTG_HS general core configuration
         /// register
-        pub const OTG_HS_GCCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GCCFG = @intToPtr(*volatile align(4) packed struct {
             /// Data contact detection (DCD)
             /// status
             DCDET: u1,
@@ -44264,107 +44262,107 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4004003c
         /// OTG_HS core ID register
-        pub const OTG_HS_CID = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_CID = @intToPtr(*volatile align(4) packed struct {
             /// Product ID field
             PRODUCT_ID: u32,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40040100
         /// OTG_HS Host periodic transmit FIFO size
         /// register
-        pub const OTG_HS_HPTXFSIZ = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_HPTXFSIZ = @intToPtr(*volatile align(4) packed struct {
             /// Host periodic TxFIFO start
             /// address
             PTXSA: u16,
             /// Host periodic TxFIFO depth
             PTXFD: u16,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0x40040104
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF1 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x104);
+        }, base_address + 0x104);
 
         /// address: 0x40040108
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF2 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0x4004010c
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF3 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x10c);
+        }, base_address + 0x10c);
 
         /// address: 0x40040110
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF4 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x110);
+        }, base_address + 0x110);
 
         /// address: 0x40040114
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF5 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x114);
+        }, base_address + 0x114);
 
         /// address: 0x40040118
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF6 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x118);
+        }, base_address + 0x118);
 
         /// address: 0x4004011c
         /// OTG_HS device IN endpoint transmit FIFO size
         /// register
-        pub const OTG_HS_DIEPTXF7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTXF7 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint FIFOx transmit RAM start
             /// address
             INEPTXSA: u16,
             /// IN endpoint TxFIFO depth
             INEPTXFD: u16,
-        }), base_address + 0x11c);
+        }, base_address + 0x11c);
 
         /// address: 0x4004001c
         /// OTG_HS Receive status debug read register
         /// (peripheral mode mode)
-        pub const OTG_HS_GRXSTSR_Device = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GRXSTSR_Device = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint number
             EPNUM: u4,
             /// Byte count
@@ -44382,12 +44380,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40040020
         /// OTG_HS status read and pop register
         /// (peripheral mode)
-        pub const OTG_HS_GRXSTSP_Device = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GRXSTSP_Device = @intToPtr(*volatile align(4) packed struct {
             /// Endpoint number
             EPNUM: u4,
             /// Byte count
@@ -44405,12 +44403,12 @@ pub const registers = struct {
             padding4: u1,
             padding5: u1,
             padding6: u1,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0x40040054
         /// OTG core LPM configuration
         /// register
-        pub const OTG_HS_GLPMCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GLPMCFG = @intToPtr(*volatile align(4) packed struct {
             /// LPM support enable
             LPMEN: u1,
             /// LPM token acknowledge
@@ -44447,11 +44445,11 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x54);
+        }, base_address + 0x54);
 
         /// address: 0x40040030
         /// OTG I2C access register
-        pub const OTG_HS_GI2CCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_GI2CCTL = @intToPtr(*volatile align(4) packed struct {
             /// I2C Read/Write Data
             RWDATA: u8,
             /// I2C Register Address
@@ -44472,7 +44470,7 @@ pub const registers = struct {
             RW: u1,
             /// I2C Busy/Done
             BSYDNE: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
     };
 
     /// USB on the go high speed
@@ -44482,7 +44480,7 @@ pub const registers = struct {
         /// address: 0x40040e00
         /// Power and clock gating control
         /// register
-        pub const OTG_HS_PCGCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_PCGCR = @intToPtr(*volatile align(4) packed struct {
             /// Stop PHY clock
             STPPCLK: u1,
             /// Gate HCLK
@@ -44518,7 +44516,7 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
 
     /// USB on the go high speed
@@ -44528,7 +44526,7 @@ pub const registers = struct {
         /// address: 0x40040800
         /// OTG_HS device configuration
         /// register
-        pub const OTG_HS_DCFG = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DCFG = @intToPtr(*volatile align(4) packed struct {
             /// Device speed
             DSPD: u2,
             /// Nonzero-length status OUT
@@ -44560,11 +44558,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40040804
         /// OTG_HS device control register
-        pub const OTG_HS_DCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DCTL = @intToPtr(*volatile align(4) packed struct {
             /// Remote wakeup signaling
             RWUSIG: u1,
             /// Soft disconnect
@@ -44605,11 +44603,11 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40040808
         /// OTG_HS device status register
-        pub const OTG_HS_DSTS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DSTS = @intToPtr(*volatile align(4) packed struct {
             /// Suspend status
             SUSPSTS: u1,
             /// Enumerated speed
@@ -44633,12 +44631,12 @@ pub const registers = struct {
             padding7: u1,
             padding8: u1,
             padding9: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0x40040810
         /// OTG_HS device IN endpoint common interrupt
         /// mask register
-        pub const OTG_HS_DIEPMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPMSK = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed interrupt
             /// mask
             XFRCM: u1,
@@ -44685,12 +44683,12 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0x40040814
         /// OTG_HS device OUT endpoint common interrupt
         /// mask register
-        pub const OTG_HS_DOEPMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPMSK = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed interrupt
             /// mask
             XFRCM: u1,
@@ -44734,33 +44732,33 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0x40040818
         /// OTG_HS device all endpoints interrupt
         /// register
-        pub const OTG_HS_DAINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DAINT = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint interrupt bits
             IEPINT: u16,
             /// OUT endpoint interrupt
             /// bits
             OEPINT: u16,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0x4004081c
         /// OTG_HS all endpoints interrupt mask
         /// register
-        pub const OTG_HS_DAINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DAINTMSK = @intToPtr(*volatile align(4) packed struct {
             /// IN EP interrupt mask bits
             IEPM: u16,
             /// OUT EP interrupt mask bits
             OEPM: u16,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0x40040828
         /// OTG_HS device VBUS discharge time
         /// register
-        pub const OTG_HS_DVBUSDIS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DVBUSDIS = @intToPtr(*volatile align(4) packed struct {
             /// Device VBUS discharge time
             VBUSDT: u16,
             padding0: u1,
@@ -44779,12 +44777,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0x4004082c
         /// OTG_HS device VBUS pulsing time
         /// register
-        pub const OTG_HS_DVBUSPULSE = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DVBUSPULSE = @intToPtr(*volatile align(4) packed struct {
             /// Device VBUS pulsing time
             DVBUSP: u12,
             padding0: u1,
@@ -44807,12 +44805,12 @@ pub const registers = struct {
             padding17: u1,
             padding18: u1,
             padding19: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0x40040830
         /// OTG_HS Device threshold control
         /// register
-        pub const OTG_HS_DTHRCTL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTHRCTL = @intToPtr(*volatile align(4) packed struct {
             /// Nonisochronous IN endpoints threshold
             /// enable
             NONISOTHREN: u1,
@@ -44837,12 +44835,12 @@ pub const registers = struct {
             padding1: u1,
             padding2: u1,
             padding3: u1,
-        }), base_address + 0x30);
+        }, base_address + 0x30);
 
         /// address: 0x40040834
         /// OTG_HS device IN endpoint FIFO empty
         /// interrupt mask register
-        pub const OTG_HS_DIEPEMPMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPEMPMSK = @intToPtr(*volatile align(4) packed struct {
             /// IN EP Tx FIFO empty interrupt mask
             /// bits
             INEPTXFEM: u16,
@@ -44862,12 +44860,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0x40040838
         /// OTG_HS device each endpoint interrupt
         /// register
-        pub const OTG_HS_DEACHINT = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DEACHINT = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// IN endpoint 1interrupt bit
             IEP1INT: u1,
@@ -44903,12 +44901,12 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
 
         /// address: 0x4004083c
         /// OTG_HS device each endpoint interrupt
         /// register mask
-        pub const OTG_HS_DEACHINTMSK = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DEACHINTMSK = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// IN Endpoint 1 interrupt mask
             /// bit
@@ -44945,12 +44943,12 @@ pub const registers = struct {
             padding11: u1,
             padding12: u1,
             padding13: u1,
-        }), base_address + 0x3c);
+        }, base_address + 0x3c);
 
         /// address: 0x40040900
         /// OTG device endpoint-0 control
         /// register
-        pub const OTG_HS_DIEPCTL0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL0 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -44982,12 +44980,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x100);
+        }, base_address + 0x100);
 
         /// address: 0x40040920
         /// OTG device endpoint-1 control
         /// register
-        pub const OTG_HS_DIEPCTL1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL1 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45019,12 +45017,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x120);
+        }, base_address + 0x120);
 
         /// address: 0x40040940
         /// OTG device endpoint-2 control
         /// register
-        pub const OTG_HS_DIEPCTL2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL2 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45056,12 +45054,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x140);
+        }, base_address + 0x140);
 
         /// address: 0x40040960
         /// OTG device endpoint-3 control
         /// register
-        pub const OTG_HS_DIEPCTL3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL3 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45093,12 +45091,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x160);
+        }, base_address + 0x160);
 
         /// address: 0x40040980
         /// OTG device endpoint-4 control
         /// register
-        pub const OTG_HS_DIEPCTL4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL4 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45130,12 +45128,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x180);
+        }, base_address + 0x180);
 
         /// address: 0x400409a0
         /// OTG device endpoint-5 control
         /// register
-        pub const OTG_HS_DIEPCTL5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL5 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45167,12 +45165,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x1a0);
+        }, base_address + 0x1a0);
 
         /// address: 0x400409c0
         /// OTG device endpoint-6 control
         /// register
-        pub const OTG_HS_DIEPCTL6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL6 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45204,12 +45202,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x1c0);
+        }, base_address + 0x1c0);
 
         /// address: 0x400409e0
         /// OTG device endpoint-7 control
         /// register
-        pub const OTG_HS_DIEPCTL7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPCTL7 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -45241,12 +45239,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x1e0);
+        }, base_address + 0x1e0);
 
         /// address: 0x40040908
         /// OTG device endpoint-0 interrupt
         /// register
-        pub const OTG_HS_DIEPINT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45294,12 +45292,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x108);
+        }, base_address + 0x108);
 
         /// address: 0x40040928
         /// OTG device endpoint-1 interrupt
         /// register
-        pub const OTG_HS_DIEPINT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45347,12 +45345,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x128);
+        }, base_address + 0x128);
 
         /// address: 0x40040948
         /// OTG device endpoint-2 interrupt
         /// register
-        pub const OTG_HS_DIEPINT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45400,12 +45398,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x148);
+        }, base_address + 0x148);
 
         /// address: 0x40040968
         /// OTG device endpoint-3 interrupt
         /// register
-        pub const OTG_HS_DIEPINT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45453,12 +45451,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x168);
+        }, base_address + 0x168);
 
         /// address: 0x40040988
         /// OTG device endpoint-4 interrupt
         /// register
-        pub const OTG_HS_DIEPINT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45506,12 +45504,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x188);
+        }, base_address + 0x188);
 
         /// address: 0x400409a8
         /// OTG device endpoint-5 interrupt
         /// register
-        pub const OTG_HS_DIEPINT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45559,12 +45557,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x1a8);
+        }, base_address + 0x1a8);
 
         /// address: 0x400409c8
         /// OTG device endpoint-6 interrupt
         /// register
-        pub const OTG_HS_DIEPINT6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45612,12 +45610,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x1c8);
+        }, base_address + 0x1c8);
 
         /// address: 0x400409e8
         /// OTG device endpoint-7 interrupt
         /// register
-        pub const OTG_HS_DIEPINT7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPINT7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -45665,12 +45663,12 @@ pub const registers = struct {
             padding15: u1,
             padding16: u1,
             padding17: u1,
-        }), base_address + 0x1e8);
+        }, base_address + 0x1e8);
 
         /// address: 0x40040910
         /// OTG_HS device IN endpoint 0 transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u7,
             reserved0: u1,
@@ -45698,52 +45696,52 @@ pub const registers = struct {
             padding8: u1,
             padding9: u1,
             padding10: u1,
-        }), base_address + 0x110);
+        }, base_address + 0x110);
 
         /// address: 0x40040914
         /// OTG_HS device endpoint-1 DMA address
         /// register
-        pub const OTG_HS_DIEPDMA0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPDMA0 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x114);
+        }, base_address + 0x114);
 
         /// address: 0x40040934
         /// OTG_HS device endpoint-2 DMA address
         /// register
-        pub const OTG_HS_DIEPDMA1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPDMA1 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x134);
+        }, base_address + 0x134);
 
         /// address: 0x40040954
         /// OTG_HS device endpoint-3 DMA address
         /// register
-        pub const OTG_HS_DIEPDMA2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPDMA2 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x154);
+        }, base_address + 0x154);
 
         /// address: 0x40040974
         /// OTG_HS device endpoint-4 DMA address
         /// register
-        pub const OTG_HS_DIEPDMA3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPDMA3 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x174);
+        }, base_address + 0x174);
 
         /// address: 0x40040994
         /// OTG_HS device endpoint-5 DMA address
         /// register
-        pub const OTG_HS_DIEPDMA4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPDMA4 = @intToPtr(*volatile align(4) packed struct {
             /// DMA address
             DMAADDR: u32,
-        }), base_address + 0x194);
+        }, base_address + 0x194);
 
         /// address: 0x40040918
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS0 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -45763,12 +45761,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x118);
+        }, base_address + 0x118);
 
         /// address: 0x40040938
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS1 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -45788,12 +45786,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x138);
+        }, base_address + 0x138);
 
         /// address: 0x40040958
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS2 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -45813,12 +45811,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x158);
+        }, base_address + 0x158);
 
         /// address: 0x40040978
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS3 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -45838,12 +45836,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x178);
+        }, base_address + 0x178);
 
         /// address: 0x40040998
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS4 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -45863,12 +45861,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x198);
+        }, base_address + 0x198);
 
         /// address: 0x400409b8
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS5 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -45888,12 +45886,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1b8);
+        }, base_address + 0x1b8);
 
         /// address: 0x40040930
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -45901,12 +45899,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x130);
+        }, base_address + 0x130);
 
         /// address: 0x40040950
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -45914,12 +45912,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x150);
+        }, base_address + 0x150);
 
         /// address: 0x40040970
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -45927,12 +45925,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x170);
+        }, base_address + 0x170);
 
         /// address: 0x40040990
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -45940,12 +45938,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x190);
+        }, base_address + 0x190);
 
         /// address: 0x400409b0
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -45953,12 +45951,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x1b0);
+        }, base_address + 0x1b0);
 
         /// address: 0x40040b00
         /// OTG_HS device control OUT endpoint 0 control
         /// register
-        pub const OTG_HS_DOEPCTL0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL0 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u2,
             reserved0: u1,
@@ -45999,12 +45997,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x300);
+        }, base_address + 0x300);
 
         /// address: 0x40040b20
         /// OTG device endpoint-1 control
         /// register
-        pub const OTG_HS_DOEPCTL1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL1 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46041,12 +46039,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x320);
+        }, base_address + 0x320);
 
         /// address: 0x40040b40
         /// OTG device endpoint-2 control
         /// register
-        pub const OTG_HS_DOEPCTL2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL2 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46083,12 +46081,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x340);
+        }, base_address + 0x340);
 
         /// address: 0x40040b60
         /// OTG device endpoint-3 control
         /// register
-        pub const OTG_HS_DOEPCTL3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL3 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46125,12 +46123,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x360);
+        }, base_address + 0x360);
 
         /// address: 0x40040b08
         /// OTG_HS device endpoint-0 interrupt
         /// register
-        pub const OTG_HS_DOEPINT0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46173,12 +46171,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x308);
+        }, base_address + 0x308);
 
         /// address: 0x40040b28
         /// OTG_HS device endpoint-1 interrupt
         /// register
-        pub const OTG_HS_DOEPINT1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46221,12 +46219,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x328);
+        }, base_address + 0x328);
 
         /// address: 0x40040b48
         /// OTG_HS device endpoint-2 interrupt
         /// register
-        pub const OTG_HS_DOEPINT2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46269,12 +46267,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x348);
+        }, base_address + 0x348);
 
         /// address: 0x40040b68
         /// OTG_HS device endpoint-3 interrupt
         /// register
-        pub const OTG_HS_DOEPINT3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46317,12 +46315,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x368);
+        }, base_address + 0x368);
 
         /// address: 0x40040b88
         /// OTG_HS device endpoint-4 interrupt
         /// register
-        pub const OTG_HS_DOEPINT4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46365,12 +46363,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x388);
+        }, base_address + 0x388);
 
         /// address: 0x40040ba8
         /// OTG_HS device endpoint-5 interrupt
         /// register
-        pub const OTG_HS_DOEPINT5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46413,12 +46411,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x3a8);
+        }, base_address + 0x3a8);
 
         /// address: 0x40040bc8
         /// OTG_HS device endpoint-6 interrupt
         /// register
-        pub const OTG_HS_DOEPINT6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46461,12 +46459,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x3c8);
+        }, base_address + 0x3c8);
 
         /// address: 0x40040be8
         /// OTG_HS device endpoint-7 interrupt
         /// register
-        pub const OTG_HS_DOEPINT7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPINT7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer completed
             /// interrupt
             XFRC: u1,
@@ -46509,12 +46507,12 @@ pub const registers = struct {
             padding14: u1,
             padding15: u1,
             padding16: u1,
-        }), base_address + 0x3e8);
+        }, base_address + 0x3e8);
 
         /// address: 0x40040b10
         /// OTG_HS device endpoint-0 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ0 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ0 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u7,
             reserved0: u1,
@@ -46543,12 +46541,12 @@ pub const registers = struct {
             /// SETUP packet count
             STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x310);
+        }, base_address + 0x310);
 
         /// address: 0x40040b30
         /// OTG_HS device endpoint-1 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ1 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46557,12 +46555,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x330);
+        }, base_address + 0x330);
 
         /// address: 0x40040b50
         /// OTG_HS device endpoint-2 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ2 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46571,12 +46569,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x350);
+        }, base_address + 0x350);
 
         /// address: 0x40040b70
         /// OTG_HS device endpoint-3 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ3 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46585,12 +46583,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x370);
+        }, base_address + 0x370);
 
         /// address: 0x40040b90
         /// OTG_HS device endpoint-4 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ4 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46599,12 +46597,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x390);
+        }, base_address + 0x390);
 
         /// address: 0x400409d0
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46612,12 +46610,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x1d0);
+        }, base_address + 0x1d0);
 
         /// address: 0x400409d8
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS6 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -46637,12 +46635,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1d8);
+        }, base_address + 0x1d8);
 
         /// address: 0x400409f0
         /// OTG_HS device endpoint transfer size
         /// register
-        pub const OTG_HS_DIEPTSIZ7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DIEPTSIZ7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46650,12 +46648,12 @@ pub const registers = struct {
             /// Multi count
             MCNT: u2,
             padding0: u1,
-        }), base_address + 0x1f0);
+        }, base_address + 0x1f0);
 
         /// address: 0x400409f8
         /// OTG_HS device IN endpoint transmit FIFO
         /// status register
-        pub const OTG_HS_DTXFSTS7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DTXFSTS7 = @intToPtr(*volatile align(4) packed struct {
             /// IN endpoint TxFIFO space
             /// avail
             INEPTFSAV: u16,
@@ -46675,12 +46673,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x1f8);
+        }, base_address + 0x1f8);
 
         /// address: 0x40040b80
         /// OTG device endpoint-4 control
         /// register
-        pub const OTG_HS_DOEPCTL4 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL4 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46717,12 +46715,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x380);
+        }, base_address + 0x380);
 
         /// address: 0x40040ba0
         /// OTG device endpoint-5 control
         /// register
-        pub const OTG_HS_DOEPCTL5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL5 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46759,12 +46757,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x3a0);
+        }, base_address + 0x3a0);
 
         /// address: 0x40040bc0
         /// OTG device endpoint-6 control
         /// register
-        pub const OTG_HS_DOEPCTL6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL6 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46801,12 +46799,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x3c0);
+        }, base_address + 0x3c0);
 
         /// address: 0x40040be0
         /// OTG device endpoint-7 control
         /// register
-        pub const OTG_HS_DOEPCTL7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPCTL7 = @intToPtr(*volatile align(4) packed struct {
             /// Maximum packet size
             MPSIZ: u11,
             reserved0: u1,
@@ -46843,12 +46841,12 @@ pub const registers = struct {
             EPDIS: u1,
             /// Endpoint enable
             EPENA: u1,
-        }), base_address + 0x3e0);
+        }, base_address + 0x3e0);
 
         /// address: 0x40040bb0
         /// OTG_HS device endpoint-5 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ5 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ5 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46857,12 +46855,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x3b0);
+        }, base_address + 0x3b0);
 
         /// address: 0x40040bd0
         /// OTG_HS device endpoint-6 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ6 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ6 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46871,12 +46869,12 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x3d0);
+        }, base_address + 0x3d0);
 
         /// address: 0x40040bf0
         /// OTG_HS device endpoint-7 transfer size
         /// register
-        pub const OTG_HS_DOEPTSIZ7 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const OTG_HS_DOEPTSIZ7 = @intToPtr(*volatile align(4) packed struct {
             /// Transfer size
             XFRSIZ: u19,
             /// Packet count
@@ -46885,142 +46883,142 @@ pub const registers = struct {
             /// count
             RXDPID_STUPCNT: u2,
             padding0: u1,
-        }), base_address + 0x3f0);
+        }, base_address + 0x3f0);
 
         /// address: 0x40040b14
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA0 = @intToPtr(*volatile u32, base_address + 0x314);
+        pub const OTG_HS_DOEPDMA0 = @intToPtr(*volatile align(4) u32, base_address + 0x314);
 
         /// address: 0x40040b34
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA1 = @intToPtr(*volatile u32, base_address + 0x334);
+        pub const OTG_HS_DOEPDMA1 = @intToPtr(*volatile align(4) u32, base_address + 0x334);
 
         /// address: 0x40040b54
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA2 = @intToPtr(*volatile u32, base_address + 0x354);
+        pub const OTG_HS_DOEPDMA2 = @intToPtr(*volatile align(4) u32, base_address + 0x354);
 
         /// address: 0x40040b74
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA3 = @intToPtr(*volatile u32, base_address + 0x374);
+        pub const OTG_HS_DOEPDMA3 = @intToPtr(*volatile align(4) u32, base_address + 0x374);
 
         /// address: 0x40040b94
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA4 = @intToPtr(*volatile u32, base_address + 0x394);
+        pub const OTG_HS_DOEPDMA4 = @intToPtr(*volatile align(4) u32, base_address + 0x394);
 
         /// address: 0x40040bb4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA5 = @intToPtr(*volatile u32, base_address + 0x3b4);
+        pub const OTG_HS_DOEPDMA5 = @intToPtr(*volatile align(4) u32, base_address + 0x3b4);
 
         /// address: 0x40040bd4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA6 = @intToPtr(*volatile u32, base_address + 0x3d4);
+        pub const OTG_HS_DOEPDMA6 = @intToPtr(*volatile align(4) u32, base_address + 0x3d4);
 
         /// address: 0x40040bf4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA7 = @intToPtr(*volatile u32, base_address + 0x3f4);
+        pub const OTG_HS_DOEPDMA7 = @intToPtr(*volatile align(4) u32, base_address + 0x3f4);
 
         /// address: 0x40040c14
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA8 = @intToPtr(*volatile u32, base_address + 0x414);
+        pub const OTG_HS_DOEPDMA8 = @intToPtr(*volatile align(4) u32, base_address + 0x414);
 
         /// address: 0x40040c34
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA9 = @intToPtr(*volatile u32, base_address + 0x434);
+        pub const OTG_HS_DOEPDMA9 = @intToPtr(*volatile align(4) u32, base_address + 0x434);
 
         /// address: 0x40040c54
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA10 = @intToPtr(*volatile u32, base_address + 0x454);
+        pub const OTG_HS_DOEPDMA10 = @intToPtr(*volatile align(4) u32, base_address + 0x454);
 
         /// address: 0x40040c74
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA11 = @intToPtr(*volatile u32, base_address + 0x474);
+        pub const OTG_HS_DOEPDMA11 = @intToPtr(*volatile align(4) u32, base_address + 0x474);
 
         /// address: 0x40040c94
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA12 = @intToPtr(*volatile u32, base_address + 0x494);
+        pub const OTG_HS_DOEPDMA12 = @intToPtr(*volatile align(4) u32, base_address + 0x494);
 
         /// address: 0x40040cb4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA13 = @intToPtr(*volatile u32, base_address + 0x4b4);
+        pub const OTG_HS_DOEPDMA13 = @intToPtr(*volatile align(4) u32, base_address + 0x4b4);
 
         /// address: 0x40040cd4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA14 = @intToPtr(*volatile u32, base_address + 0x4d4);
+        pub const OTG_HS_DOEPDMA14 = @intToPtr(*volatile align(4) u32, base_address + 0x4d4);
 
         /// address: 0x40040cf4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DOEPDMA15 = @intToPtr(*volatile u32, base_address + 0x4f4);
+        pub const OTG_HS_DOEPDMA15 = @intToPtr(*volatile align(4) u32, base_address + 0x4f4);
 
         /// address: 0x400409b4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA5 = @intToPtr(*volatile u32, base_address + 0x1b4);
+        pub const OTG_HS_DIEPDMA5 = @intToPtr(*volatile align(4) u32, base_address + 0x1b4);
 
         /// address: 0x400409d4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA6 = @intToPtr(*volatile u32, base_address + 0x1d4);
+        pub const OTG_HS_DIEPDMA6 = @intToPtr(*volatile align(4) u32, base_address + 0x1d4);
 
         /// address: 0x400409f4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA7 = @intToPtr(*volatile u32, base_address + 0x1f4);
+        pub const OTG_HS_DIEPDMA7 = @intToPtr(*volatile align(4) u32, base_address + 0x1f4);
 
         /// address: 0x40040a14
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA8 = @intToPtr(*volatile u32, base_address + 0x214);
+        pub const OTG_HS_DIEPDMA8 = @intToPtr(*volatile align(4) u32, base_address + 0x214);
 
         /// address: 0x40040a34
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA9 = @intToPtr(*volatile u32, base_address + 0x234);
+        pub const OTG_HS_DIEPDMA9 = @intToPtr(*volatile align(4) u32, base_address + 0x234);
 
         /// address: 0x40040a54
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA10 = @intToPtr(*volatile u32, base_address + 0x254);
+        pub const OTG_HS_DIEPDMA10 = @intToPtr(*volatile align(4) u32, base_address + 0x254);
 
         /// address: 0x40040a74
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA11 = @intToPtr(*volatile u32, base_address + 0x274);
+        pub const OTG_HS_DIEPDMA11 = @intToPtr(*volatile align(4) u32, base_address + 0x274);
 
         /// address: 0x40040a94
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA12 = @intToPtr(*volatile u32, base_address + 0x294);
+        pub const OTG_HS_DIEPDMA12 = @intToPtr(*volatile align(4) u32, base_address + 0x294);
 
         /// address: 0x40040ab4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA13 = @intToPtr(*volatile u32, base_address + 0x2b4);
+        pub const OTG_HS_DIEPDMA13 = @intToPtr(*volatile align(4) u32, base_address + 0x2b4);
 
         /// address: 0x40040ad4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA14 = @intToPtr(*volatile u32, base_address + 0x2d4);
+        pub const OTG_HS_DIEPDMA14 = @intToPtr(*volatile align(4) u32, base_address + 0x2d4);
 
         /// address: 0x40040af4
         /// OTG Device channel-x DMA address
         /// register
-        pub const OTG_HS_DIEPDMA15 = @intToPtr(*volatile u32, base_address + 0x2f4);
+        pub const OTG_HS_DIEPDMA15 = @intToPtr(*volatile align(4) u32, base_address + 0x2f4);
     };
 
     /// Window watchdog
@@ -47029,7 +47027,7 @@ pub const registers = struct {
 
         /// address: 0x40002c00
         /// Control register
-        pub const CR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CR = @intToPtr(*volatile align(4) packed struct {
             /// 7-bit counter (MSB to LSB)
             T: u7,
             /// Activation bit
@@ -47058,11 +47056,11 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0x40002c04
         /// Configuration register
-        pub const CFR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CFR = @intToPtr(*volatile align(4) packed struct {
             /// 7-bit window value
             W: u7,
             /// Timer base
@@ -47093,11 +47091,11 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0x40002c08
         /// Status register
-        pub const SR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SR = @intToPtr(*volatile align(4) packed struct {
             /// Early wakeup interrupt
             /// flag
             EWIF: u1,
@@ -47132,7 +47130,7 @@ pub const registers = struct {
             padding28: u1,
             padding29: u1,
             padding30: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
     };
 
     /// Memory protection unit
@@ -47141,7 +47139,7 @@ pub const registers = struct {
 
         /// address: 0xe000ed90
         /// MPU type register
-        pub const MPU_TYPER = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MPU_TYPER = @intToPtr(*volatile align(4) packed struct {
             /// Separate flag
             SEPARATE: u1,
             reserved0: u1,
@@ -47164,11 +47162,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000ed94
         /// MPU control register
-        pub const MPU_CTRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MPU_CTRL = @intToPtr(*volatile align(4) packed struct {
             /// Enables the MPU
             ENABLE: u1,
             /// Enables the operation of MPU during hard
@@ -47206,11 +47204,11 @@ pub const registers = struct {
             padding26: u1,
             padding27: u1,
             padding28: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000ed98
         /// MPU region number register
-        pub const MPU_RNR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MPU_RNR = @intToPtr(*volatile align(4) packed struct {
             /// MPU region
             REGION: u8,
             padding0: u1,
@@ -47237,24 +47235,24 @@ pub const registers = struct {
             padding21: u1,
             padding22: u1,
             padding23: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xe000ed9c
         /// MPU region base address
         /// register
-        pub const MPU_RBAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MPU_RBAR = @intToPtr(*volatile align(4) packed struct {
             /// MPU region field
             REGION: u4,
             /// MPU region number valid
             VALID: u1,
             /// Region base address field
             ADDR: u27,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0xe000eda0
         /// MPU region attribute and size
         /// register
-        pub const MPU_RASR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MPU_RASR = @intToPtr(*volatile align(4) packed struct {
             /// Region enable bit.
             ENABLE: u1,
             /// Size of the MPU protection
@@ -47283,7 +47281,7 @@ pub const registers = struct {
             padding0: u1,
             padding1: u1,
             padding2: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
     };
 
     /// SysTick timer
@@ -47293,7 +47291,7 @@ pub const registers = struct {
         /// address: 0xe000e010
         /// SysTick control and status
         /// register
-        pub const CSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CSR = @intToPtr(*volatile align(4) packed struct {
             /// Counter enable
             ENABLE: u1,
             /// SysTick exception request
@@ -47331,11 +47329,11 @@ pub const registers = struct {
             padding12: u1,
             padding13: u1,
             padding14: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000e014
         /// SysTick reload value register
-        pub const RVR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const RVR = @intToPtr(*volatile align(4) packed struct {
             /// RELOAD value
             RELOAD: u24,
             padding0: u1,
@@ -47346,11 +47344,11 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000e018
         /// SysTick current value register
-        pub const CVR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CVR = @intToPtr(*volatile align(4) packed struct {
             /// Current counter value
             CURRENT: u24,
             padding0: u1,
@@ -47361,12 +47359,12 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xe000e01c
         /// SysTick calibration value
         /// register
-        pub const CALIB = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CALIB = @intToPtr(*volatile align(4) packed struct {
             /// Calibration value
             TENMS: u24,
             reserved0: u1,
@@ -47380,7 +47378,7 @@ pub const registers = struct {
             SKEW: u1,
             /// NOREF flag. Reads as zero
             NOREF: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
     };
 
     /// Nested vectored interrupt
@@ -47391,7 +47389,7 @@ pub const registers = struct {
         /// address: 0xe000ef00
         /// Software trigger interrupt
         /// register
-        pub const STIR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const STIR = @intToPtr(*volatile align(4) packed struct {
             /// Software generated interrupt
             /// ID
             INTID: u9,
@@ -47418,7 +47416,7 @@ pub const registers = struct {
             padding20: u1,
             padding21: u1,
             padding22: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
 
     /// Floating point unit CPACR
@@ -47428,7 +47426,7 @@ pub const registers = struct {
         /// address: 0xe000ed88
         /// Coprocessor access control
         /// register
-        pub const CPACR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CPACR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -47459,7 +47457,7 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
 
     /// System control block ACTLR
@@ -47468,7 +47466,7 @@ pub const registers = struct {
 
         /// address: 0xe000e008
         /// Auxiliary control register
-        pub const ACTRL = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ACTRL = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             /// DISFOLD
@@ -47505,7 +47503,7 @@ pub const registers = struct {
             padding16: u1,
             padding17: u1,
             padding18: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
     };
 
     /// Floting point unit
@@ -47515,7 +47513,7 @@ pub const registers = struct {
         /// address: 0xe000ef34
         /// Floating-point context control
         /// register
-        pub const FPCCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FPCCR = @intToPtr(*volatile align(3) packed struct {
             /// LSPACT
             LSPACT: u1,
             /// USER
@@ -47557,24 +47555,24 @@ pub const registers = struct {
             LSPEN: u1,
             /// ASPEN
             ASPEN: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000ef38
         /// Floating-point context address
         /// register
-        pub const FPCAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FPCAR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
             /// Location of unpopulated
             /// floating-point
             ADDRESS: u29,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000ef3c
         /// Floating-point status control
         /// register
-        pub const FPSCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const FPSCR = @intToPtr(*volatile align(4) packed struct {
             /// Invalid operation cumulative exception
             /// bit
             IOC: u1,
@@ -47632,7 +47630,7 @@ pub const registers = struct {
             /// Negative condition code
             /// flag
             N: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
     };
 
     /// System control block
@@ -47641,7 +47639,7 @@ pub const registers = struct {
 
         /// address: 0xe000ed00
         /// CPUID base register
-        pub const CPUID = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CPUID = @intToPtr(*volatile align(4) packed struct {
             /// Revision number
             Revision: u4,
             /// Part number of the
@@ -47653,12 +47651,12 @@ pub const registers = struct {
             Variant: u4,
             /// Implementer code
             Implementer: u8,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000ed04
         /// Interrupt control and state
         /// register
-        pub const ICSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ICSR = @intToPtr(*volatile align(4) packed struct {
             /// Active vector
             VECTACTIVE: u9,
             reserved0: u1,
@@ -47688,11 +47686,11 @@ pub const registers = struct {
             reserved8: u1,
             /// NMI set-pending bit.
             NMIPENDSET: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000ed08
         /// Vector table offset register
-        pub const VTOR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const VTOR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -47707,12 +47705,12 @@ pub const registers = struct {
             TBLOFF: u21,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xe000ed0c
         /// Application interrupt and reset control
         /// register
-        pub const AIRCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AIRCR = @intToPtr(*volatile align(4) packed struct {
             /// VECTRESET
             VECTRESET: u1,
             /// VECTCLRACTIVE
@@ -47734,11 +47732,11 @@ pub const registers = struct {
             ENDIANESS: u1,
             /// Register key
             VECTKEYSTAT: u16,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0xe000ed10
         /// System control register
-        pub const SCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SCR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// SLEEPONEXIT
             SLEEPONEXIT: u1,
@@ -47774,12 +47772,12 @@ pub const registers = struct {
             padding24: u1,
             padding25: u1,
             padding26: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0xe000ed14
         /// Configuration and control
         /// register
-        pub const CCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCR = @intToPtr(*volatile align(4) packed struct {
             /// Configures how the processor enters
             /// Thread mode
             NONBASETHRDENA: u1,
@@ -47822,12 +47820,12 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x14);
+        }, base_address + 0x14);
 
         /// address: 0xe000ed18
         /// System handler priority
         /// registers
-        pub const SHPR1 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SHPR1 = @intToPtr(*volatile align(4) packed struct {
             /// Priority of system handler
             /// 4
             PRI_4: u8,
@@ -47845,12 +47843,12 @@ pub const registers = struct {
             padding5: u1,
             padding6: u1,
             padding7: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
 
         /// address: 0xe000ed1c
         /// System handler priority
         /// registers
-        pub const SHPR2 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SHPR2 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -47878,12 +47876,12 @@ pub const registers = struct {
             /// Priority of system handler
             /// 11
             PRI_11: u8,
-        }), base_address + 0x1c);
+        }, base_address + 0x1c);
 
         /// address: 0xe000ed20
         /// System handler priority
         /// registers
-        pub const SHPR3 = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SHPR3 = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             reserved1: u1,
             reserved2: u1,
@@ -47906,12 +47904,12 @@ pub const registers = struct {
             /// Priority of system handler
             /// 15
             PRI_15: u8,
-        }), base_address + 0x20);
+        }, base_address + 0x20);
 
         /// address: 0xe000ed24
         /// System handler control and state
         /// register
-        pub const SHCRS = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const SHCRS = @intToPtr(*volatile align(4) packed struct {
             /// Memory management fault exception active
             /// bit
             MEMFAULTACT: u1,
@@ -47967,12 +47965,12 @@ pub const registers = struct {
             padding10: u1,
             padding11: u1,
             padding12: u1,
-        }), base_address + 0x24);
+        }, base_address + 0x24);
 
         /// address: 0xe000ed28
         /// Configurable fault status
         /// register
-        pub const CFSR_UFSR_BFSR_MMFSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CFSR_UFSR_BFSR_MMFSR = @intToPtr(*volatile align(4) packed struct {
             /// IACCVIOL
             IACCVIOL: u1,
             /// DACCVIOL
@@ -48032,11 +48030,11 @@ pub const registers = struct {
             padding3: u1,
             padding4: u1,
             padding5: u1,
-        }), base_address + 0x28);
+        }, base_address + 0x28);
 
         /// address: 0xe000ed2c
         /// Hard fault status register
-        pub const HFSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const HFSR = @intToPtr(*volatile align(4) packed struct {
             reserved0: u1,
             /// Vector table hard fault
             VECTTBL: u1,
@@ -48072,23 +48070,23 @@ pub const registers = struct {
             FORCED: u1,
             /// Reserved for Debug use
             DEBUG_VT: u1,
-        }), base_address + 0x2c);
+        }, base_address + 0x2c);
 
         /// address: 0xe000ed34
         /// Memory management fault address
         /// register
-        pub const MMFAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const MMFAR = @intToPtr(*volatile align(4) packed struct {
             /// Memory management fault
             /// address
             ADDRESS: u32,
-        }), base_address + 0x34);
+        }, base_address + 0x34);
 
         /// address: 0xe000ed38
         /// Bus fault address register
-        pub const BFAR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const BFAR = @intToPtr(*volatile align(4) packed struct {
             /// Bus fault address
             ADDRESS: u32,
-        }), base_address + 0x38);
+        }, base_address + 0x38);
     };
 
     /// Processor features
@@ -48097,7 +48095,7 @@ pub const registers = struct {
 
         /// address: 0xe000ed78
         /// Cache Level ID register
-        pub const CLIDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CLIDR = @intToPtr(*volatile align(4) packed struct {
             /// CL1
             CL1: u3,
             /// CL2
@@ -48120,11 +48118,11 @@ pub const registers = struct {
             LoU: u3,
             padding0: u1,
             padding1: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000ed7c
         /// Cache Type register
-        pub const CTR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CTR = @intToPtr(*volatile align(4) packed struct {
             /// IminLine
             _IminLine: u4,
             reserved0: u1,
@@ -48148,11 +48146,11 @@ pub const registers = struct {
             reserved12: u1,
             /// Format
             Format: u3,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000ed80
         /// Cache Size ID register
-        pub const CCSIDR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CCSIDR = @intToPtr(*volatile align(4) packed struct {
             /// LineSize
             LineSize: u3,
             /// Associativity
@@ -48167,7 +48165,7 @@ pub const registers = struct {
             WB: u1,
             /// WT
             WT: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
     };
 
     /// Access control
@@ -48177,7 +48175,7 @@ pub const registers = struct {
         /// address: 0xe000ef90
         /// Instruction and Data Tightly-Coupled Memory
         /// Control Registers
-        pub const ITCMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ITCMCR = @intToPtr(*volatile align(4) packed struct {
             /// EN
             EN: u1,
             /// RMW
@@ -48211,12 +48209,12 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x0);
+        }, base_address + 0x0);
 
         /// address: 0xe000ef94
         /// Instruction and Data Tightly-Coupled Memory
         /// Control Registers
-        pub const DTCMCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const DTCMCR = @intToPtr(*volatile align(4) packed struct {
             /// EN
             EN: u1,
             /// RMW
@@ -48250,11 +48248,11 @@ pub const registers = struct {
             padding22: u1,
             padding23: u1,
             padding24: u1,
-        }), base_address + 0x4);
+        }, base_address + 0x4);
 
         /// address: 0xe000ef98
         /// AHBP Control register
-        pub const AHBPCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHBPCR = @intToPtr(*volatile align(4) packed struct {
             /// EN
             EN: u1,
             /// SZ
@@ -48287,12 +48285,12 @@ pub const registers = struct {
             padding25: u1,
             padding26: u1,
             padding27: u1,
-        }), base_address + 0x8);
+        }, base_address + 0x8);
 
         /// address: 0xe000ef9c
         /// Auxiliary Cache Control
         /// register
-        pub const CACR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const CACR = @intToPtr(*volatile align(4) packed struct {
             /// SIWT
             SIWT: u1,
             /// ECCEN
@@ -48328,11 +48326,11 @@ pub const registers = struct {
             padding26: u1,
             padding27: u1,
             padding28: u1,
-        }), base_address + 0xc);
+        }, base_address + 0xc);
 
         /// address: 0xe000efa0
         /// AHB Slave Control register
-        pub const AHBSCR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const AHBSCR = @intToPtr(*volatile align(4) packed struct {
             /// CTL
             CTL: u2,
             /// TPRI
@@ -48355,12 +48353,12 @@ pub const registers = struct {
             padding13: u1,
             padding14: u1,
             padding15: u1,
-        }), base_address + 0x10);
+        }, base_address + 0x10);
 
         /// address: 0xe000efa8
         /// Auxiliary Bus Fault Status
         /// register
-        pub const ABFSR = @intToPtr(*volatile Mmio(32, packed struct {
+        pub const ABFSR = @intToPtr(*volatile align(4) packed struct {
             /// ITCM
             ITCM: u1,
             /// DTCM
@@ -48398,63 +48396,13 @@ pub const registers = struct {
             padding19: u1,
             padding20: u1,
             padding21: u1,
-        }), base_address + 0x18);
+        }, base_address + 0x18);
     };
 };
 
+
 const std = @import("std");
 
-pub fn mmio(addr: usize, comptime size: u8, comptime PackedT: type) *volatile Mmio(size, PackedT) {
-    return @intToPtr(*volatile Mmio(size, PackedT), addr);
-}
-
-pub fn Mmio(comptime size: u8, comptime PackedT: type) type {
-    if ((size % 8) != 0)
-        @compileError("size must be divisible by 8!");
-
-    if (!std.math.isPowerOfTwo(size / 8))
-        @compileError("size must encode a power of two number of bytes!");
-
-    const IntT = std.meta.Int(.unsigned, size);
-
-    if (@sizeOf(PackedT) != (size / 8))
-        @compileError(std.fmt.comptimePrint("IntT and PackedT must have the same size!, they are {} and {} bytes respectively", .{ size / 8, @sizeOf(PackedT) }));
-
-    return extern struct {
-        const Self = @This();
-
-        raw: IntT,
-
-        pub const underlying_type = PackedT;
-
-        pub inline fn read(addr: *volatile Self) PackedT {
-            return @bitCast(PackedT, addr.raw);
-        }
-
-        pub inline fn write(addr: *volatile Self, val: PackedT) void {
-            // This is a workaround for a compiler bug related to miscompilation
-            // If the tmp var is not used, result location will fuck things up
-            var tmp = @bitCast(IntT, val);
-            addr.raw = tmp;
-        }
-
-        pub inline fn modify(addr: *volatile Self, fields: anytype) void {
-            var val = read(addr);
-            inline for (@typeInfo(@TypeOf(fields)).Struct.fields) |field| {
-                @field(val, field.name) = @field(fields, field.name);
-            }
-            write(addr, val);
-        }
-
-        pub inline fn toggle(addr: *volatile Self, fields: anytype) void {
-            var val = read(addr);
-            inline for (@typeInfo(@TypeOf(fields)).Struct.fields) |field| {
-                @field(val, @tagName(field.default_value.?)) = !@field(val, @tagName(field.default_value.?));
-            }
-            write(addr, val);
-        }
-    };
-}
 
 pub fn MmioInt(comptime size: u8, comptime T: type) type {
     return extern struct {
@@ -48462,11 +48410,11 @@ pub fn MmioInt(comptime size: u8, comptime T: type) type {
 
         raw: std.meta.Int(.unsigned, size),
 
-        pub inline fn read(addr: *volatile Self) T {
+        pub inline fn read(addr: *volatile align(4) Self) T {
             return @truncate(T, addr.raw);
         }
 
-        pub inline fn modify(addr: *volatile Self, val: T) void {
+        pub inline fn modify(addr: *volatile align(4) Self, val: T) void {
             const Int = std.meta.Int(.unsigned, size);
             const mask = ~@as(Int, (1 << @bitSizeOf(T)) - 1);
 
@@ -48476,11 +48424,11 @@ pub fn MmioInt(comptime size: u8, comptime T: type) type {
     };
 }
 
-pub fn mmioInt(addr: usize, comptime size: usize, comptime T: type) *volatile MmioInt(size, T) {
-    return @intToPtr(*volatile MmioInt(size, T), addr);
+pub fn mmioInt(addr: usize, comptime size: usize, comptime T: type) *volatile align(4) MmioInt(size, T) {
+    return @intToPtr(*volatile align(4) MmioInt(size, T), addr);
 }
 
-const InterruptVector = extern union {
+pub const InterruptVector = extern union {
     C: *const fn () callconv(.C) void,
     Naked: *const fn () callconv(.Naked) void,
     // Interrupt is not supported on arm

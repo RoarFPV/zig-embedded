@@ -1,0 +1,27 @@
+mach create "STM32F7"
+
+
+machine LoadPlatformDescription @platforms/cpus/stm32f7x2.repl
+
+using sysbus
+
+
+$bin ?= @zig-out/bin/STM32F7x2-firmware.elf
+
+macro reset
+"""
+    logLevel 0
+    sysbus.cpu VectorTableOffset 0x08000000
+    sysbus.cpu ExecutionMode SingleStepBlocking
+    sysbus LogPeripheralAccess rcc true
+    #sysbus.cpu LogFunctionNames true
+    
+    sysbus LoadELF $bin
+"""
+
+machine StartGdbServer 3333
+
+runMacro $reset
+
+
+showAnalyzer usart1

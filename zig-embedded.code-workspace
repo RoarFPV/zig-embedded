@@ -1,0 +1,41 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../zig"
+		},
+		{
+			"path": "../../microzig"
+		},
+		{
+			"path": "../../clashos"
+		},
+		{
+			"path": "../../zig-flight"
+		},
+		{
+			"path": "../../zig-engine"
+		},
+		{
+			"path": "../stm32f7_microzig"
+		},
+		{
+			"path": "../../../fpga/eos-s3"
+		},
+		{
+			"path": "../../../fpga/amaranth-lang/amaranth"
+		},
+		{
+			"path": "../../../renode"
+		},
+		{
+			"path": "../../regz"
+		},
+		{
+			"path": "../../gyro"
+		}
+	],
+	"settings": {}
+}

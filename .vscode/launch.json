@@ -5,6 +5,25 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Cortex Debug Renode",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceRoot}/zig-out/bin/STM32F7x2-firmware.elf",
+      "device": "STM32F722",
+      "request": "launch",
+      "type": "cortex-debug",
+      "runToEntryPoint": "main",
+      "servertype": "external",
+      "gdbTarget": "localhost:3333",
+      // "toolchainPrefix": "arm-none-eabi-",
+      "gdbPath": "gdb-multiarch",
+      "svdFile": "libs/stm32-svd/f7/STM32F722.svd",
+      "showDevDebugOutput": "raw",
+      "overrideLaunchCommands": ["monitor start", "continue"],
+      "overrideRestartCommands": ["monitor pause","monitor runMacro $reset"],
+      // "postStartSessionCommands": ["break main"]
+    },
+
+    {
       "name": "STM32F7X2 zig Debug",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceRoot}/zig-out/bin/STM32F7x2-firmware.elf",
@@ -24,6 +43,35 @@
       // "runToMain": true,
       // Work around for stopping at main on restart
       "preLaunchTask": "Zig stm32f7x2 Build",
+  
+      // "postLaunchCommands": [
+      //     "break main"
+      // ],
+      // "postRestartCommands": [
+      //   "break main",
+      //   "continue"
+      // ]
+    },
+    {
+      "name": "STM32F7X2 zig Debug ReNode",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/zig-out/bin/STM32F7x2-firmware.elf",
+      "request": "attach",
+      "type": "cortex-debug",
+      "servertype": "qemu",
+      // This may need to be arm-none-eabi-gdb depending on your system
+      "gdbPath": "gdb-multiarch",
+      // "device": "RP2040",
+      "configFiles": [
+      //   "target/rp2040.cfg"
+          "libs/openocd/stm32f7x2.cfg"
+      ],
+      "showDevDebugOutput": "both",
+      // "serverArgs": ["-d"],
+      "svdFile": "libs/stm32-svd/f7/STM32F722.svd",
+      // "runToMain": true,
+      // Work around for stopping at main on restart
+      //"preLaunchTask": "Zig stm32f7x2 Build",
   
       // "postLaunchCommands": [
       //     "break main"

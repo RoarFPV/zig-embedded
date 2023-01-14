@@ -67,7 +67,7 @@ pub const gpio = struct {
     }
 
     pub fn write(comptime pin: type, state: u1) void {
-        _ = pin;
+        //_ = pin;
         switch (state) {
             0 => setRegField(pin.gpio_port.BSRR, "BR" ++ pin.suffix, 1),
             1 => setRegField(pin.gpio_port.BSRR, "BS" ++ pin.suffix, 1),

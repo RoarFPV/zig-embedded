@@ -12,11 +12,10 @@ extern var __stack_end: u32;
 pub const MainFunc = fn () anyerror!void;
 // pub const PanicFunc = fn (message: []const u8, maybe_stack_trace: ?*std.builtin.StackTrace) noreturn;
 
-pub fn Core(comptime arch:anytype, main:MainFunc ) type {
+pub fn Core(comptime arch:anytype, comptime main:MainFunc ) type {
     return struct {
-        pub const arch = arch;
+        // pub const arch = arch;
         
-
         pub fn start() callconv(.C) noreturn {
             // fill .bss with zeroes
             
@@ -75,8 +74,6 @@ pub fn Core(comptime arch:anytype, main:MainFunc ) type {
                 asm volatile ("" ::: "memory");
             }
         }
-
-
     };
 }
 
